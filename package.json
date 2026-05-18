@@ -1,5 +1,16 @@
 {
-  "dependencies": {
-    "zustand": "^5.0.13"
-  }
+  "name": "ojas-wellness-app",
+  "version": "1.0.0",
+  "description": "AI-powered wellness app with menstrual cycle tracking, moon phases, and Prakriti assessment",
+  "private": true,
+  "scripts": {
+    "dev:frontend": "cd ojas-frontend && npm run dev",
+    "dev:backend": "cd ojas-backend && python app.py",
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "author": "Samridhi",
+  "license": "MIT"
 }
