@@ -10,17 +10,7 @@ import { LunarPhaseAnimation } from '../components/LunarPhaseAnimation';
 import { useCycleStore } from '../store/cycleStore';
 import { useUserStore } from '../store/userStore';
 import { getMusicRecommendations, RecommendedSong } from '../services/musicService';
-
-interface PredictionData {
-  success: boolean;
-  predicted_mood: number;
-  cycle_phase: string;
-  day_in_cycle: number;
-  moon_phase: string;
-  moon_illumination: number;
-  recommended_songs?: string[];
-  recommended_genres?: string[];
-}
+import { predictMood, PredictionData } from '../lib/api';
 
 export default function CyclePage() {
   const cycle = useCycleStore((state) => state.cycle);
@@ -65,17 +55,11 @@ export default function CyclePage() {
     try {
       const today = new Date().toISOString().split('T')[0];
 
-      const response = await fetch('http://localhost:5000/api/predict-mood', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          cycle_day: cycleDay,
-          date: today,
-          estrogen: 50,
-        }),
+      const data = await predictMood({
+        cycle_day: cycleDay,
+        date: today,
+        estrogen: 50,
       });
-
-      const data = await response.json();
       console.log('API Response:', data);
 
       if (data.success) {

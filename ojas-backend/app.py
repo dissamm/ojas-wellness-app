@@ -4,11 +4,15 @@ import joblib
 import numpy as np
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import ephem
+import jwt
+from functools import wraps
+from database import init_db, create_user, get_user_by_email, get_user_by_id, update_user_profile
 
 app = Flask(__name__)
 CORS(app)
+app.config['JWT_SECRET_KEY'] = os.environ.get("JWT_SECRET_KEY", "ojas-cosmic-secret-key-108")
 
 # Get the directory where this script is located
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -379,7 +383,166 @@ def get_music_recommendations():
         return jsonify({'success': False, 'error': str(e)}), 400
 
 
+# ============================================
+# AUTHENTICATION & SECURITY
+# ============================================
+
+def generate_token(user_id):
+    payload = {
+        'sub': str(user_id),
+        'exp': datetime.utcnow() + timedelta(days=7),
+        'iat': datetime.utcnow()
+    }
+    return jwt.encode(payload, app.config['JWT_SECRET_KEY'], algorithm='HS256')
+
+def decode_token(token):
+    try:
+        payload = jwt.decode(token, app.config['JWT_SECRET_KEY'], algorithms=['HS256'])
+        return int(payload['sub'])
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.InvalidTokenError:
+        return None
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        if 'Authorization' in request.headers:
+            auth_header = request.headers['Authorization']
+            if auth_header.startswith('Bearer '):
+                token = auth_header.split(" ")[1]
+        
+        if not token:
+            return jsonify({'success': False, 'message': 'Token is missing'}), 401
+        
+        user_id = decode_token(token)
+        if not user_id:
+            return jsonify({'success': False, 'message': 'Token is invalid or expired'}), 401
+            
+        current_user = get_user_by_id(user_id)
+        if not current_user:
+            return jsonify({'success': False, 'message': 'User not found'}), 401
+            
+        return f(current_user, *args, **kwargs)
+    return decorated
+
+def serialize_user(user):
+    return {
+        'id': user['id'],
+        'username': user['username'],
+        'email': user['email'],
+        'name': user['name'],
+        'doshaComposition': json.loads(user['dosha_composition']) if user['dosha_composition'] else None,
+        'dominantDosha': user['dominant_dosha'],
+        'menstrualCycleStart': user['menstrual_cycle_start'],
+        'musicPreferences': json.loads(user['music_preferences']) if user['music_preferences'] else None
+    }
+
+@app.route('/api/auth/register', methods=['POST'])
+def register():
+    try:
+        data = request.json
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+        name = data.get('name')
+        
+        if not username or not email or not password:
+            return jsonify({'success': False, 'message': 'All fields are required'}), 400
+            
+        user_id = create_user(username, email, password, name)
+        if not user_id:
+            return jsonify({'success': False, 'message': 'Username or Email already exists'}), 409
+            
+        token = generate_token(user_id)
+        user = get_user_by_id(user_id)
+        
+        return jsonify({
+            'success': True,
+            'message': 'Registration successful',
+            'token': token,
+            'user': serialize_user(user)
+        }), 201
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+@app.route('/api/auth/login', methods=['POST'])
+def login():
+    try:
+        data = request.json
+        email = data.get('email')
+        password = data.get('password')
+        
+        if not email or not password:
+            return jsonify({'success': False, 'message': 'Email and Password are required'}), 400
+            
+        from werkzeug.security import check_password_hash
+        user = get_user_by_email(email)
+        if not user or not check_password_hash(user['password_hash'], password):
+            return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
+            
+        token = generate_token(user['id'])
+        
+        return jsonify({
+            'success': True,
+            'message': 'Login successful',
+            'token': token,
+            'user': serialize_user(user)
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+@app.route('/api/auth/me', methods=['GET'])
+@token_required
+def get_me(current_user):
+    return jsonify({
+        'success': True,
+        'user': serialize_user(current_user)
+    })
+
+@app.route('/api/auth/update-profile', methods=['POST'])
+@token_required
+def update_profile(current_user):
+    try:
+        data = request.json
+        name = data.get('name')
+        dosha_composition = data.get('doshaComposition')
+        dominant_dosha = data.get('dominantDosha')
+        menstrual_cycle_start = data.get('menstrualCycleStart')
+        music_preferences = data.get('musicPreferences')
+        
+        # Serialize JSON fields if present
+        dosha_comp_str = json.dumps(dosha_composition) if dosha_composition is not None else None
+        music_pref_str = json.dumps(music_preferences) if music_preferences is not None else None
+        
+        success = update_user_profile(
+            current_user['id'],
+            name=name,
+            dosha_composition=dosha_comp_str,
+            dominant_dosha=dominant_dosha,
+            menstrual_cycle_start=menstrual_cycle_start,
+            music_preferences=music_pref_str
+        )
+        
+        if not success:
+            # We still return success as user might send identical values during auto-sync
+            pass
+            
+        updated_user = get_user_by_id(current_user['id'])
+        return jsonify({
+            'success': True,
+            'message': 'Profile updated successfully',
+            'user': serialize_user(updated_user)
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+
 if __name__ == '__main__':
+    # Initialize database tables
+    init_db()
+    
     print("=" * 50)
     print("📍 Server running at: http://localhost:5000")
     print("📊 Health check: http://localhost:5000/api/health")

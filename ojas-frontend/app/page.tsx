@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import React from 'react';
 import { Header } from './components/Header';
 import { useUserStore } from './store/userStore';
 import { useRouter } from 'next/navigation';
 import WellnessFlow from './WellnessFlow';
+import { Disclaimer } from './components/Disclaimer';
+import { hasCompletedPrakriti } from './lib/dominantDosha';
 
 // Large Hero Blooming Lotus (Interactive & Centered above Headline)
 const LargeHeroLotus = () => (
@@ -31,9 +33,7 @@ const LargeHeroLotus = () => (
 
 export default function Home() {
   const router = useRouter();
-  const { user, setName, currentStep } = useUserStore();
-  const [showNameModal, setShowNameModal] = useState(false);
-  const [nameInput, setNameInput] = useState('');
+  const { currentStep, isAuthenticated } = useUserStore();
 
   if (currentStep !== 'name') {
     return <WellnessFlow />;
@@ -41,20 +41,11 @@ export default function Home() {
 
   const handleBeginJourney = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (user?.name) {
-      router.push('/dashboard');
+    if (isAuthenticated) {
+      router.push(hasCompletedPrakriti() ? '/dashboard' : '/prakriti');
     } else {
-      setShowNameModal(true);
+      router.push('/register');
     }
-  };
-
-  const handleEnterSanctuary = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!nameInput.trim()) return;
-
-    setName(nameInput.trim());
-    setShowNameModal(false);
-    router.push('/dashboard');
   };
 
   const scrollToFeatures = (e: React.MouseEvent) => {
@@ -67,6 +58,7 @@ export default function Home() {
 
       <div>
         <Header />
+        <Disclaimer className="mb-8" />
 
         {/* Hero Section */}
         <main className="relative z-10 flex flex-col items-center justify-center text-center px-6 w-full max-w-7xl mx-auto">
@@ -256,62 +248,6 @@ export default function Home() {
         </div>
         <div className="select-none">© 2026 OJAS</div>
       </footer>
-
-      {/* Name Input Premium Fullscreen Glass Overlay Modal */}
-      {showNameModal && (
-        <div className="fixed inset-0 z-50 bg-[#F4EFEA]/95 backdrop-blur-xl flex items-center justify-center p-6 animate-fade-in">
-          {/* Subtle warm ambient lighting overlay */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#C27A5D]/5 via-transparent to-transparent pointer-events-none" />
-
-          <form
-            onSubmit={handleEnterSanctuary}
-            className="relative z-10 w-full max-w-md bg-[#FAF6F0]/80 border border-[#1C1917]/5 backdrop-blur-md rounded-3xl p-8 md:p-10 shadow-[0_10px_50px_rgba(28,25,22,0.03)] flex flex-col items-center text-center animate-fade-rise"
-          >
-            {/* Lotus Graphic Icon */}
-            <div className="w-16 h-16 text-[#C27A5D] mb-4 select-none">
-              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full lotus-interactive">
-                <path d="M50,85 C50,85 42,65 50,50 C58,65 50,85 50,85Z" fill="#C27A5D" />
-                <path d="M50,85 C50,85 32,75 28,58 C38,52 46,70 50,85Z" fill="#FAF6F0" opacity="0.6" />
-                <path d="M50,85 C50,85 68,75 72,58 C62,52 54,70 50,85Z" fill="#FAF6F0" opacity="0.6" />
-              </svg>
-            </div>
-
-            <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-bold mb-3 select-none">
-              WELCOME TO OJAS
-            </span>
-
-            <h2 className="font-cormorant italic text-3xl md:text-4xl text-stone-900 mb-8 font-normal leading-tight">
-              How shall we address you, beautiful soul?
-            </h2>
-
-            <input
-              type="text"
-              value={nameInput}
-              onChange={(e) => setNameInput(e.target.value)}
-              placeholder="Enter your name..."
-              className="w-full text-center py-3 border-b border-stone-300 focus:border-[#C27A5D] bg-transparent text-2xl font-cormorant italic text-stone-950 placeholder-stone-300 focus:outline-none transition-colors duration-300 mb-8"
-              autoFocus
-              required
-            />
-
-            <div className="flex gap-4 w-full">
-              <button
-                type="button"
-                onClick={() => setShowNameModal(false)}
-                className="flex-1 py-3.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] border border-stone-300 hover:border-stone-500 transition-all duration-300 text-stone-600 hover:text-[#1C1917] cursor-pointer select-none bg-transparent"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="flex-1 py-3.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1917] text-[#FAF6F0] hover:bg-[#C27A5D] active:scale-[0.98] transition-all duration-300 shadow-sm cursor-pointer select-none"
-              >
-                Enter Sanctuary
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
 
     </div>
   );
