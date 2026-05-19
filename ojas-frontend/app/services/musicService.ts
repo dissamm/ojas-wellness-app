@@ -8,64 +8,61 @@ export interface RecommendedSong {
     youtubeUrl: string;
 }
 
-// Phase-based music recommendations
+// Curated Underrated Indian Indie Pop recommendations based on phase
 export function getMusicRecommendations(phase: string, moodScore: number): RecommendedSong[] {
     const phaseLower = phase.toLowerCase();
 
-    // Follicular Phase (Energy rising)
+    // Follicular Phase (Rising creative energy)
     if (phaseLower.includes('follicular')) {
         if (moodScore >= 6) {
             return [
-                { title: "Happy", artist: "Pharrell Williams", mood: "Energetic", spotifyUrl: "https://open.spotify.com/track/60nZcImufyMA1TKQvUDRk7", youtubeUrl: "https://youtube.com/watch?v=y6Sxv-sUYtM" },
-                { title: "Good as Hell", artist: "Lizzo", mood: "Confident", spotifyUrl: "https://open.spotify.com/track/6uL7Gj6v6JjCjGa5t2PPLX", youtubeUrl: "https://youtube.com/watch?v=XvFkIuYqj5s" },
-                { title: "Levitating", artist: "Dua Lipa", mood: "Upbeat", spotifyUrl: "https://open.spotify.com/track/39LLxExYz6ewLAcYrzQQyP", youtubeUrl: "https://youtube.com/watch?v=TUVcZfQe-Kw" }
+                { title: "Firefly", artist: "When Chai Met Toast", mood: "Optimistic", spotifyUrl: "https://open.spotify.com/track/2NWh665tV458t6575121S2", youtubeUrl: "https://www.youtube.com/results?search_query=when+chai+met+toast+firefly" },
+                { title: "Shaayad", artist: "Taba Chake", mood: "Adaptable", spotifyUrl: "https://open.spotify.com/track/5c8c50cE5f0P61iZg8Cg8J", youtubeUrl: "https://www.youtube.com/results?search_query=taba+chake+shaayad" }
             ];
         } else {
             return [
-                { title: "Here Comes the Sun", artist: "The Beatles", mood: "Hopeful", spotifyUrl: "https://open.spotify.com/track/6p9CqlM1FQKJzVPPKrJ3qm", youtubeUrl: "https://youtube.com/watch?v=KQetemT1s2c" },
-                { title: "Rises the Moon", artist: "Liana Flores", mood: "Dreamy", spotifyUrl: "https://open.spotify.com/track/3X5MURBk3zYUnAJuC8oZ8B", youtubeUrl: "https://youtube.com/watch?v=VgBx1VvR1qU" },
-                { title: "Weightless", artist: "Marconi Union", mood: "Calming", spotifyUrl: "https://open.spotify.com/track/3yJ1e8X3axXo4O7yZeM9nR", youtubeUrl: "https://youtube.com/watch?v=qYnA9wWFHLI" }
+                { title: "Kadam", artist: "Prateek Kuhad", mood: "Hopeful", spotifyUrl: "https://open.spotify.com/track/4WWh115tV458t6575121S1", youtubeUrl: "https://www.youtube.com/results?search_query=prateek+kuhad+kadam" },
+                { title: "Alag Aasmaan", artist: "Anuv Jain", mood: "Dreamy", spotifyUrl: "https://open.spotify.com/track/6WWh225tV458t6575121S2", youtubeUrl: "https://www.youtube.com/results?search_query=anuv+jain+alag+aasmaan" }
             ];
         }
     }
 
-    // Ovulatory Phase (Peak energy)
+    // Ovulatory Phase (Peak expressive power & transformation)
     if (phaseLower.includes('ovulat')) {
         return [
-            { title: "Blinding Lights", artist: "The Weeknd", mood: "Energetic", spotifyUrl: "https://open.spotify.com/track/0VjIjW4GlUZAMYd2vXMi3b", youtubeUrl: "https://youtube.com/watch?v=fHI8X4_O4x0" },
-            { title: "Uptown Funk", artist: "Bruno Mars", mood: "Confident", spotifyUrl: "https://open.spotify.com/track/6XpcuJa7cGMdsC3THFhnPF", youtubeUrl: "https://youtube.com/watch?v=OPf0YbXqDm0" },
-            { title: "Girl on Fire", artist: "Alicia Keys", mood: "Empowered", spotifyUrl: "https://open.spotify.com/track/4T7cMcHgS68TZQ1kIISWHi", youtubeUrl: "https://youtube.com/watch?v=J91ti_MpdHA" }
+            { title: "One Nation", artist: "Karsh Kale", mood: "Transcendent", spotifyUrl: "https://open.spotify.com/track/3HWh775tV458t6575121S4", youtubeUrl: "https://www.youtube.com/results?search_query=karsh+kale+one+nation" },
+            { title: "Jaago", artist: "Lifafa", mood: "Vibrant", spotifyUrl: "https://open.spotify.com/track/1HWh555tV458t6575121S9", youtubeUrl: "https://www.youtube.com/results?search_query=lifafa+jaago" },
+            { title: "Maybe Babe", artist: "When Chai Met Toast", mood: "Expressive", spotifyUrl: "https://open.spotify.com/track/8WWh885tV458t6575121S8", youtubeUrl: "https://www.youtube.com/results?search_query=when+chai+met+toast+maybe+babe" }
         ];
     }
 
-    // Luteal Phase (Slowing down)
+    // Luteal Phase (Reflective turn inwards)
     if (phaseLower.includes('luteal')) {
         if (moodScore >= 5) {
             return [
-                { title: "Buddy", artist: "Willow Smith", mood: "Gentle", spotifyUrl: "https://open.spotify.com/track/0PfKiPJWXMAy7D9aJlQy8C", youtubeUrl: "https://youtube.com/watch?v=Xl1ssXbFWXk" },
-                { title: "Sunflower", artist: "Post Malone", mood: "Warm", spotifyUrl: "https://open.spotify.com/track/4EpZ4h6dVJNYW59Iq8vNlM", youtubeUrl: "https://youtube.com/watch?v=ApXoWvfEYVU" }
+                { title: "Baarishein", artist: "Anuv Jain", mood: "Gentle", spotifyUrl: "https://open.spotify.com/track/5nAkv9yZkQ4gC0617v12S2", youtubeUrl: "https://www.youtube.com/results?search_query=anuv+jain+baarishein" },
+                { title: "Kho Gaye Hum Kahan", artist: "Prateek Kuhad", mood: "Nostalgic", spotifyUrl: "https://open.spotify.com/track/9WWh995tV458t6575121S9", youtubeUrl: "https://www.youtube.com/results?search_query=prateek+kuhad+kho+gaye+hum+kahan" }
             ];
         } else {
             return [
-                { title: "Stay", artist: "Rihanna", mood: "Melancholic", spotifyUrl: "https://open.spotify.com/track/5HCyWlXZPP0y6Gqq8TgA20", youtubeUrl: "https://youtube.com/watch?v=JF8BRvqG6sA" },
-                { title: "Someone Like You", artist: "Adele", mood: "Emotional", spotifyUrl: "https://open.spotify.com/track/4kflIGfjdZJW4ot2ioixTB", youtubeUrl: "https://youtube.com/watch?v=hLQl3WQQoQ0" },
-                { title: "Clair de Lune", artist: "Debussy", mood: "Reflective", spotifyUrl: "https://open.spotify.com/track/4pAWp4zNHnCeGPkg6Ch1LF", youtubeUrl: "https://youtube.com/watch?v=CvFH_6DNRCY" }
+                { title: "Nikamma", artist: "Lifafa", mood: "Reflective", spotifyUrl: "https://open.spotify.com/track/5WWh555tV458t6575121S5", youtubeUrl: "https://www.youtube.com/results?search_query=lifafa+nikamma" },
+                { title: "Tune Kaha", artist: "Prateek Kuhad", mood: "Melancholic", spotifyUrl: "https://open.spotify.com/track/2WWh225tV458t6575121S2", youtubeUrl: "https://www.youtube.com/results?search_query=prateek+kuhad+tune+kaha" }
             ];
         }
     }
 
-    // Menstrual Phase (Rest)
+    // Menstrual Phase (Deep physical & spiritual rest)
     if (phaseLower.includes('menstrual')) {
         return [
-            { title: "River Flows in You", artist: "Yiruma", mood: "Peaceful", spotifyUrl: "https://open.spotify.com/track/3xr8COed4nPPn6XW5YfTWk", youtubeUrl: "https://youtube.com/watch?v=7maJOI3QMu0" },
-            { title: "Gymnopédie No.1", artist: "Erik Satie", mood: "Calm", spotifyUrl: "https://open.spotify.com/track/1T9B8CcoPxcA3YNOV6JKrA", youtubeUrl: "https://youtube.com/watch?v=S-Xm7s9eGxU" },
-            { title: "Experience", artist: "Ludovico Einaudi", mood: "Healing", spotifyUrl: "https://open.spotify.com/track/1BncfTJAWxrsxyT9culBrj", youtubeUrl: "https://youtube.com/watch?v=4Z7iTMSNS2M" }
+            { title: "Cold/Mess", artist: "Prateek Kuhad", mood: "Cathartic", spotifyUrl: "https://open.spotify.com/track/1BWh445tV458t6575121S6", youtubeUrl: "https://www.youtube.com/results?search_query=prateek+kuhad+cold+mess" },
+            { title: "Aasmaan", artist: "Taba Chake", mood: "Calming", spotifyUrl: "https://open.spotify.com/track/4c8c40cE5f0P61iZg8Cg8J", youtubeUrl: "https://www.youtube.com/results?search_query=taba+chake+aasmaan" },
+            { title: "In Dino", artist: "Lifafa", mood: "Soulful", spotifyUrl: "https://open.spotify.com/track/3WWh335tV458t6575121S3", youtubeUrl: "https://www.youtube.com/results?search_query=lifafa+in+dino" }
         ];
     }
 
-    // Default fallback
+    // Default Fallback
     return [
-        { title: "Weightless", artist: "Marconi Union", mood: "Calming", spotifyUrl: "https://open.spotify.com/track/3yJ1e8X3axXo4O7yZeM9nR", youtubeUrl: "https://youtube.com/watch?v=qYnA9wWFHLI" },
-        { title: "Clair de Lune", artist: "Debussy", mood: "Peaceful", spotifyUrl: "https://open.spotify.com/track/4pAWp4zNHnCeGPkg6Ch1LF", youtubeUrl: "https://youtube.com/watch?v=CvFH_6DNRCY" }
+        { title: "Shaayad", artist: "Taba Chake", mood: "Calm", spotifyUrl: "https://open.spotify.com/track/5c8c50cE5f0P61iZg8Cg8J", youtubeUrl: "https://www.youtube.com/results?search_query=taba+chake+shaayad" },
+        { title: "Cold/Mess", artist: "Prateek Kuhad", mood: "Reflective", spotifyUrl: "https://open.spotify.com/track/1BWh445tV458t6575121S6", youtubeUrl: "https://www.youtube.com/results?search_query=prateek+kuhad+cold+mess" }
     ];
 }

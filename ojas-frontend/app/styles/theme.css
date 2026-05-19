@@ -145,3 +145,57 @@
 .lotus-interactive:hover .petal-right-outer {
   transform: rotate(36deg) scale(1.05) !important;
 }
+
+/* Premium Continuous Floating/Breathing Animation */
+@keyframes lotus-float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 4px 15px rgba(223, 128, 96, 0.08));
+  }
+  50% {
+    transform: translateY(-8px) scale(1.03);
+    filter: drop-shadow(0 15px 30px rgba(223, 128, 96, 0.16));
+  }
+}
+
+.animate-lotus-float {
+  animation: lotus-float 6s ease-in-out infinite;
+}
+
+/* Serene luxury-minimal theme additions */
+.border-fine {
+  border: 1px solid var(--border-color);
+}
+
+.bg-card-light {
+  background-color: var(--card-light);
+}
+
+.bg-card-dark {
+  background-color: var(--card-dark);
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.bg-accent {
+  background-color: var(--accent);
+}
+
+.border-accent {
+  border-color: var(--accent);
+}
+
+.bg-cream-bg {
+  background-color: var(--background);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(-1.5deg);
+  }
+}

@@ -100,144 +100,66 @@ def get_phase_from_day(cycle_day):
     else:
         return 3  # Luteal
 
+def get_estrogen_from_day(cycle_day):
+    """Estimate estrogen level based on cycle day"""
+    if cycle_day <= 7:
+        return 35   # Menstrual - low estrogen
+    elif cycle_day <= 14:
+        return 65   # Follicular - rising estrogen
+    elif cycle_day <= 16:
+        return 95   # Ovulation - peak estrogen
+    else:
+        return 45   # Luteal - dropping estrogen
+
 def get_phase_name(phase_num):
     phases = {1: 'Follicular', 2: 'Ovulation', 3: 'Luteal', 4: 'Menstrual'}
     return phases.get(phase_num, 'Unknown')
 
-# ============================================
-# PRAKRITI-BASED MUSIC LIBRARY
-# ============================================
-PRAKRITI_MUSIC_LIBRARY = {
-    'Vata': {
-        'high_mood': {
-            'songs': ["Feeling Good - Nina Simone", "Here Comes the Sun - Beatles", "Don't Worry Be Happy - Bobby McFerrin"],
-            'genres': ['World Music', 'Folk', 'Acoustic', 'Reggae']
-        },
-        'medium_mood': {
-            'songs': ["Weightless - Marconi Union", "Grounded - Beautiful Chorus", "Mountain Lullaby - Liquid Mind"],
-            'genres': ['Ambient', 'Meditation', 'Folk']
-        },
-        'low_mood': {
-            'songs': ["Om Mantra - Deva Premal", "Healing Frequency 528Hz", "Moola Mantra"],
-            'genres': ['Meditation', 'Healing', 'Mantra']
-        }
-    },
-    'Pitta': {
-        'high_mood': {
-            'songs': ["Happy - Pharrell Williams", "Good as Hell - Lizzo", "Can't Stop the Feeling - Justin Timberlake"],
-            'genres': ['Pop', 'Funk', 'Soul']
-        },
-        'medium_mood': {
-            'songs': ["Waterfall - Relaxation Ensemble", "Cooling Waves - Meditation Spa", "Clair de Lune - Debussy"],
-            'genres': ['Classical', 'Instrumental', 'Ambient']
-        },
-        'low_mood': {
-            'songs': ["River Flows in You - Yiruma", "Gymnopédie No.1 - Satie", "Experience - Ludovico Einaudi"],
-            'genres': ['Classical', 'Piano', 'Meditation']
-        }
-    },
-    'Kapha': {
-        'high_mood': {
-            'songs': ["Uptown Funk - Bruno Mars", "Blinding Lights - The Weeknd", "Levitating - Dua Lipa"],
-            'genres': ['Pop', 'Dance', 'EDM', 'Funk']
-        },
-        'medium_mood': {
-            'songs': ["Rises the Moon - Liana Flores", "Buddy - Willow Smith", "Sunflower - Post Malone"],
-            'genres': ['Lofi', 'Indie', 'Acoustic']
-        },
-        'low_mood': {
-            'songs': ["Energize - Morning Workout", "Rise Up - Andra Day", "Stronger - Kelly Clarkson"],
-            'genres': ['Motivational', 'Pop', 'Rock']
-        }
-    }
-}
-
-CYCLE_PHASE_MUSIC = {
-    1: {  # Follicular
-        'songs': ["Happy - Pharrell Williams", "Good as Hell - Lizzo"],
-        'genres': ['Pop', 'Indie', 'Folk']
-    },
-    2: {  # Ovulation
-        'songs': ["Girl on Fire - Alicia Keys", "Run the World - Beyoncé"],
-        'genres': ['Dance', 'Hip Hop', 'Pop']
-    },
-    3: {  # Luteal
-        'songs': ["Stay - Rihanna", "Someone Like You - Adele"],
-        'genres': ['Ballad', 'Ambient', 'Chill']
-    },
-    4: {  # Menstrual
-        'songs': ["Healing - Reiki Music", "Om Namah Shivaya"],
-        'genres': ['Meditation', 'Healing', 'Classical']
-    }
-}
-
-BASE_MUSIC = {
-    'high_mood': {
-        'songs': ["Blinding Lights - The Weeknd", "Levitating - Dua Lipa", "Dance Monkey - Tones and I"],
-        'genres': ['Pop', 'Dance', 'EDM']
-    },
-    'medium_mood': {
-        'songs': ["Weightless - Marconi Union", "Here Comes the Sun - The Beatles", "Rises the Moon - Liana Flores"],
-        'genres': ['Lofi', 'Acoustic', 'Ambient']
-    },
-    'low_mood': {
-        'songs': ["Clair de Lune - Debussy", "River Flows in You - Yiruma", "Gymnopédie No.1 - Satie"],
-        'genres': ['Classical', 'Meditation', 'Piano']
-    }
-}
-
-def recommend_music_hybrid(mood_score, phase_num, prakriti='Pitta'):
-    """Hybrid music recommendation combining Prakriti, Cycle Phase, and Mood"""
-    
-    # Determine mood level
-    if mood_score >= 7:
-        mood_level = 'high_mood'
-    elif mood_score >= 4:
-        mood_level = 'medium_mood'
+def get_mood_message(mood_score):
+    """Convert numeric mood score to positive, empowering message"""
+    if mood_score >= 7.5:
+        return "🌟 Radiant", "You're radiating positive energy today!"
+    elif mood_score >= 6.0:
+        return "😊 Good", "You're in a good space. Keep flowing!"
+    elif mood_score >= 4.5:
+        return "🌿 Balanced", "A calm, steady day. Honor your rhythm."
+    elif mood_score >= 3.0:
+        return "💫 Gentle", "Be kind to yourself. Rest is productive."
     else:
-        mood_level = 'low_mood'
-    
-    all_songs = []
-    all_genres = []
-    
-    # 1. Add Prakriti-based songs
-    if prakriti in PRAKRITI_MUSIC_LIBRARY:
-        prakriti_data = PRAKRITI_MUSIC_LIBRARY[prakriti]
-        if mood_level in prakriti_data:
-            all_songs.extend(prakriti_data[mood_level]['songs'])
-            all_genres.extend(prakriti_data[mood_level]['genres'])
-    
-    # 2. Add Cycle Phase songs
-    if phase_num in CYCLE_PHASE_MUSIC:
-        phase_data = CYCLE_PHASE_MUSIC[phase_num]
-        all_songs.extend(phase_data['songs'])
-        all_genres.extend(phase_data['genres'])
-    
-    # 3. Add Base mood songs
-    base_data = BASE_MUSIC.get(mood_level, BASE_MUSIC['medium_mood'])
-    all_songs.extend(base_data['songs'])
-    all_genres.extend(base_data['genres'])
-    
-    # Remove duplicates while preserving order
-    unique_songs = []
-    for song in all_songs:
-        if song not in unique_songs:
-            unique_songs.append(song)
-    
-    unique_genres = []
-    for genre in all_genres:
-        if genre not in unique_genres:
-            unique_genres.append(genre)
-    
-    # Mood type description with Prakriti
+        return "🌸 Nurturing", "Listen to your body. Softness is strength."
+
+def recommend_music(mood_score, phase_num, prakriti='Pitta'):
+    """Get music recommendations based on predicted mood"""
     if mood_score >= 7:
-        mood_type = f"Energetic & Vibrant ⚡ ({prakriti} Mode)"
+        mood_type = "Energetic"
+        songs = [
+            "Blinding Lights - The Weeknd",
+            "Levitating - Dua Lipa",
+            "Dance Monkey - Tones and I"
+        ]
+        genres = ["Pop", "Dance", "EDM"]
     elif mood_score >= 4:
-        mood_type = f"Balanced & Calming 🌿 ({prakriti} Mode)"
+        mood_type = "Calming"
+        songs = [
+            "Weightless - Marconi Union",
+            "Here Comes the Sun - The Beatles",
+            "Rises the Moon - Liana Flores"
+        ]
+        genres = ["Lofi", "Acoustic", "Ambient"]
     else:
-        mood_type = f"Restorative & Gentle 💫 ({prakriti} Mode)"
+        mood_type = "Relaxing"
+        songs = [
+            "Clair de Lune - Debussy",
+            "River Flows in You - Yiruma",
+            "Gymnopédie No.1 - Satie"
+        ]
+        genres = ["Classical", "Meditation", "Piano"]
     
-    return mood_type, unique_songs[:5], unique_genres[:4]
+    return mood_type, songs, genres
+
+# ============================================
+# API ENDPOINTS
+# ============================================
 
 @app.route('/api/health', methods=['GET'])
 def health():
@@ -256,28 +178,28 @@ def predict_mood():
         data = request.json
         cycle_day = data.get('cycle_day', 14)
         user_date = data.get('date', datetime.now().strftime('%Y-%m-%d'))
-        estrogen = data.get('estrogen', 50)
-        prakriti = data.get('prakriti', 'Pitta')  # Get Prakriti from frontend
+        estrogen = data.get('estrogen', get_estrogen_from_day(cycle_day))
+        prakriti = data.get('prakriti', 'Pitta')
         
         phase_num = get_phase_from_day(cycle_day)
         lunar_sin, lunar_cos = calculate_lunar_phase(user_date)
         
-        # Calculate moon phase name and illumination
         moon_phase = get_moon_phase_name(lunar_sin, lunar_cos)
         moon_illumination = get_moon_illumination(lunar_sin, lunar_cos)
         
-        # Features must be in order: phase_num, lunar_sin, lunar_cos, estrogen
         features = np.array([[phase_num, lunar_sin, lunar_cos, estrogen]])
         features_scaled = scaler.transform(features)
         mood_score = model.predict(features_scaled)[0]
         
-        # Get hybrid music recommendations with Prakriti
-        mood_type, songs, genres = recommend_music_hybrid(mood_score, phase_num, prakriti)
+        mood_type, mood_message = get_mood_message(mood_score)
+        music_mood_type, songs, genres = recommend_music(mood_score, phase_num, prakriti)
         
         return jsonify({
             'success': True,
             'predicted_mood': round(float(mood_score), 1),
+            'mood_message': mood_message,
             'mood_type': mood_type,
+            'music_mood_type': music_mood_type,
             'cycle_phase': get_phase_name(phase_num),
             'day_in_cycle': cycle_day,
             'moon_phase': moon_phase,
@@ -301,10 +223,169 @@ def cycle_info():
         ]
     })
 
+# ============================================
+# NEW API ENDPOINTS FOR COMPLETE FLOW
+# ============================================
+
+@app.route('/api/assessment/calculate', methods=['POST'])
+def calculate_prakriti():
+    """Calculate dosha composition from assessment answers"""
+    try:
+        data = request.json
+        answers = data.get('answers', {})
+        
+        counts = {'vata': 0, 'pitta': 0, 'kapha': 0}
+        for answer in answers.values():
+            if answer in counts:
+                counts[answer] += 1
+        
+        total = sum(counts.values())
+        
+        if total == 0:
+            composition = {'vata': 34, 'pitta': 33, 'kapha': 33}
+        else:
+            composition = {
+                'vata': round((counts['vata'] / total) * 100),
+                'pitta': round((counts['pitta'] / total) * 100),
+                'kapha': round((counts['kapha'] / total) * 100),
+            }
+        
+        dominant = max(composition, key=composition.get)
+        
+        return jsonify({
+            'success': True,
+            'composition': composition,
+            'dominant': dominant.capitalize(),
+            'message': f'Your dominant dosha is {dominant.capitalize()}'
+        })
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+
+@app.route('/api/insights/daily', methods=['POST'])
+def get_daily_insights():
+    """Get daily affirmations and tips based on dosha"""
+    try:
+        data = request.json
+        composition = data.get('composition', {})
+        
+        dominant = max(composition, key=composition.get) if composition else 'pitta'
+        
+        insights = {
+            'vata': {
+                'affirmation': 'I am grounded, calm, and centered in my body.',
+                'tips': [
+                    'Wake up at the same time every day',
+                    'Eat warm, cooked meals',
+                    'Practice gentle yoga or stretching',
+                    'Take breaks throughout the day'
+                ],
+                'bestFoods': ['Warm soups', 'Cooked grains', 'Root vegetables', 'Ginger tea'],
+                'avoidFoods': ['Cold drinks', 'Raw vegetables', 'Caffeine', 'Dry snacks']
+            },
+            'pitta': {
+                'affirmation': 'I am cool, calm, and balanced within.',
+                'tips': [
+                    'Avoid overheating during exercise',
+                    'Take breaks and rest midday',
+                    'Practice cooling breathing exercises',
+                    'Spend time in nature near water'
+                ],
+                'bestFoods': ['Coconut water', 'Sweet fruits', 'Cucumber', 'Fresh salads'],
+                'avoidFoods': ['Spicy food', 'Coffee', 'Fried food', 'Sour fruits']
+            },
+            'kapha': {
+                'affirmation': 'I am energetic, light, and motivated to move.',
+                'tips': [
+                    'Exercise daily, especially in the morning',
+                    'Wake up early, avoid sleeping in',
+                    'Try new activities and challenges',
+                    'Keep a consistent routine'
+                ],
+                'bestFoods': ['Light fruits', 'Spices like ginger', 'Warm water with honey', 'Leafy greens'],
+                'avoidFoods': ['Dairy', 'Fried food', 'Sugar', 'Heavy desserts']
+            }
+        }
+        
+        result = insights.get(dominant, insights['pitta'])
+        
+        current_hour = datetime.now().hour
+        if current_hour < 12:
+            result['affirmation'] = f"Good morning! {result['affirmation']}"
+        elif current_hour < 18:
+            result['affirmation'] = f"Good afternoon. {result['affirmation']}"
+        else:
+            result['affirmation'] = f"Good evening. {result['affirmation']}"
+        
+        return jsonify({
+            'success': True,
+            'affirmation': result['affirmation'],
+            'tips': result['tips'],
+            'bestFoods': result['bestFoods'],
+            'avoidFoods': result['avoidFoods']
+        })
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+
+@app.route('/api/music/recommendations', methods=['POST'])
+def get_music_recommendations():
+    """Get personalized music recommendations"""
+    try:
+        data = request.json
+        composition = data.get('composition', {})
+        
+        dominant = max(composition, key=composition.get) if composition else 'pitta'
+        
+        recommendations = {
+            'vata': {
+                'playlists': [
+                    {'name': 'Grounding Rhythms', 'description': 'Earthy beats to anchor your energy', 'icon': '🌍', 'tracks': 20},
+                    {'name': 'Calm & Centered', 'description': 'Gentle melodies for relaxation', 'icon': '🎵', 'tracks': 18},
+                    {'name': 'Ambient Flow', 'description': 'Space for peaceful thoughts', 'icon': '🌊', 'tracks': 22}
+                ],
+                'genres': ['Ambient', 'Acoustic', 'Folk', 'Classical']
+            },
+            'pitta': {
+                'playlists': [
+                    {'name': 'Cooling Serenity', 'description': 'Soothing sounds to balance', 'icon': '❄️', 'tracks': 25},
+                    {'name': 'Water Elements', 'description': 'Flowing melodies', 'icon': '💧', 'tracks': 20},
+                    {'name': 'Peaceful Piano', 'description': 'Gentle instrumental music', 'icon': '🎹', 'tracks': 28}
+                ],
+                'genres': ['Classical', 'Jazz', 'Instrumental', 'Lofi']
+            },
+            'kapha': {
+                'playlists': [
+                    {'name': 'Uplifting Energy', 'description': 'Stimulating rhythms', 'icon': '⚡', 'tracks': 22},
+                    {'name': 'Morning Motivation', 'description': 'Wake up with these beats', 'icon': '🌅', 'tracks': 18},
+                    {'name': 'Active Flow', 'description': 'Keep your energy moving', 'icon': '🏃', 'tracks': 24}
+                ],
+                'genres': ['World', 'Dance', 'Electronic', 'Upbeat Pop']
+            }
+        }
+        
+        result = recommendations.get(dominant, recommendations['pitta'])
+        
+        return jsonify({
+            'success': True,
+            'dominant_dosha': dominant.capitalize(),
+            'playlists': result['playlists'],
+            'recommended_genres': result['genres']
+        })
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+
 if __name__ == '__main__':
     print("=" * 50)
     print("📍 Server running at: http://localhost:5000")
     print("📊 Health check: http://localhost:5000/api/health")
     print("🔮 Predict: POST to http://localhost:5000/api/predict-mood")
+    print("📝 Assessment: POST to http://localhost:5000/api/assessment/calculate")
+    print("💡 Insights: POST to http://localhost:5000/api/insights/daily")
+    print("🎵 Music: POST to http://localhost:5000/api/music/recommendations")
     print("=" * 50)
     app.run(debug=True, host='0.0.0.0', port=5000)
