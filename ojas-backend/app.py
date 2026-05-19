@@ -14,6 +14,9 @@ app = Flask(__name__)
 CORS(app)
 app.config['JWT_SECRET_KEY'] = os.environ.get("JWT_SECRET_KEY", "ojas-cosmic-secret-key-108")
 
+# Initialize database tables on load/import
+init_db()
+
 # Get the directory where this script is located
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -540,15 +543,8 @@ def update_profile(current_user):
 
 
 if __name__ == '__main__':
-    # Initialize database tables
-    init_db()
-    
     print("=" * 50)
-    print("📍 Server running at: http://localhost:5000")
-    print("📊 Health check: http://localhost:5000/api/health")
-    print("🔮 Predict: POST to http://localhost:5000/api/predict-mood")
-    print("📝 Assessment: POST to http://localhost:5000/api/assessment/calculate")
-    print("💡 Insights: POST to http://localhost:5000/api/insights/daily")
-    print("🎵 Music: POST to http://localhost:5000/api/music/recommendations")
+    print("📍 Server running...")
     print("=" * 50)
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=True, host='0.0.0.0', port=port)
