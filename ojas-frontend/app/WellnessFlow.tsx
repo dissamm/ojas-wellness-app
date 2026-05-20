@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useUserStore } from './store/userStore';
 import { DoshaAnimation } from './components/flows/DoshaAnimation';
 import { PrakritiAssessment } from './components/flows/PrakritiAssessment';
@@ -11,6 +11,14 @@ import { DailyCompanion } from './components/flows/DailyCompanion';
 
 export default function WellnessFlow() {
     const currentStep = useUserStore((state) => state.currentStep);
+    const setCurrentStep = useUserStore((state) => state.setCurrentStep);
+    const user = useUserStore((state) => state.user);
+
+    useEffect(() => {
+        if (currentStep === 'menstrual-moon' && user?.gender === 'male') {
+            setCurrentStep('music');
+        }
+    }, [currentStep, user?.gender, setCurrentStep]);
 
     if (currentStep === 'dosha-animation') {
         return <DoshaAnimation />;
@@ -25,6 +33,7 @@ export default function WellnessFlow() {
     }
 
     if (currentStep === 'menstrual-moon') {
+        if (user?.gender === 'male') return null;
         return <MenstrualMoonCorrelation />;
     }
 

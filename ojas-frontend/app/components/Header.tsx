@@ -13,8 +13,10 @@ export const Header = () => {
   const loadProfileFromToken = useUserStore((state) => state.loadProfileFromToken);
 
   const [isDark, setIsDark] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     // Read theme on mount
     const root = document.documentElement;
     const isDarkTheme = root.classList.contains('dark') || localStorage.getItem('theme') === 'dark';
@@ -46,18 +48,20 @@ export const Header = () => {
     }
   };
 
-  const links = isAuthenticated
+  const links = isMounted && isAuthenticated
     ? [
         { name: 'Dashboard', path: '/dashboard' },
         { name: 'Rituals', path: '/rituals' },
         { name: 'Prakriti', path: '/prakriti' },
         { name: 'Cycle', path: '/cycle' },
         { name: 'Music', path: '/music' },
-      ]
-    : [
+      ].filter(link => !(link.name === 'Cycle' && user?.gender === 'male'))
+    : isMounted
+    ? [
         { name: 'Login', path: '/login' },
         { name: 'Register', path: '/register' },
-      ];
+      ]
+    : [];
 
   const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : 'A';
 
@@ -107,7 +111,7 @@ export const Header = () => {
           </button>
 
           {/* Profile Initials / Log In Action */}
-          {isAuthenticated ? (
+          {isMounted && isAuthenticated ? (
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-mono border border-stone-300/80 dark:border-stone-800 text-stone-600 dark:text-stone-450 bg-white/40 dark:bg-stone-900/40 shadow-[0_1px_3px_rgba(28,25,22,0.02)] select-none">
                 {userInitial}
@@ -119,14 +123,14 @@ export const Header = () => {
                 Logout
               </button>
             </div>
-          ) : (
+          ) : isMounted ? (
             <Link 
               href="/login"
               className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-stone-550 dark:text-stone-400 hover:text-[#C27A5D] dark:hover:text-[#C27A5D] transition-colors duration-300"
             >
               Sign In
             </Link>
-          )}
+          ) : null}
         </div>
       </div>
     </header>

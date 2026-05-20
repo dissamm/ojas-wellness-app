@@ -6,6 +6,7 @@ import { Card } from '../components/Card';
 import { useUserStore } from '../store/userStore';
 import { useCycleStore } from '../store/cycleStore';
 import { getMusicRecommendations, RecommendedSong } from '../services/musicService';
+import { useRouter } from 'next/navigation';
 
 // Vedic Solfeggio alignments
 const SOLFEGGIO_SOUNDSCAPES = [
@@ -39,6 +40,7 @@ const SOLFEGGIO_SOUNDSCAPES = [
 ];
 
 export default function MusicPage() {
+  const router = useRouter();
   const user = useUserStore((state) => state.user);
   const cycle = useCycleStore((state) => state.cycle);
 
@@ -378,6 +380,28 @@ export default function MusicPage() {
             </div>
 
           </div>
+
+          {/* Proceed to Dashboard / Compile wellness metrics */}
+          <div className="mt-12 mb-8 flex justify-center animate-fade-rise">
+            <button
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  localStorage.setItem('musicPreferencesSet', 'true');
+                }
+                // Save current target dosha to user music preferences if not empty
+                if (user && (!user.musicPreferences || user.musicPreferences.length === 0)) {
+                  useUserStore.getState().setMusicPreferences([selectedDosha.toLowerCase()]);
+                } else {
+                  useUserStore.getState().syncUserProfile();
+                }
+                router.push('/dashboard');
+              }}
+              className="px-10 py-4.5 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1917] hover:bg-[#C27A5D] text-white transition-all duration-300 shadow-md cursor-pointer text-center"
+            >
+              COMPILE WELLNESS PORTAL & ENTER DASHBOARD →
+            </button>
+          </div>
+
         </div>
 
         {/* Footer */}

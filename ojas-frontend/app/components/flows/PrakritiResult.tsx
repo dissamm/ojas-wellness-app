@@ -47,7 +47,7 @@ export const PrakritiResult = () => {
                     </button>
 
                     <button
-                        onClick={() => setCurrentStep('companion')}
+                        onClick={() => setCurrentStep(user?.gender === 'male' ? 'music' : 'menstrual-moon')}
                         className="px-5 sm:px-6 py-2.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-[#C27A5D] hover:bg-[#b0674a] text-white active:scale-[0.98] transition duration-300 shadow-sm cursor-pointer"
                     >
                         Continue to Sanctuary →
@@ -139,17 +139,20 @@ export const PrakritiResult = () => {
                     {/* Educational Note */}
                     <div className="p-5 bg-[#F4EFEA] rounded-2xl border border-stone-200/50 text-center">
                         <p className="text-xs text-stone-600 leading-relaxed italic">
-                            &ldquo;You are a unique combination of all three. While your Prakriti defines your core nature, your emotional rhythms drift daily. Let&apos;s map how the celestial lunar cycle aligns with your body&apos;s inner clock.&rdquo;
+                            {user?.gender === 'male'
+                                ? "You are a unique combination of all three. While your Prakriti defines your core nature, your emotional rhythms drift daily. Let's find the healing frequencies aligned with your mind."
+                                : "You are a unique combination of all three. While your Prakriti defines your core nature, your emotional rhythms drift daily. Let's map how the celestial lunar cycle aligns with your body's inner clock."
+                            }
                         </p>
                     </div>
                 </div>
 
                 {/* Continue Action (Secondary fallback) */}
                 <button
-                    onClick={() => setCurrentStep('menstrual-moon')}
+                    onClick={() => setCurrentStep(user?.gender === 'male' ? 'music' : 'menstrual-moon')}
                     className="w-full py-4 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] border border-[#C27A5D]/40 text-[#C27A5D] bg-[#FAF6F0]/30 hover:bg-[#FAF6F0] active:scale-[0.98] transition-all duration-300 shadow-md animate-fade-rise-delay-2 cursor-pointer"
                 >
-                    Continue to Cycle & Moon Magic →
+                    {user?.gender === 'male' ? 'Continue to Sound Sanctuary →' : 'Continue to Cycle & Moon Magic →'}
                 </button>
             </div>
         </div>

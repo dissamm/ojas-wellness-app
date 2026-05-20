@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Header } from '../components/Header';
 import { Card } from '../components/Card';
 import { Input } from '../components/Input';
@@ -13,10 +14,17 @@ import { getMusicRecommendations, RecommendedSong } from '../services/musicServi
 import { predictMood, PredictionData } from '../lib/api';
 
 export default function CyclePage() {
+  const router = useRouter();
+  const user = useUserStore((state) => state.user);
+
+  useEffect(() => {
+    if (user?.gender === 'male') {
+      router.replace('/dashboard');
+    }
+  }, [user?.gender, router]);
+
   const cycle = useCycleStore((state) => state.cycle);
   const setCycle = useCycleStore((state) => state.setCycle);
-
-  const user = useUserStore((state) => state.user);
   const setMenstrualData = useUserStore((state) => state.setMenstrualData);
 
   const [startDate, setStartDate] = useState(cycle?.startDate || '');
@@ -379,13 +387,21 @@ export default function CyclePage() {
                         </p>
                       </div>
 
-                      {/* Edit Button to toggle back the form */}
-                      <button
-                        onClick={() => setIsEditing(true)}
-                        className="w-full py-4 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1917] text-[#FAF6F0] hover:bg-[#C27A5D] active:scale-[0.98] transition-all duration-300 shadow-md cursor-pointer"
-                      >
-                        🔄 RECALIBRATE COSMIC DATA
-                      </button>
+                      {/* Recalibrate & Next step CTAs */}
+                      <div className="flex flex-col sm:flex-row gap-4">
+                        <button
+                          onClick={() => setIsEditing(true)}
+                          className="flex-1 py-4 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] border border-stone-650 text-stone-300 hover:bg-white/5 active:scale-[0.98] transition-all duration-300 cursor-pointer text-center"
+                        >
+                          🔄 Recalibrate
+                        </button>
+                        <button
+                          onClick={() => router.push('/music')}
+                          className="flex-[2] py-4 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] bg-[#FAF6F0] text-[#1C1917] hover:bg-[#C27A5D] hover:text-white active:scale-[0.98] transition-all duration-300 shadow-md cursor-pointer text-center"
+                        >
+                          CONTINUE TO SOUND SANCTUARY →
+                        </button>
+                      </div>
                     </div>
                   )
                 )}

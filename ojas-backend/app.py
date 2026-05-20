@@ -439,7 +439,8 @@ def serialize_user(user):
         'doshaComposition': json.loads(user['dosha_composition']) if user['dosha_composition'] else None,
         'dominantDosha': user['dominant_dosha'],
         'menstrualCycleStart': user['menstrual_cycle_start'],
-        'musicPreferences': json.loads(user['music_preferences']) if user['music_preferences'] else None
+        'musicPreferences': json.loads(user['music_preferences']) if user['music_preferences'] else None,
+        'gender': user['gender'] if ('gender' in user.keys() and user['gender'] is not None) else 'female'
     }
 
 @app.route('/api/auth/register', methods=['POST'])
@@ -450,11 +451,12 @@ def register():
         email = data.get('email')
         password = data.get('password')
         name = data.get('name')
+        gender = data.get('gender', 'female')
         
         if not username or not email or not password:
             return jsonify({'success': False, 'message': 'All fields are required'}), 400
             
-        user_id = create_user(username, email, password, name)
+        user_id = create_user(username, email, password, name, gender)
         if not user_id:
             return jsonify({'success': False, 'message': 'Username or Email already exists'}), 409
             
@@ -514,6 +516,7 @@ def update_profile(current_user):
         dominant_dosha = data.get('dominantDosha')
         menstrual_cycle_start = data.get('menstrualCycleStart')
         music_preferences = data.get('musicPreferences')
+        gender = data.get('gender')
         
         # Serialize JSON fields if present
         dosha_comp_str = json.dumps(dosha_composition) if dosha_composition is not None else None
@@ -525,7 +528,8 @@ def update_profile(current_user):
             dosha_composition=dosha_comp_str,
             dominant_dosha=dominant_dosha,
             menstrual_cycle_start=menstrual_cycle_start,
-            music_preferences=music_pref_str
+            music_preferences=music_pref_str,
+            gender=gender
         )
         
         if not success:

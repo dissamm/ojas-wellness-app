@@ -39,7 +39,7 @@ export default function RitualsPage() {
     const { day: cycleDay, phase: cyclePhase } = getCycleStateFromStore(cycle);
 
     // Get final personalized rituals
-    const rituals: Ritual[] = hydrated ? getRitualsForDosha(dominantDosha, cyclePhase, showPhaseMod) : [];
+    const rituals: Ritual[] = hydrated ? getRitualsForDosha(dominantDosha, cyclePhase, user?.gender !== 'male' && showPhaseMod) : [];
 
     // Helper for Dosha Color Tags
     const getDoshaStyles = (doshaName: string) => {
@@ -110,13 +110,21 @@ export default function RitualsPage() {
                                 <span className="text-[9px] font-mono text-stone-400 mt-1 uppercase">Prakriti Profile</span>
                             </Card>
 
-                            <Card className="flex flex-col justify-center items-center text-center p-6">
-                                <span className="text-[9px] font-mono uppercase tracking-widest text-stone-400 mb-2">Cycle Phase Synchronization</span>
-                                <span className="text-2xl font-serif italic text-[#C27A5D] font-semibold">{cycle ? cyclePhase : 'Unsynced'}</span>
-                                <span className="text-[9px] font-mono text-stone-400 mt-1 uppercase">
-                                    {cycle ? `Day ${cycleDay} of ${cycle.cycleLengthDays} days` : 'Visit Cycle tab to sync'}
-                                </span>
-                            </Card>
+                            {user?.gender !== 'male' ? (
+                                <Card className="flex flex-col justify-center items-center text-center p-6">
+                                    <span className="text-[9px] font-mono uppercase tracking-widest text-stone-400 mb-2">Cycle Phase Synchronization</span>
+                                    <span className="text-2xl font-serif italic text-[#C27A5D] font-semibold">{cycle ? cyclePhase : 'Unsynced'}</span>
+                                    <span className="text-[9px] font-mono text-stone-400 mt-1 uppercase">
+                                        {cycle ? `Day ${cycleDay} of ${cycle.cycleLengthDays} days` : 'Visit Cycle tab to sync'}
+                                    </span>
+                                </Card>
+                            ) : (
+                                <Card className="flex flex-col justify-center items-center text-center p-6">
+                                    <span className="text-[9px] font-mono uppercase tracking-widest text-stone-400 mb-2">Ayurvedic Daily Rhythm</span>
+                                    <span className="text-2xl font-serif italic text-stone-800 dark:text-stone-100 font-semibold">Dinacharya</span>
+                                    <span className="text-[9px] font-mono text-stone-400 mt-1 uppercase">Dominant Dosha Centered</span>
+                                </Card>
+                            )}
 
                             <Card className="flex flex-col justify-center items-center text-center p-6">
                                 <span className="text-[9px] font-mono uppercase tracking-widest text-stone-400 mb-2">Active Recommendations</span>
@@ -126,36 +134,38 @@ export default function RitualsPage() {
                         </div>
 
                         {/* Interactive Phase Toggle Banner */}
-                        <div className="bg-[#FAF6F0] dark:bg-stone-900/60 border border-[#1C1917]/5 dark:border-stone-800 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm animate-fade-rise-delay-2">
-                            <div className="space-y-1 max-w-lg text-center md:text-left">
-                                <h3 className="text-base font-serif italic text-stone-900 dark:text-stone-100 font-normal">
-                                    Menstrual Phase Adaptability
-                                </h3>
-                                <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
-                                    When enabled, your daily routines adapt to the energetic, nutritional, and physical requirements of your current phase ({cyclePhase}).
-                                </p>
-                            </div>
+                        {user?.gender !== 'male' && (
+                            <div className="bg-[#FAF6F0] dark:bg-stone-900/60 border border-[#1C1917]/5 dark:border-stone-800 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm animate-fade-rise-delay-2">
+                                <div className="space-y-1 max-w-lg text-center md:text-left">
+                                    <h3 className="text-base font-serif italic text-stone-900 dark:text-stone-100 font-normal">
+                                        Menstrual Phase Adaptability
+                                    </h3>
+                                    <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
+                                        When enabled, your daily routines adapt to the energetic, nutritional, and physical requirements of your current phase ({cyclePhase}).
+                                    </p>
+                                </div>
 
-                            {/* Custom Sliding Toggle Switch */}
-                            <div className="flex items-center gap-3">
-                                <span className="text-[10px] font-mono uppercase tracking-widest text-stone-500">
-                                    {showPhaseMod ? 'Sync Active' : 'Offline'}
-                                </span>
-                                <button
-                                    onClick={() => setShowPhaseMod(!showPhaseMod)}
-                                    className={`w-14 h-8 rounded-full p-1 transition-colors duration-500 ease-in-out cursor-pointer ${
-                                        showPhaseMod ? 'bg-[#C27A5D]' : 'bg-stone-300 dark:bg-stone-800'
-                                    }`}
-                                    aria-label="Toggle phase-specific modifications"
-                                >
-                                    <div
-                                        className={`w-6 h-6 rounded-full bg-white dark:bg-stone-900 shadow-md transform transition-transform duration-500 ease-in-out ${
-                                            showPhaseMod ? 'translate-x-6' : 'translate-x-0'
+                                {/* Custom Sliding Toggle Switch */}
+                                <div className="flex items-center gap-3">
+                                    <span className="text-[10px] font-mono uppercase tracking-widest text-stone-500">
+                                        {showPhaseMod ? 'Sync Active' : 'Offline'}
+                                    </span>
+                                    <button
+                                        onClick={() => setShowPhaseMod(!showPhaseMod)}
+                                        className={`w-14 h-8 rounded-full p-1 transition-colors duration-500 ease-in-out cursor-pointer ${
+                                            showPhaseMod ? 'bg-[#C27A5D]' : 'bg-stone-300 dark:bg-stone-800'
                                         }`}
-                                    />
-                                </button>
+                                        aria-label="Toggle phase-specific modifications"
+                                    >
+                                        <div
+                                            className={`w-6 h-6 rounded-full bg-white dark:bg-stone-900 shadow-md transform transition-transform duration-500 ease-in-out ${
+                                                showPhaseMod ? 'translate-x-6' : 'translate-x-0'
+                                            }`}
+                                        />
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         {/* Sequential Ritual List */}
                         <div className="space-y-6 animate-fade-rise-delay-2">

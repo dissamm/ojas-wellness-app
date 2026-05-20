@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Header } from '../components/Header';
 import { usePrakritiStore } from '../store/prakritiStore';
 import { useUserStore } from '../store/userStore';
+import { useCycleStore } from '../store/cycleStore';
 import { useRouter } from 'next/navigation';
 
 const PRAKRITI_QUESTIONS = [
@@ -349,6 +350,7 @@ export default function PrakritiPage() {
   const router = useRouter();
   const { setPrakriti } = usePrakritiStore();
   const { user } = useUserStore();
+  const { cycle } = useCycleStore();
   
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [scores, setScores] = useState({ Vata: 0, Pitta: 0, Kapha: 0 });
@@ -474,6 +476,20 @@ export default function PrakritiPage() {
     setSubmitted(false);
     setCalculatedBmi(null);
     localStorage.removeItem('prakriti');
+  };
+
+  const getNextStepRouteAndLabel = () => {
+    const isFemale = user?.gender !== 'male';
+    const hasCycle = cycle?.startDate || user?.menstrualCycleStart;
+    const hasMusic = (user?.musicPreferences && user.musicPreferences.length > 0) || (typeof window !== 'undefined' && localStorage.getItem('musicPreferencesSet') === 'true');
+
+    if (isFemale && !hasCycle) {
+      return { route: '/cycle', label: 'CONTINUE TO MOON SYNC →' };
+    } else if (!hasMusic) {
+      return { route: '/music', label: 'CONTINUE TO SOUND SANCTUARY →' };
+    } else {
+      return { route: '/dashboard', label: 'GO TO DASHBOARD →' };
+    }
   };
 
   const handleToggleChecklist = (id: string) => {
@@ -1372,10 +1388,10 @@ export default function PrakritiPage() {
                 ↺ RETAKE ANALYSIS
               </button>
               <button
-                onClick={() => router.push('/dashboard')}
+                onClick={() => router.push(getNextStepRouteAndLabel().route)}
                 className="flex-1 py-4 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1917] hover:bg-[#C27A5D] text-white transition-all duration-300 cursor-pointer shadow-md text-center"
               >
-                RETURN TO DASHBOARD
+                {getNextStepRouteAndLabel().label}
               </button>
             </div>
 

@@ -22,20 +22,25 @@ def init_db():
             dosha_composition TEXT,
             dominant_dosha TEXT,
             menstrual_cycle_start TEXT,
-            music_preferences TEXT
+            music_preferences TEXT,
+            gender TEXT
         )
     ''')
+    try:
+        cursor.execute("SELECT gender FROM users LIMIT 1")
+    except sqlite3.OperationalError:
+        cursor.execute("ALTER TABLE users ADD COLUMN gender TEXT")
     conn.commit()
     conn.close()
 
-def create_user(username, email, password, name):
+def create_user(username, email, password, name, gender=None):
     password_hash = generate_password_hash(password)
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
-            'INSERT INTO users (username, email, password_hash, name) VALUES (?, ?, ?, ?)',
-            (username, email, password_hash, name)
+            'INSERT INTO users (username, email, password_hash, name, gender) VALUES (?, ?, ?, ?, ?)',
+            (username, email, password_hash, name, gender)
         )
         conn.commit()
         user_id = cursor.lastrowid
@@ -59,7 +64,7 @@ def get_user_by_id(user_id):
     conn.close()
     return user
 
-def update_user_profile(user_id, name=None, dosha_composition=None, dominant_dosha=None, menstrual_cycle_start=None, music_preferences=None):
+def update_user_profile(user_id, name=None, dosha_composition=None, dominant_dosha=None, menstrual_cycle_start=None, music_preferences=None, gender=None):
     conn = get_db_connection()
     cursor = conn.cursor()
     
@@ -81,6 +86,9 @@ def update_user_profile(user_id, name=None, dosha_composition=None, dominant_dos
     if music_preferences is not None:
         updates.append("music_preferences = ?")
         params.append(music_preferences)
+    if gender is not None:
+        updates.append("gender = ?")
+        params.append(gender)
         
     if not updates:
         conn.close()

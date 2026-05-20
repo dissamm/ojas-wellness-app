@@ -16,13 +16,13 @@ export function getMusicRecommendations(phase: string, moodScore: number): Recom
     if (phaseLower.includes('follicular')) {
         if (moodScore >= 6) {
             return [
-                { title: "Firefly", artist: "When Chai Met Toast", mood: "Optimistic", spotifyUrl: "https://open.spotify.com/track/2NWh665tV458t6575121S2", youtubeUrl: "https://www.youtube.com/results?search_query=when+chai+met+toast+firefly" },
-                { title: "Shaayad", artist: "Taba Chake", mood: "Adaptable", spotifyUrl: "https://open.spotify.com/track/5c8c50cE5f0P61iZg8Cg8J", youtubeUrl: "https://www.youtube.com/results?search_query=taba+chake+shaayad" }
+                { title: "Firefly", artist: "When Chai Met Toast", mood: "Optimistic", spotifyUrl: "https://open.spotify.com/track/3JxsX5nmbAn0lMrOcD5gPA", youtubeUrl: "https://www.youtube.com/watch?v=N6M5J5K477o" },
+                { title: "Shaayad", artist: "Taba Chake", mood: "Adaptable", spotifyUrl: "https://open.spotify.com/track/6T1J61mB2sU6Ww8X5yS5gT", youtubeUrl: "https://www.youtube.com/watch?v=Cdys7CdwZac" }
             ];
         } else {
             return [
-                { title: "Kadam", artist: "Prateek Kuhad", mood: "Hopeful", spotifyUrl: "https://open.spotify.com/track/4WWh115tV458t6575121S1", youtubeUrl: "https://www.youtube.com/results?search_query=prateek+kuhad+kadam" },
-                { title: "Alag Aasmaan", artist: "Anuv Jain", mood: "Dreamy", spotifyUrl: "https://open.spotify.com/track/6WWh225tV458t6575121S2", youtubeUrl: "https://www.youtube.com/results?search_query=anuv+jain+alag+aasmaan" }
+                { title: "Kadam", artist: "Prateek Kuhad", mood: "Hopeful", spotifyUrl: "https://open.spotify.com/track/4jZ2L5vX4m6V7Yf5Z2lQ5o", youtubeUrl: "https://www.youtube.com/watch?v=3-5eP154i1M" },
+                { title: "Alag Aasmaan", artist: "Anuv Jain", mood: "Dreamy", spotifyUrl: "https://open.spotify.com/track/622bN1TjB2WJ5P22P29rS7", youtubeUrl: "https://www.youtube.com/watch?v=kY4e062V07g" }
             ];
         }
     }
@@ -30,9 +30,9 @@ export function getMusicRecommendations(phase: string, moodScore: number): Recom
     // Ovulatory Phase (Peak expressive power & transformation)
     if (phaseLower.includes('ovulat')) {
         return [
-            { title: "One Nation", artist: "Karsh Kale", mood: "Transcendent", spotifyUrl: "https://open.spotify.com/track/3HWh775tV458t6575121S4", youtubeUrl: "https://www.youtube.com/results?search_query=karsh+kale+one+nation" },
-            { title: "Jaago", artist: "Lifafa", mood: "Vibrant", spotifyUrl: "https://open.spotify.com/track/1HWh555tV458t6575121S9", youtubeUrl: "https://www.youtube.com/results?search_query=lifafa+jaago" },
-            { title: "Maybe Babe", artist: "When Chai Met Toast", mood: "Expressive", spotifyUrl: "https://open.spotify.com/track/8WWh885tV458t6575121S8", youtubeUrl: "https://www.youtube.com/results?search_query=when+chai+met+toast+maybe+babe" }
+            { title: "Milan", artist: "Karsh Kale", mood: "Transcendent", spotifyUrl: "https://open.spotify.com/track/4S93o77G5P3lKkO61a2JvR", youtubeUrl: "https://www.youtube.com/watch?v=A8vG4n3oU94" },
+            { title: "Jaago", artist: "Lifafa", mood: "Vibrant", spotifyUrl: "https://open.spotify.com/track/622hZ3kQ9n1T9aP0794s8S", youtubeUrl: "https://www.youtube.com/watch?v=R9jC76uPj3s" },
+            { title: "Maybe I Can Fly", artist: "When Chai Met Toast", mood: "Expressive", spotifyUrl: "https://open.spotify.com/track/1P5Y7I47d0iP9FqH7O6J1L", youtubeUrl: "https://www.youtube.com/watch?v=k5qG1p6g_tQ" }
         ];
     }
 
@@ -40,13 +40,13 @@ export function getMusicRecommendations(phase: string, moodScore: number): Recom
     if (phaseLower.includes('luteal')) {
         if (moodScore >= 5) {
             return [
-                { title: "Baarishein", artist: "Anuv Jain", mood: "Gentle", spotifyUrl: "https://open.spotify.com/track/5nAkv9yZkQ4gC0617v12S2", youtubeUrl: "https://www.youtube.com/results?search_query=anuv+jain+baarishein" },
-                { title: "Kho Gaye Hum Kahan", artist: "Prateek Kuhad", mood: "Nostalgic", spotifyUrl: "https://open.spotify.com/track/9WWh995tV458t6575121S9", youtubeUrl: "https://www.youtube.com/results?search_query=prateek+kuhad+kho+gaye+hum+kahan" }
+                { title: "Baarishein", artist: "Anuv Jain", mood: "Gentle", spotifyUrl: "https://open.spotify.com/track/4j51B6M07N22Qd8jU1364a", youtubeUrl: "https://www.youtube.com/watch?v=kY4e1FN_p4I" },
+                { title: "Kho Gaye Hum Kahan", artist: "Prateek Kuhad", mood: "Nostalgic", spotifyUrl: "https://open.spotify.com/track/629H5C42o1T4F1aXk9D15T", youtubeUrl: "https://www.youtube.com/watch?v=vt4jX0iRgCg" }
             ];
         } else {
             return [
-                { title: "Nikamma", artist: "Lifafa", mood: "Reflective", spotifyUrl: "https://open.spotify.com/track/5WWh555tV458t6575121S5", youtubeUrl: "https://www.youtube.com/results?search_query=lifafa+nikamma" },
-                { title: "Tune Kaha", artist: "Prateek Kuhad", mood: "Melancholic", spotifyUrl: "https://open.spotify.com/track/2WWh225tV458t6575121S2", youtubeUrl: "https://www.youtube.com/results?search_query=prateek+kuhad+tune+kaha" }
+                { title: "Nikamma", artist: "Lifafa", mood: "Reflective", spotifyUrl: "https://open.spotify.com/track/4jV1KxW4Z04O148Zf7048A", youtubeUrl: "https://www.youtube.com/watch?v=Jm9n_b9Cj0k" },
+                { title: "Tune Kaha", artist: "Prateek Kuhad", mood: "Melancholic", spotifyUrl: "https://open.spotify.com/track/4jV1f2aK16W6yJtL6nE5Yh", youtubeUrl: "https://www.youtube.com/watch?v=1M7zX6qB-j4" }
             ];
         }
     }
@@ -54,15 +54,15 @@ export function getMusicRecommendations(phase: string, moodScore: number): Recom
     // Menstrual Phase (Deep physical & spiritual rest)
     if (phaseLower.includes('menstrual')) {
         return [
-            { title: "Cold/Mess", artist: "Prateek Kuhad", mood: "Cathartic", spotifyUrl: "https://open.spotify.com/track/1BWh445tV458t6575121S6", youtubeUrl: "https://www.youtube.com/results?search_query=prateek+kuhad+cold+mess" },
-            { title: "Aasmaan", artist: "Taba Chake", mood: "Calming", spotifyUrl: "https://open.spotify.com/track/4c8c40cE5f0P61iZg8Cg8J", youtubeUrl: "https://www.youtube.com/results?search_query=taba+chake+aasmaan" },
-            { title: "In Dino", artist: "Lifafa", mood: "Soulful", spotifyUrl: "https://open.spotify.com/track/3WWh335tV458t6575121S3", youtubeUrl: "https://www.youtube.com/results?search_query=lifafa+in+dino" }
+            { title: "Cold/Mess", artist: "Prateek Kuhad", mood: "Cathartic", spotifyUrl: "https://open.spotify.com/track/46k1aD331rVnL3i0y6p2i0", youtubeUrl: "https://www.youtube.com/watch?v=Il7Nv270zNk" },
+            { title: "Aao Chalein", artist: "Taba Chake", mood: "Calming", spotifyUrl: "https://open.spotify.com/track/6Zp6t5H0Qf32v24w6w4X9G", youtubeUrl: "https://www.youtube.com/watch?v=jJSn-HWPDdg" },
+            { title: "Din Raat", artist: "Lifafa", mood: "Soulful", spotifyUrl: "https://open.spotify.com/track/3u1tS1h2363t4lW4n30j34", youtubeUrl: "https://www.youtube.com/watch?v=kYJp6yCqF00" }
         ];
     }
 
     // Default Fallback
     return [
-        { title: "Shaayad", artist: "Taba Chake", mood: "Calm", spotifyUrl: "https://open.spotify.com/track/5c8c50cE5f0P61iZg8Cg8J", youtubeUrl: "https://www.youtube.com/results?search_query=taba+chake+shaayad" },
-        { title: "Cold/Mess", artist: "Prateek Kuhad", mood: "Reflective", spotifyUrl: "https://open.spotify.com/track/1BWh445tV458t6575121S6", youtubeUrl: "https://www.youtube.com/results?search_query=prateek+kuhad+cold+mess" }
+        { title: "Shaayad", artist: "Taba Chake", mood: "Calm", spotifyUrl: "https://open.spotify.com/track/6T1J61mB2sU6Ww8X5yS5gT", youtubeUrl: "https://www.youtube.com/watch?v=Cdys7CdwZac" },
+        { title: "Cold/Mess", artist: "Prateek Kuhad", mood: "Reflective", spotifyUrl: "https://open.spotify.com/track/46k1aD331rVnL3i0y6p2i0", youtubeUrl: "https://www.youtube.com/watch?v=Il7Nv270zNk" }
     ];
 }

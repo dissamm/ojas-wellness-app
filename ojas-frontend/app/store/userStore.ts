@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { API_BASE_URL } from '../lib/api';
+import { useCycleStore } from './cycleStore';
 
 export interface UserData {
     id?: number;
@@ -14,6 +15,7 @@ export interface UserData {
     dominantDosha: string;
     menstrualCycleStart?: Date | string;
     musicPreferences?: string[];
+    gender?: string;
 }
 
 export interface AppState {
@@ -34,7 +36,7 @@ export interface AppState {
     setToken: (token: string | null) => void;
     logout: () => void;
     loginUser: (email: string, password: string) => Promise<boolean>;
-    registerUser: (username: string, email: string, password: string, name: string) => Promise<boolean>;
+    registerUser: (username: string, email: string, password: string, name: string, gender: string) => Promise<boolean>;
     syncUserProfile: () => Promise<void>;
     loadProfileFromToken: () => Promise<void>;
 }
@@ -45,6 +47,7 @@ export const useUserStore = create<AppState>((set, get) => ({
         name: '',
         doshaComposition: { vata: 0, pitta: 0, kapha: 0 },
         dominantDosha: '',
+        gender: 'female',
     },
     assessmentAnswers: {},
     token: typeof window !== 'undefined' ? localStorage.getItem('token') : null,
@@ -68,7 +71,11 @@ export const useUserStore = create<AppState>((set, get) => ({
             localStorage.removeItem('dominantPrakriti');
             localStorage.removeItem('prakriti_quiz_progress');
             localStorage.removeItem('prakriti_quiz_answers');
+            localStorage.removeItem('cycle');
+            localStorage.removeItem('musicPreferencesSet');
+            localStorage.removeItem('ojas_checklist_state');
         }
+        useCycleStore.getState().clearCycle();
         set({
             token: null,
             isAuthenticated: false,
@@ -76,6 +83,7 @@ export const useUserStore = create<AppState>((set, get) => ({
                 name: '',
                 doshaComposition: { vata: 0, pitta: 0, kapha: 0 },
                 dominantDosha: '',
+                gender: 'female',
             },
             assessmentAnswers: {},
             currentStep: 'name'
@@ -108,12 +116,23 @@ export const useUserStore = create<AppState>((set, get) => ({
         }
     },
 
-    registerUser: async (username, email, password, name) => {
+    registerUser: async (username, email, password, name, gender) => {
         try {
+            if (typeof window !== 'undefined') {
+                localStorage.removeItem('cycle');
+                localStorage.removeItem('musicPreferencesSet');
+                localStorage.removeItem('prakriti');
+                localStorage.removeItem('dominantPrakriti');
+                localStorage.removeItem('prakriti_quiz_progress');
+                localStorage.removeItem('prakriti_quiz_answers');
+                localStorage.removeItem('ojas_checklist_state');
+            }
+            useCycleStore.getState().clearCycle();
+
             const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, email, password, name })
+                body: JSON.stringify({ username, email, password, name, gender })
             });
             const data = await response.json();
             if (data.success) {
@@ -144,7 +163,8 @@ export const useUserStore = create<AppState>((set, get) => ({
                     doshaComposition: user.doshaComposition,
                     dominantDosha: user.dominantDosha,
                     menstrualCycleStart: user.menstrualCycleStart,
-                    musicPreferences: user.musicPreferences
+                    musicPreferences: user.musicPreferences,
+                    gender: user.gender
                 })
             });
         } catch (err) {

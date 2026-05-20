@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Header } from '../components/Header';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
@@ -128,6 +129,7 @@ const LotusLogo = ({ size = "lg", animated = true }) => {
 };
 
 export default function Dashboard() {
+  const router = useRouter();
   const { prakriti, dominantPrakriti } = usePrakritiStore();
   const { cycle } = useCycleStore();
   const { currentEnergy, currentMood, dailyAffirmation } = useAppStore();
@@ -136,6 +138,42 @@ export default function Dashboard() {
   const dominantDoshaText = getDominantDoshaLabel(user, prakriti, dominantPrakriti);
   
   const [greeting, setGreeting] = useState("Good morning");
+
+  // Client-side sequential onboarding guards
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.replace('/login');
+      return;
+    }
+
+    if (user && user.name) {
+      // 1. Check Prakriti
+      const hasPrakriti = localStorage.getItem('prakriti') || user.dominantDosha;
+      if (!hasPrakriti) {
+        router.replace('/prakriti');
+        return;
+      }
+
+      // 2. Check Cycle (if female)
+      if (user.gender !== 'male') {
+        const hasCycle = cycle?.startDate || user.menstrualCycleStart;
+        if (!hasCycle) {
+          router.replace('/cycle');
+          return;
+        }
+      }
+
+      // 3. Check Music
+      const hasMusic = (user.musicPreferences && user.musicPreferences.length > 0) || localStorage.getItem('musicPreferencesSet') === 'true';
+      if (!hasMusic) {
+        router.replace('/music');
+        return;
+      }
+    }
+  }, [user, cycle, router]);
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -153,7 +191,7 @@ export default function Dashboard() {
     musicRecommendations,
   } = useMoodPrediction(cycle, dominantDoshaText);
 
-  const allRituals = getRitualsForDosha(dominantDoshaText, cyclePhase, true);
+  const allRituals = getRitualsForDosha(dominantDoshaText, cyclePhase, user?.gender !== 'male');
   const topThreeRituals = getTopThreeRituals(allRituals);
 
   const formattedDate = new Date().toLocaleDateString('en-US', { 
@@ -167,6 +205,19 @@ export default function Dashboard() {
   const pittaVal = user?.doshaComposition?.pitta || prakriti?.pitta || 45;
   const kaphaVal = user?.doshaComposition?.kapha || prakriti?.kapha || 20;
 
+  const getDinacharyaPhase = () => {
+    const hour = new Date().getHours();
+    if (hour >= 6 && hour < 10) return { phase: "Kapha (Stabilizing)", tip: "Ideal for steady physical work, light exercise, and grounding routines." };
+    if (hour >= 10 && hour < 14) return { phase: "Pitta (Transformation)", tip: "Highest solar fire. Perfect time for your largest meal and complex problem-solving." };
+    if (hour >= 14 && hour < 18) return { phase: "Vata (Activity)", tip: "High mental agility. Focus on creative pursuits, communication, and brainstorming." };
+    if (hour >= 18 && hour < 22) return { phase: "Kapha (Restoration)", tip: "Wind down, eat a light dinner, and prepare for deep cellular rest." };
+    return { phase: "Brahma Muhurta / Cleanse", tip: "Internal renewal. Ideal for meditation, deep sleep, and spiritual aligning." };
+  };
+
+  const musicPrefs = user?.musicPreferences && user.musicPreferences.length > 0
+    ? user.musicPreferences.map((p: string) => p.charAt(0).toUpperCase() + p.slice(1)).join(", ")
+    : "Solfeggio Frequencies & Calibrated Indie Pop";
+
   return (
     <div className="min-h-screen bg-background text-foreground font-inter selection:bg-[#C27A5D]/10 flex flex-col justify-between transition-colors duration-500">
       <div>
@@ -174,6 +225,96 @@ export default function Dashboard() {
         <Disclaimer className="mt-6 -mb-4" />
         
         <main className="max-w-7xl mx-auto px-6 py-10 md:px-12 md:py-14 w-full">
+          {/* Compiled Resonance Blueprint Banner */}
+          <div className="mb-10 animate-fade-rise">
+            <Card className="p-6 md:p-8 bg-[#FAF6F0]/80 dark:bg-stone-900/60 border border-[#C27A5D]/20 dark:border-stone-800 relative overflow-hidden backdrop-blur-md">
+              {/* Subtle background graphics */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#C27A5D]/5 rounded-full blur-3xl pointer-events-none" />
+              
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-stone-200/50 dark:border-stone-800 pb-6 mb-6">
+                <div>
+                  <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-bold block mb-1">
+                    INTEGRATED AYURVEDIC MATRIX
+                  </span>
+                  <h2 className="text-2xl md:text-3xl font-serif font-normal text-[#1C1917] dark:text-[#FAF6F0]">
+                    Your Resonance <span className="italic text-[#C27A5D]">Blueprint</span>
+                  </h2>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-stone-500 dark:text-stone-400">
+                    Live Portal Compiled
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* 1. Prakriti Component */}
+                <div className="flex flex-col gap-2">
+                  <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold flex items-center gap-2">
+                    <span>🧬</span> CONSTITUTION
+                  </div>
+                  <div>
+                    <h3 className="font-serif italic text-xl text-[#1C1917] dark:text-[#FAF6F0] mb-1">
+                      {dominantDoshaText}-Dominant
+                    </h3>
+                    <p className="text-xs text-stone-555 dark:text-stone-400 leading-relaxed font-inter">
+                      Pitta {pittaVal}% • Vata {vataVal}% • Kapha {kaphaVal}%. Keep fire balanced with soothing rituals.
+                    </p>
+                  </div>
+                </div>
+
+                {/* 2. Cycle / Solar Alignment Component */}
+                <div className="flex flex-col gap-2">
+                  {user?.gender === 'male' ? (
+                    <>
+                      <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold flex items-center gap-2">
+                        <span>☀️</span> SOLAR DINACHARYA
+                      </div>
+                      <div>
+                        <h3 className="font-serif italic text-xl text-[#1C1917] dark:text-[#FAF6F0] mb-1">
+                          {getDinacharyaPhase().phase}
+                        </h3>
+                        <p className="text-xs text-stone-555 dark:text-stone-400 leading-relaxed font-inter">
+                          {getDinacharyaPhase().tip}
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold flex items-center gap-2">
+                        <span>🌙</span> LUNAR CYCLE SYNC
+                      </div>
+                      <div>
+                        <h3 className="font-serif italic text-xl text-[#1C1917] dark:text-[#FAF6F0] mb-1">
+                          {cyclePhase} Phase
+                        </h3>
+                        <p className="text-xs text-stone-555 dark:text-stone-400 leading-relaxed font-inter">
+                          Day {cycleDay} of {cycle?.cycleLengthDays || 28}. Aligned with {moonPhase || 'Moon cycles'}.
+                        </p>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* 3. Acoustic Signature Component */}
+                <div className="flex flex-col gap-2">
+                  <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold flex items-center gap-2">
+                    <span>🎵</span> ACOUSTIC SIGNATURE
+                  </div>
+                  <div>
+                    <h3 className="font-serif italic text-xl text-[#1C1917] dark:text-[#FAF6F0] mb-1">
+                      {currentEnergy ? `${currentEnergy * 10}% Vibe` : "70% Vibe Calibrated"}
+                    </h3>
+                    <p className="text-xs text-stone-555 dark:text-stone-400 leading-relaxed font-inter truncate">
+                      Preferred: {musicPrefs}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+
           {/* Main 2-Column Responsive Layout Grid */}
           <div className="grid lg:grid-cols-12 gap-10 md:gap-14 items-start">
             
@@ -202,7 +343,7 @@ export default function Dashboard() {
 
               {/* Daily Affirmation: Typographic block */}
               <div className="w-full border-l border-[#C27A5D]/30 pl-6 py-2 select-none">
-                <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500 mb-2 font-semibold">
+                <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-stone-400 dark:text-stone-550 mb-2 font-semibold">
                   DAILY AFFIRMATION
                 </div>
                 <p className="text-xl md:text-2xl font-instrument-serif italic text-stone-905 dark:text-stone-100 leading-relaxed">
@@ -278,7 +419,7 @@ export default function Dashboard() {
               
               {/* Unified Cosmic Metrics Panel */}
               <Card className="p-6 md:p-8 bg-white/40 dark:bg-stone-900/30 border border-stone-200/10 dark:border-stone-850 backdrop-blur-md">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-2 divide-y md:divide-y-0 md:divide-x divide-stone-200/15 dark:divide-stone-850">
+                <div className={`grid grid-cols-1 ${user?.gender === 'male' ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6 md:gap-2 divide-y md:divide-y-0 md:divide-x divide-stone-200/15 dark:divide-stone-850`}>
                   
                   {/* Energy Section */}
                   <div className="pb-4 md:pb-0 md:pr-4 md:pl-2 first:pl-0 last:pr-0">
@@ -297,94 +438,113 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  {/* Mood Estimate Section */}
-                  <div className="pt-4 pb-4 md:pt-0 md:pb-0 md:px-6">
-                    <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] mb-1.5 font-semibold flex items-center justify-between">
-                      <span>MOOD SYNC</span>
-                      <span className="text-[#C27A5D]">✦</span>
+                  {/* Mood Estimate or Constitution Section */}
+                  {user?.gender === 'male' ? (
+                    <div className="pt-4 pb-4 md:pt-0 md:pb-0 md:px-6">
+                      <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] mb-1.5 font-semibold flex items-center justify-between">
+                        <span>CONSTITUTION</span>
+                        <span className="text-[#C27A5D]">✦</span>
+                      </div>
+                      <div className="font-serif italic text-3xl font-semibold text-[#1C1917] dark:text-[#FAF6F0] mb-1">
+                        {dominantDoshaText}
+                      </div>
+                      <div className="text-[9px] font-mono text-stone-400 dark:text-stone-550 uppercase tracking-widest leading-relaxed">
+                        Dominant Dosha
+                      </div>
                     </div>
-                    <div className="font-serif italic text-3xl font-semibold text-[#1C1917] dark:text-[#FAF6F0] mb-1">
-                      {predictedMood !== null ? `${predictedMood}/10` : currentMood || "Reflective"}
+                  ) : (
+                    <div className="pt-4 pb-4 md:pt-0 md:pb-0 md:px-6">
+                      <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] mb-1.5 font-semibold flex items-center justify-between">
+                        <span>MOOD SYNC</span>
+                        <span className="text-[#C27A5D]">✦</span>
+                      </div>
+                      <div className="font-serif italic text-3xl font-semibold text-[#1C1917] dark:text-[#FAF6F0] mb-1">
+                        {predictedMood !== null ? `${predictedMood}/10` : currentMood || "Reflective"}
+                      </div>
+                      <div className="text-[9px] font-mono text-stone-400 dark:text-stone-550 uppercase tracking-widest leading-relaxed">
+                        {moodType ? `${moodType} Resonance` : "Reflective state"}
+                      </div>
                     </div>
-                    <div className="text-[9px] font-mono text-stone-400 dark:text-stone-550 uppercase tracking-widest leading-relaxed">
-                      {moodType ? `${moodType} Resonance` : "Reflective state"}
-                    </div>
-                  </div>
+                  )}
 
                   {/* Cycle State Section */}
-                  <div className="pt-4 md:pt-0 md:pl-6">
-                    <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] mb-1.5 font-semibold flex items-center justify-between">
-                      <span>CYCLE STATE</span>
-                      <span className="text-stone-300 dark:text-stone-700">✦</span>
+                  {user?.gender !== 'male' && (
+                    <div className="pt-4 md:pt-0 md:pl-6">
+                      <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] mb-1.5 font-semibold flex items-center justify-between">
+                        <span>CYCLE STATE</span>
+                        <span className="text-stone-300 dark:text-stone-700">✦</span>
+                      </div>
+                      <div className="font-serif italic text-3xl font-semibold text-[#1C1917] dark:text-[#FAF6F0] mb-1">
+                        {cyclePhase}
+                      </div>
+                      <div className="text-[9px] font-mono text-stone-400 dark:text-stone-550 uppercase tracking-wider mb-2">
+                        {cycle ? `Day ${cycleDay} of ${cycle.cycleLengthDays || 28}` : `Day ${cycleDay} of 28`}
+                        {moonPhase && ` • ${moonPhase}`}
+                      </div>
+                      <Link 
+                        href="/cycle" 
+                        className="text-[9px] font-mono uppercase tracking-wider text-[#C27A5D] border-b border-[#C27A5D]/30 hover:text-stone-900 dark:hover:text-white transition-colors inline-block"
+                      >
+                        View Alignment →
+                      </Link>
                     </div>
-                    <div className="font-serif italic text-3xl font-semibold text-[#1C1917] dark:text-[#FAF6F0] mb-1">
-                      {cyclePhase}
-                    </div>
-                    <div className="text-[9px] font-mono text-stone-400 dark:text-stone-550 uppercase tracking-wider mb-2">
-                      {cycle ? `Day ${cycleDay} of ${cycle.cycleLengthDays || 28}` : `Day ${cycleDay} of 28`}
-                      {moonPhase && ` • ${moonPhase}`}
-                    </div>
-                    <Link 
-                      href="/cycle" 
-                      className="text-[9px] font-mono uppercase tracking-wider text-[#C27A5D] border-b border-[#C27A5D]/30 hover:text-stone-900 dark:hover:text-white transition-colors inline-block"
-                    >
-                      View Alignment →
-                    </Link>
-                  </div>
+                  )}
 
                 </div>
               </Card>
 
               {/* Seasonal Rhythm Card */}
-              <Card>
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="font-serif italic text-2xl text-stone-900 dark:text-[#FAF6F0] font-normal">
-                    Seasonal Rhythm
-                  </h2>
-                  <Link href="/cycle" className="text-[10px] font-mono uppercase tracking-wider text-stone-400 border-b border-stone-300 dark:border-stone-700 hover:text-stone-900 dark:hover:text-white transition-colors">
-                    View details
-                  </Link>
-                </div>
-                
-                <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-stone-400 mb-8 font-semibold">
-                  CYCLE PHASE TIMELINE
-                </div>
-
-                {/* Timeline display */}
-                <div className="relative pt-4 pb-2 px-2">
-                  <div className="absolute top-[34px] left-0 right-0 h-0.5 bg-stone-200/60 dark:bg-stone-800" />
-                  <div className="relative flex justify-between">
-                    {['Menstrual', 'Follicular', 'Ovulatory', 'Luteal'].map((phase) => {
-                      const isActive = cyclePhase 
-                        ? (cyclePhase.toLowerCase() === phase.toLowerCase() || 
-                           (cyclePhase.toLowerCase() === 'ovulation' && phase === 'Ovulatory'))
-                        : phase === 'Follicular';
-                      return (
-                        <div key={phase} className="flex flex-col items-center">
-                          {/* Timeline dot */}
-                          <div 
-                            className={`w-4 h-4 rounded-full border-2 bg-white dark:bg-stone-900 z-10 transition-all duration-500 mb-3 flex items-center justify-center ${
-                              isActive 
-                                ? 'border-[#C27A5D] scale-125 shadow-sm shadow-[#C27A5D]/20' 
-                                : 'border-stone-300 dark:border-stone-750'
-                            }`}
-                          >
-                            {isActive && <div className="w-1.5 h-1.5 rounded-full bg-[#C27A5D]" />}
-                          </div>
-                          {/* Timeline label */}
-                          <p 
-                            className={`text-[9px] md:text-[10px] font-mono uppercase tracking-[0.15em] transition-colors duration-500 ${
-                              isActive ? 'text-[#C27A5D] font-semibold' : 'text-stone-400 dark:text-stone-500'
-                            }`}
-                          >
-                            {phase}
-                          </p>
-                        </div>
-                      );
-                    })}
+              {user?.gender !== 'male' && (
+                <Card>
+                  <div className="flex justify-between items-center mb-6">
+                    <h2 className="font-serif italic text-2xl text-stone-900 dark:text-[#FAF6F0] font-normal">
+                      Seasonal Rhythm
+                    </h2>
+                    <Link href="/cycle" className="text-[10px] font-mono uppercase tracking-wider text-stone-400 border-b border-stone-300 dark:border-stone-700 hover:text-stone-900 dark:hover:text-white transition-colors">
+                      View details
+                    </Link>
                   </div>
-                </div>
-              </Card>
+                  
+                  <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-stone-400 mb-8 font-semibold">
+                    CYCLE PHASE TIMELINE
+                  </div>
+
+                  {/* Timeline display */}
+                  <div className="relative pt-4 pb-2 px-2">
+                    <div className="absolute top-[34px] left-0 right-0 h-0.5 bg-stone-200/60 dark:bg-stone-800" />
+                    <div className="relative flex justify-between">
+                      {['Menstrual', 'Follicular', 'Ovulatory', 'Luteal'].map((phase) => {
+                        const isActive = cyclePhase 
+                          ? (cyclePhase.toLowerCase() === phase.toLowerCase() || 
+                             (cyclePhase.toLowerCase() === 'ovulation' && phase === 'Ovulatory'))
+                          : phase === 'Follicular';
+                        return (
+                          <div key={phase} className="flex flex-col items-center">
+                            {/* Timeline dot */}
+                            <div 
+                              className={`w-4 h-4 rounded-full border-2 bg-white dark:bg-stone-900 z-10 transition-all duration-500 mb-3 flex items-center justify-center ${
+                                isActive 
+                                  ? 'border-[#C27A5D] scale-125 shadow-sm shadow-[#C27A5D]/20' 
+                                  : 'border-stone-300 dark:border-stone-750'
+                              }`}
+                            >
+                              {isActive && <div className="w-1.5 h-1.5 rounded-full bg-[#C27A5D]" />}
+                            </div>
+                            {/* Timeline label */}
+                            <p 
+                              className={`text-[9px] md:text-[10px] font-mono uppercase tracking-[0.15em] transition-colors duration-500 ${
+                                isActive ? 'text-[#C27A5D] font-semibold' : 'text-stone-400 dark:text-stone-500'
+                              }`}
+                            >
+                              {phase}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </Card>
+              )}
 
               {/* Recommended Songs Card */}
               {musicRecommendations && musicRecommendations.length > 0 && (

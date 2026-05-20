@@ -7,6 +7,7 @@ import { useUserStore } from '../store/userStore';
 import { Header } from '../components/Header';
 import { Card } from '../components/Card';
 import { Input } from '../components/Input';
+import { Select } from '../components/Select';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -16,12 +17,13 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [gender, setGender] = useState('female');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username || !email || !name || !password) {
+    if (!username || !email || !name || !password || !gender) {
       setError('All fields are required.');
       return;
     }
@@ -30,7 +32,7 @@ export default function RegisterPage() {
     setError('');
 
     try {
-      const success = await registerUser(username, email, password, name);
+      const success = await registerUser(username, email, password, name, gender);
       if (success) {
         // New user registered -> begin Prakriti questionnaire
         router.push('/prakriti');
@@ -108,6 +110,18 @@ export default function RegisterPage() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={loading}
+                />
+
+                <Select
+                  label="Biological Sex"
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                  options={[
+                    { value: 'female', label: 'Female' },
+                    { value: 'male', label: 'Male' }
+                  ]}
                   required
                   disabled={loading}
                 />
