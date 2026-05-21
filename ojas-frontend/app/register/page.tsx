@@ -7,7 +7,31 @@ import { useUserStore } from '../store/userStore';
 import { Header } from '../components/Header';
 import { Card } from '../components/Card';
 import { Input } from '../components/Input';
-import { Select } from '../components/Select';
+import { Check, X } from 'lucide-react';
+
+const hasSequentialCharacters = (val: string): boolean => {
+  if (val.length < 3) return false;
+  const str = val.toLowerCase();
+  for (let i = 0; i <= str.length - 3; i++) {
+    const code1 = str.charCodeAt(i);
+    const code2 = str.charCodeAt(i + 1);
+    const code3 = str.charCodeAt(i + 2);
+
+    const isDigit = (c: number) => c >= 48 && c <= 57;
+    const isLetter = (c: number) => c >= 97 && c <= 122;
+
+    const allDigits = isDigit(code1) && isDigit(code2) && isDigit(code3);
+    const allLetters = isLetter(code1) && isLetter(code2) && isLetter(code3);
+
+    if (allDigits || allLetters) {
+      if ((code2 === code1 + 1 && code3 === code2 + 1) || // ascending
+          (code2 === code1 - 1 && code3 === code2 - 1)) {  // descending
+        return true;
+      }
+    }
+  }
+  return false;
+};
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -20,11 +44,28 @@ export default function RegisterPage() {
   const [gender, setGender] = useState('female');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showRules, setShowRules] = useState(false);
+  const [passwordWarning, setPasswordWarning] = useState('');
+
+  const hasSequential = hasSequentialCharacters(password);
+  const rules = [
+    { id: 'length', label: 'Minimum 6 characters', valid: password.length >= 6 },
+    { id: 'uppercase', label: 'At least 1 uppercase letter (A–Z)', valid: /[A-Z]/.test(password) },
+    { id: 'digit', label: 'At least 1 digit (0–9)', valid: /\d/.test(password) },
+    { id: 'special', label: 'At least 1 special character (e.g. !@#$%^&*)', valid: /[^A-Za-z0-9]/.test(password) },
+    { id: 'sequence', label: 'No sequential characters (e.g. 123, abc)', valid: !hasSequential },
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username || !email || !name || !password || !gender) {
       setError('All fields are required.');
+      return;
+    }
+
+    const allRulesSatisfied = rules.every((r) => r.valid);
+    if (!allRulesSatisfied) {
+      setPasswordWarning('Password does not meet all requirements');
       return;
     }
 
@@ -104,27 +145,79 @@ export default function RegisterPage() {
                   disabled={loading}
                 />
 
-                <Input
-                  type="password"
-                  label="Password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  disabled={loading}
-                />
+                <div>
+                  <Input
+                    type="password"
+                    label="Password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (passwordWarning) setPasswordWarning('');
+                    }}
+                    onFocus={() => setShowRules(true)}
+                    required
+                    disabled={loading}
+                  />
+                  {passwordWarning && (
+                    <p className="text-red-500 font-mono text-[10px] uppercase tracking-wider mt-1">
+                      ⚠️ {passwordWarning}
+                    </p>
+                  )}
+                  {showRules && (
+                    <div className="mt-2.5 p-3 rounded-2xl bg-[#FAF6F0]/50 dark:bg-stone-900/50 border border-stone-200/50 dark:border-stone-800/50 space-y-1.5 animate-fade-in">
+                      <p className="text-[9px] font-mono uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-1 font-bold">
+                        Password Requirements
+                      </p>
+                      <ul className="space-y-1">
+                        {rules.map((rule) => (
+                          <li key={rule.id} className="flex items-center text-[10px] font-mono tracking-wide">
+                            {rule.valid ? (
+                              <Check size={12} className="text-green-600 dark:text-green-400 mr-1.5 flex-shrink-0 stroke-[2.5]" />
+                            ) : (
+                              <X size={12} className="text-red-500 dark:text-red-400 mr-1.5 flex-shrink-0 stroke-[2.5]" />
+                            )}
+                            <span className={rule.valid ? "text-stone-400 line-through decoration-stone-300/30" : "text-stone-600 dark:text-stone-300"}>
+                              {rule.label}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
 
-                <Select
-                  label="Biological Sex"
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                  options={[
-                    { value: 'female', label: 'Female' },
-                    { value: 'male', label: 'Male' }
-                  ]}
-                  required
-                  disabled={loading}
-                />
+                <div className="mb-5">
+                  <label className="block text-[9px] font-mono uppercase tracking-wider mb-1.5 font-bold text-stone-400">
+                    Biological Sex
+                  </label>
+                  <div className="flex w-full gap-3">
+                    <button
+                      type="button"
+                      disabled={loading}
+                      onClick={() => setGender('female')}
+                      className={`flex-1 py-3 px-4 rounded-2xl text-xs font-mono uppercase tracking-widest font-bold border transition-all duration-300 select-none cursor-pointer ${
+                        gender === 'female'
+                          ? "bg-[#C27A5D] border-[#C27A5D] text-white shadow-sm"
+                          : "bg-[#FAF6F0] border-stone-300/40 text-stone-600 dark:bg-stone-900/40 dark:border-stone-800 dark:text-stone-400 hover:border-[#C27A5D]/50 hover:text-stone-900 dark:hover:text-white"
+                      }`}
+                    >
+                      Female
+                    </button>
+                    <button
+                      type="button"
+                      disabled={loading}
+                      onClick={() => setGender('male')}
+                      className={`flex-1 py-3 px-4 rounded-2xl text-xs font-mono uppercase tracking-widest font-bold border transition-all duration-300 select-none cursor-pointer ${
+                        gender === 'male'
+                          ? "bg-[#C27A5D] border-[#C27A5D] text-white shadow-sm"
+                          : "bg-[#FAF6F0] border-stone-300/40 text-stone-600 dark:bg-stone-900/40 dark:border-stone-800 dark:text-stone-400 hover:border-[#C27A5D]/50 hover:text-stone-900 dark:hover:text-white"
+                      }`}
+                    >
+                      Male
+                    </button>
+                  </div>
+                </div>
 
                 {error && (
                   <p className="text-red-500 font-mono text-[10px] uppercase tracking-wider text-center mt-2">

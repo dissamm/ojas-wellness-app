@@ -4,9 +4,16 @@ import joblib
 import numpy as np
 import json
 import os
+import sys
 from datetime import datetime, timedelta
 import ephem
 import jwt
+
+# Reconfigure stdout/stderr to UTF-8 to avoid encoding errors on Windows
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8')
 from functools import wraps
 from database import init_db, create_user, get_user_by_email, get_user_by_id, update_user_profile
 
@@ -440,7 +447,8 @@ def serialize_user(user):
         'dominantDosha': user['dominant_dosha'],
         'menstrualCycleStart': user['menstrual_cycle_start'],
         'musicPreferences': json.loads(user['music_preferences']) if user['music_preferences'] else None,
-        'gender': user['gender'] if ('gender' in user.keys() and user['gender'] is not None) else 'female'
+        'gender': user['gender'] if ('gender' in user.keys() and user['gender'] is not None) else 'female',
+        'profilePicture': user['profile_picture'] if ('profile_picture' in user.keys() and user['profile_picture'] is not None) else None
     }
 
 @app.route('/api/auth/register', methods=['POST'])
@@ -453,16 +461,23 @@ def register():
         name = data.get('name')
         gender = data.get('gender', 'female')
         
+        print(f"[REGISTER DEBUG] Attempting signup for email: {email}, username: {username}")
+        
         if not username or not email or not password:
+            print("[REGISTER DEBUG] Missing required fields")
             return jsonify({'success': False, 'message': 'All fields are required'}), 400
             
         user_id = create_user(username, email, password, name, gender)
+        print(f"[REGISTER DEBUG] Database result user_id: {user_id}")
+        
         if not user_id:
+            print("[REGISTER DEBUG] Email or username already exists or database insert failed")
             return jsonify({'success': False, 'message': 'Username or Email already exists'}), 409
             
         token = generate_token(user_id)
         user = get_user_by_id(user_id)
         
+        print(f"[REGISTER DEBUG] Signup successful. Generated token length: {len(token) if token else 0}")
         return jsonify({
             'success': True,
             'message': 'Registration successful',
@@ -470,6 +485,7 @@ def register():
             'user': serialize_user(user)
         }), 201
     except Exception as e:
+        print(f"[REGISTER DEBUG] Exception raised: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 400
 
 @app.route('/api/auth/login', methods=['POST'])
@@ -479,15 +495,30 @@ def login():
         email = data.get('email')
         password = data.get('password')
         
+        print(f"[LOGIN DEBUG] Login attempt started for: {email}")
+        
         if not email or not password:
+            print("[LOGIN DEBUG] Email or password not provided in request")
             return jsonify({'success': False, 'message': 'Email and Password are required'}), 400
             
         from werkzeug.security import check_password_hash
         user = get_user_by_email(email)
-        if not user or not check_password_hash(user['password_hash'], password):
+        if not user:
+            print(f"[LOGIN DEBUG] No user found for email: {email}")
+            return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
+            
+        print(f"[LOGIN DEBUG] Found user id: {user['id']}, email: {user['email']}")
+        print(f"[LOGIN DEBUG] Verifying password hash: {user['password_hash']}")
+        
+        pw_match = check_password_hash(user['password_hash'], password)
+        print(f"[LOGIN DEBUG] Password verification result: {pw_match}")
+        
+        if not pw_match:
+            print("[LOGIN DEBUG] Password verification failed")
             return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
             
         token = generate_token(user['id'])
+        print(f"[LOGIN DEBUG] Login success for user {user['id']}. Generated token.")
         
         return jsonify({
             'success': True,
@@ -496,6 +527,7 @@ def login():
             'user': serialize_user(user)
         })
     except Exception as e:
+        print(f"[LOGIN DEBUG] Exception raised: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 400
 
 @app.route('/api/auth/me', methods=['GET'])
@@ -517,6 +549,7 @@ def update_profile(current_user):
         menstrual_cycle_start = data.get('menstrualCycleStart')
         music_preferences = data.get('musicPreferences')
         gender = data.get('gender')
+        profile_picture = data.get('profilePicture')
         
         # Serialize JSON fields if present
         dosha_comp_str = json.dumps(dosha_composition) if dosha_composition is not None else None
@@ -529,7 +562,8 @@ def update_profile(current_user):
             dominant_dosha=dominant_dosha,
             menstrual_cycle_start=menstrual_cycle_start,
             music_preferences=music_pref_str,
-            gender=gender
+            gender=gender,
+            profile_picture=profile_picture
         )
         
         if not success:
@@ -541,6 +575,84 @@ def update_profile(current_user):
             'success': True,
             'message': 'Profile updated successfully',
             'user': serialize_user(updated_user)
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+@app.route('/api/auth/change-email', methods=['POST'])
+@token_required
+def change_email(current_user):
+    try:
+        data = request.json
+        new_email = data.get('newEmail')
+        password = data.get('password')
+        
+        if not new_email or not password:
+            return jsonify({'success': False, 'message': 'New email and password are required'}), 400
+            
+        from werkzeug.security import check_password_hash
+        # Verify password
+        if not check_password_hash(current_user['password_hash'], password):
+            return jsonify({'success': False, 'message': 'Incorrect password'}), 401
+            
+        # Import helpers from database
+        from database import change_user_email, get_user_by_id
+        success = change_user_email(current_user['id'], new_email)
+        if not success:
+            return jsonify({'success': False, 'message': 'Email already in use'}), 409
+            
+        updated_user = get_user_by_id(current_user['id'])
+        return jsonify({
+            'success': True,
+            'message': 'Email updated successfully',
+            'user': serialize_user(updated_user)
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+@app.route('/api/auth/change-password', methods=['POST'])
+@token_required
+def change_password(current_user):
+    try:
+        data = request.json
+        current_password = data.get('currentPassword')
+        new_password = data.get('newPassword')
+        
+        if not current_password or not new_password:
+            return jsonify({'success': False, 'message': 'Current and new passwords are required'}), 400
+            
+        from werkzeug.security import check_password_hash
+        # Verify current password
+        if not check_password_hash(current_user['password_hash'], current_password):
+            return jsonify({'success': False, 'message': 'Incorrect current password'}), 401
+            
+        # Update password
+        from database import change_user_password, get_user_by_id
+        success = change_user_password(current_user['id'], new_password)
+        if not success:
+            return jsonify({'success': False, 'message': 'Failed to update password'}), 500
+            
+        updated_user = get_user_by_id(current_user['id'])
+        return jsonify({
+            'success': True,
+            'message': 'Password updated successfully',
+            'user': serialize_user(updated_user)
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+@app.route('/api/auth/delete-account', methods=['POST'])
+@token_required
+def delete_account(current_user):
+    try:
+        from database import delete_user
+        success = delete_user(current_user['id'])
+        if not success:
+            return jsonify({'success': False, 'message': 'Failed to delete account'}), 500
+            
+        return jsonify({
+            'success': True,
+            'message': 'Account deleted successfully'
         })
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 400

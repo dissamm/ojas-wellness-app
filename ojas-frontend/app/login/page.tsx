@@ -30,7 +30,7 @@ export default function LoginPage() {
     try {
       const success = await loginUser(email, password);
       if (success) {
-        router.push('/dashboard');
+        router.push('/prakriti');
       } else {
         setError('Invalid email or password.');
       }

@@ -109,8 +109,12 @@ export default function MusicPage() {
             <h1 className="text-4xl md:text-5xl font-serif font-normal text-[#1C1917] dark:text-[#FAF6F0] leading-tight">
               Sound <span className="italic text-[#C27A5D]">Recommendations</span>
             </h1>
-            <p className="text-stone-500 dark:text-stone-400 text-sm mt-3 leading-relaxed font-inter">
-              High-resonance acoustic alignment curated to soothe your dominant Dosha and synchronize perfectly with predicted hormonal states.
+             <p className="text-stone-500 dark:text-stone-400 text-sm mt-3 leading-relaxed font-inter">
+              {user?.gender === 'male' ? (
+                'High-resonance acoustic alignment curated to soothe your dominant Dosha and elevate your daily wellness rhythms.'
+              ) : (
+                'High-resonance acoustic alignment curated to soothe your dominant Dosha and synchronize perfectly with predicted hormonal states.'
+              )}
             </p>
           </div>
 
@@ -119,10 +123,12 @@ export default function MusicPage() {
             <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400 dark:text-stone-500 bg-stone-100 dark:bg-stone-900/60 px-3 py-1 rounded-full border border-stone-200/40 dark:border-stone-800">
               🧬 Dominant Dosha: <span className="font-bold text-[#1C1917] dark:text-[#FAF6F0]">{user?.dominantDosha || selectedDosha}</span>
             </span>
-            <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400 dark:text-stone-500 bg-stone-100 dark:bg-stone-900/60 px-3 py-1 rounded-full border border-stone-200/40 dark:border-stone-800">
-              🌙 predicted phase: <span className="font-bold text-[#C27A5D]">{predictionPhase}</span>
-            </span>
-            {cycle && (
+            {user?.gender !== 'male' && (
+              <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400 dark:text-stone-500 bg-stone-100 dark:bg-stone-900/60 px-3 py-1 rounded-full border border-stone-200/40 dark:border-stone-800">
+                🌙 predicted phase: <span className="font-bold text-[#C27A5D]">{predictionPhase}</span>
+              </span>
+            )}
+            {user?.gender !== 'male' && cycle && (
               <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400 dark:text-stone-500 bg-stone-100 dark:bg-stone-900/60 px-3 py-1 rounded-full border border-stone-200/40 dark:border-stone-800">
                 📅 Sync Source: <span className="font-bold text-[#1C1917] dark:text-[#FAF6F0]">Menstrual Cycle Store</span>
               </span>
@@ -338,7 +344,11 @@ export default function MusicPage() {
                   )}
 
                   <p className="text-center text-[9px] font-mono text-stone-500 uppercase tracking-wider mt-6 block">
-                    ✨ Curated on predicted {predictionPhase} state and {energyLevel}/10 energy calibrations
+                    {user?.gender === 'male' ? (
+                      `✨ Curated on ${energyLevel}/10 energy calibrations`
+                    ) : (
+                      `✨ Curated on predicted ${predictionPhase} state and ${energyLevel}/10 energy calibrations`
+                    )}
                   </p>
                 </Card>
               ) : (

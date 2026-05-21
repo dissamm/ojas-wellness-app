@@ -28,10 +28,23 @@ const DOSHA_DETAILS = {
 };
 
 export const PrakritiResult = () => {
-    const { user, setCurrentStep, resetAssessment } = useUserStore();
+    const { user, setCurrentStep, resetAssessment, setDoshaComposition } = useUserStore();
     const dominant = (user.dominantDosha || 'Pitta') as keyof typeof DOSHA_DETAILS;
     const composition = user.doshaComposition || { vata: 33, pitta: 33, kapha: 34 };
     const details = DOSHA_DETAILS[dominant] || DOSHA_DETAILS.Pitta;
+
+    const handleRetakeClick = () => {
+        const confirmRetake = window.confirm("Are you sure? This will replace your current Prakriti results.");
+        if (!confirmRetake) return;
+
+        localStorage.removeItem('prakriti');
+        localStorage.removeItem('dominantPrakriti');
+        localStorage.removeItem('prakriti_quiz_progress');
+        localStorage.removeItem('prakriti_quiz_answers');
+
+        setDoshaComposition({ vata: 0, pitta: 0, kapha: 0 }, '');
+        resetAssessment();
+    };
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-start px-4 sm:px-6 py-8 sm:py-12 bg-[#F4EFEA] text-[#1C1917] selection:bg-[#C27A5D]/10 relative">
@@ -40,7 +53,7 @@ export const PrakritiResult = () => {
                 {/* 1. Top Sticky Control Panel: Instantly perform retake or continue actions */}
                 <div className="sticky top-4 z-30 mb-8 w-full bg-white/75 backdrop-blur-md rounded-2xl border border-stone-200/50 p-4 shadow-md flex items-center justify-between gap-4 animate-fade-rise">
                     <button
-                        onClick={() => resetAssessment()}
+                        onClick={handleRetakeClick}
                         className="px-4 sm:px-5 py-2.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider border border-[#C27A5D]/30 text-[#C27A5D] hover:bg-[#FAF6F0]/45 active:scale-[0.98] transition duration-300 cursor-pointer"
                     >
                         ↺ Retake Analysis

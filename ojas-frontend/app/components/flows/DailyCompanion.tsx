@@ -40,19 +40,21 @@ export const DailyCompanion = () => {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className={`grid grid-cols-1 ${user?.gender === 'male' ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-4`}>
                         <div className="p-4 bg-[#F4EFEA] rounded-2xl text-center border border-stone-200/40">
                             <p className="text-2xl mb-1">🌿</p>
                             <p className="text-[9px] font-mono text-stone-400 uppercase tracking-widest">Prakriti</p>
                             <p className="font-serif italic font-semibold text-stone-850 mt-1">{user.dominantDosha || 'Vata'}</p>
                         </div>
-                        <div className="p-4 bg-[#F4EFEA] rounded-2xl text-center border border-stone-200/40">
-                            <p className="text-2xl mb-1">🌙</p>
-                            <p className="text-[9px] font-mono text-stone-400 uppercase tracking-widest">Moon Sync</p>
-                            <p className="font-serif italic font-semibold text-stone-850 mt-1">
-                                {user.menstrualCycleStart ? 'Aligned' : 'Exploring'}
-                            </p>
-                        </div>
+                        {user?.gender !== 'male' && (
+                            <div className="p-4 bg-[#F4EFEA] rounded-2xl text-center border border-stone-200/40">
+                                <p className="text-2xl mb-1">🌙</p>
+                                <p className="text-[9px] font-mono text-stone-400 uppercase tracking-widest">Moon Sync</p>
+                                <p className="font-serif italic font-semibold text-stone-850 mt-1">
+                                    {user.menstrualCycleStart ? 'Aligned' : 'Exploring'}
+                                </p>
+                            </div>
+                        )}
                         <div className="p-4 bg-[#F4EFEA] rounded-2xl text-center border border-stone-200/40">
                             <p className="text-2xl mb-1">🎵</p>
                             <p className="text-[9px] font-mono text-stone-400 uppercase tracking-widest">Indie Pop</p>

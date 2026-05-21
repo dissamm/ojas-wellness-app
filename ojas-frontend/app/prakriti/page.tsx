@@ -349,7 +349,7 @@ const DOSHA_ICONS = {
 export default function PrakritiPage() {
   const router = useRouter();
   const { setPrakriti } = usePrakritiStore();
-  const { user } = useUserStore();
+  const { user, setDoshaComposition } = useUserStore();
   const { cycle } = useCycleStore();
   
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -377,28 +377,38 @@ export default function PrakritiPage() {
   // Copy success indicator
   const [copied, setCopied] = useState(false);
 
-  // Check saved state on mount to show results directly if taken
+  // Check saved state on mount or user load to show results directly if taken
   useEffect(() => {
     const saved = localStorage.getItem('prakriti');
+    let parsed: { vata: number; pitta: number; kapha: number } | null = null;
     if (saved) {
       try {
-        const parsed = JSON.parse(saved);
-        if (parsed.vata !== undefined && parsed.pitta !== undefined && parsed.kapha !== undefined) {
-          const total = parsed.vata + parsed.pitta + parsed.kapha;
-          if (total > 0) {
-            setScores({
-              Vata: Math.round((parsed.vata / 100) * 18),
-              Pitta: Math.round((parsed.pitta / 100) * 18),
-              Kapha: Math.round((parsed.kapha / 100) * 18),
-            });
-            setSubmitted(true);
-          }
-        }
+        parsed = JSON.parse(saved);
       } catch (e) {
         console.error(e);
       }
     }
-  }, []);
+
+    if ((!parsed || !parsed.vata) && user?.doshaComposition && user?.dominantDosha) {
+      parsed = user.doshaComposition;
+      localStorage.setItem('prakriti', JSON.stringify(user.doshaComposition));
+      localStorage.setItem('dominantPrakriti', user.dominantDosha);
+    }
+
+    if (parsed) {
+      if (parsed.vata !== undefined && parsed.pitta !== undefined && parsed.kapha !== undefined) {
+        const total = parsed.vata + parsed.pitta + parsed.kapha;
+        if (total > 0) {
+          setScores({
+            Vata: Math.round((parsed.vata / 100) * 18),
+            Pitta: Math.round((parsed.pitta / 100) * 18),
+            Kapha: Math.round((parsed.kapha / 100) * 18),
+          });
+          setSubmitted(true);
+        }
+      }
+    }
+  }, [user]);
 
   // Load checklist state when submitted is true
   useEffect(() => {
@@ -411,6 +421,7 @@ export default function PrakritiPage() {
       }
     }
   }, [submitted]);
+
 
   const handleSelectOption = (index: number) => {
     setSelectedOption(index);
@@ -455,6 +466,44 @@ export default function PrakritiPage() {
     setCurrentQuestion(currentQuestion - 1);
   };
 
+  // Keyboard navigation for the quiz
+  useEffect(() => {
+    if (submitted) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignore key shortcuts if user is typing in form inputs
+      if (e.ctrlKey || e.altKey || e.metaKey) return;
+      
+      const target = e.target as HTMLElement;
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+        return;
+      }
+
+      const key = e.key.toLowerCase();
+
+      if (key === 'a') {
+        setSelectedOption(0);
+      } else if (key === 'b') {
+        setSelectedOption(1);
+      } else if (key === 'c') {
+        setSelectedOption(2);
+      } else if (e.key === 'ArrowRight') {
+        if (selectedOption !== null) {
+          handleNext();
+        }
+      } else if (e.key === 'ArrowLeft') {
+        if (currentQuestion > 0) {
+          handleBack();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [submitted, selectedOption, currentQuestion, handleNext, handleBack]);
+
   const handleSubmit = (finalScores: typeof scores) => {
     const total = finalScores.Vata + finalScores.Pitta + finalScores.Kapha;
     
@@ -464,11 +513,19 @@ export default function PrakritiPage() {
       kapha: Math.round((finalScores.Kapha / total) * 100),
     };
 
+    const entries = Object.entries(calculatedPrakriti);
+    const dominant = entries.reduce((a, b) => (a[1] > b[1] ? a : b))[0];
+    const dominantPrakriti = dominant.charAt(0).toUpperCase() + dominant.slice(1);
+
     setPrakriti(calculatedPrakriti);
+    setDoshaComposition(calculatedPrakriti, dominantPrakriti);
     setSubmitted(true);
   };
 
   const handleRetake = () => {
+    const confirmRetake = window.confirm("Are you sure? This will replace your current Prakriti results.");
+    if (!confirmRetake) return;
+
     setScores({ Vata: 0, Pitta: 0, Kapha: 0 });
     setHistory([]);
     setCurrentQuestion(0);
@@ -476,6 +533,11 @@ export default function PrakritiPage() {
     setSubmitted(false);
     setCalculatedBmi(null);
     localStorage.removeItem('prakriti');
+    localStorage.removeItem('dominantPrakriti');
+    localStorage.removeItem('prakriti_quiz_progress');
+    localStorage.removeItem('prakriti_quiz_answers');
+
+    setDoshaComposition({ vata: 0, pitta: 0, kapha: 0 }, '');
   };
 
   const getNextStepRouteAndLabel = () => {
@@ -628,7 +690,7 @@ export default function PrakritiPage() {
           <Header />
 
           {/* Sticky Pane Selector Sub-tabs */}
-          <div className="sticky top-[73px] z-30 bg-[#F4EFEA]/90 dark:bg-background/90 backdrop-blur-md border-b border-stone-200/50 dark:border-stone-850 py-3 mb-8 animate-fade-rise">
+          <div className="sticky top-[73px] z-30 bg-[#F4EFEA]/95 dark:bg-[#1C1917]/95 backdrop-blur-md border-b border-stone-200/50 dark:border-stone-800/80 py-3 mb-8 animate-fade-rise">
             <div className="max-w-2xl mx-auto px-4 flex justify-between gap-1 overflow-x-auto scrollbar-none">
               {([
                 { id: 'overview', label: 'Overview' },
@@ -642,8 +704,8 @@ export default function PrakritiPage() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`px-4 py-2 rounded-full text-xs font-mono font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer whitespace-nowrap ${
                     activeTab === tab.id
-                      ? 'bg-[#1C1917] dark:bg-white text-white dark:text-stone-900 shadow-sm'
-                      : 'text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white bg-stone-200/20 dark:bg-stone-900/30 hover:bg-stone-200/50 dark:hover:bg-stone-900/60'
+                      ? 'bg-[#1C1917] dark:bg-[#FAF6F0] text-white dark:text-[#1C1917] shadow-sm'
+                      : 'text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white bg-stone-200/30 dark:bg-stone-800/40 hover:bg-stone-200/60 dark:hover:bg-stone-800/80'
                   }`}
                 >
                   {tab.label}

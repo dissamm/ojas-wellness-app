@@ -30,10 +30,15 @@ def init_db():
         cursor.execute("SELECT gender FROM users LIMIT 1")
     except sqlite3.OperationalError:
         cursor.execute("ALTER TABLE users ADD COLUMN gender TEXT")
+    try:
+        cursor.execute("SELECT profile_picture FROM users LIMIT 1")
+    except sqlite3.OperationalError:
+        cursor.execute("ALTER TABLE users ADD COLUMN profile_picture TEXT")
     conn.commit()
     conn.close()
 
 def create_user(username, email, password, name, gender=None):
+    email = email.lower().strip()
     password_hash = generate_password_hash(password)
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -51,9 +56,10 @@ def create_user(username, email, password, name, gender=None):
         conn.close()
 
 def get_user_by_email(email):
+    email = email.lower().strip()
     conn = get_db_connection()
     cursor = conn.cursor()
-    user = cursor.execute('SELECT * FROM users WHERE email = ?', (email,)).fetchone()
+    user = cursor.execute('SELECT * FROM users WHERE LOWER(email) = LOWER(?)', (email,)).fetchone()
     conn.close()
     return user
 
@@ -64,7 +70,7 @@ def get_user_by_id(user_id):
     conn.close()
     return user
 
-def update_user_profile(user_id, name=None, dosha_composition=None, dominant_dosha=None, menstrual_cycle_start=None, music_preferences=None, gender=None):
+def update_user_profile(user_id, name=None, dosha_composition=None, dominant_dosha=None, menstrual_cycle_start=None, music_preferences=None, gender=None, profile_picture=None):
     conn = get_db_connection()
     cursor = conn.cursor()
     
@@ -89,6 +95,9 @@ def update_user_profile(user_id, name=None, dosha_composition=None, dominant_dos
     if gender is not None:
         updates.append("gender = ?")
         params.append(gender)
+    if profile_picture is not None:
+        updates.append("profile_picture = ?")
+        params.append(profile_picture)
         
     if not updates:
         conn.close()
@@ -101,3 +110,45 @@ def update_user_profile(user_id, name=None, dosha_composition=None, dominant_dos
     conn.commit()
     conn.close()
     return True
+
+def change_user_email(user_id, new_email):
+    new_email = new_email.lower().strip()
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        # Check if email is already taken by someone else
+        existing = cursor.execute('SELECT id FROM users WHERE LOWER(email) = LOWER(?) AND id != ?', (new_email, user_id)).fetchone()
+        if existing:
+            return False
+        cursor.execute('UPDATE users SET email = ? WHERE id = ?', (new_email, user_id))
+        conn.commit()
+        return True
+    except sqlite3.IntegrityError:
+        return False
+    finally:
+        conn.close()
+
+def change_user_password(user_id, new_password):
+    password_hash = generate_password_hash(new_password)
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute('UPDATE users SET password_hash = ? WHERE id = ?', (password_hash, user_id))
+        conn.commit()
+        return True
+    except Exception:
+        return False
+    finally:
+        conn.close()
+
+def delete_user(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute('DELETE FROM users WHERE id = ?', (user_id,))
+        conn.commit()
+        return True
+    except Exception:
+        return False
+    finally:
+        conn.close()

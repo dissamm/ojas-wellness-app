@@ -16,6 +16,7 @@ export interface UserData {
     menstrualCycleStart?: Date | string;
     musicPreferences?: string[];
     gender?: string;
+    profilePicture?: string;
 }
 
 export interface AppState {
@@ -39,6 +40,11 @@ export interface AppState {
     registerUser: (username: string, email: string, password: string, name: string, gender: string) => Promise<boolean>;
     syncUserProfile: () => Promise<void>;
     loadProfileFromToken: () => Promise<void>;
+    
+    // Account Settings Actions
+    changeEmail: (newEmail: string, password: string) => Promise<{ success: boolean; message?: string }>;
+    changePassword: (currentPassword: string, newPassword: string) => Promise<{ success: boolean; message?: string }>;
+    deleteAccount: () => Promise<{ success: boolean; message?: string }>;
 }
 
 export const useUserStore = create<AppState>((set, get) => ({
@@ -103,7 +109,7 @@ export const useUserStore = create<AppState>((set, get) => ({
                 set({ user: data.user });
                 
                 // Sync Prakriti details local storage
-                if (data.user.doshaComposition && data.user.dominantDosha) {
+                if (data.user.doshaComposition && data.user.dominantDosha && (data.user.doshaComposition.vata + data.user.doshaComposition.pitta + data.user.doshaComposition.kapha > 0)) {
                     localStorage.setItem('prakriti', JSON.stringify(data.user.doshaComposition));
                     localStorage.setItem('dominantPrakriti', data.user.dominantDosha);
                 }
@@ -164,7 +170,8 @@ export const useUserStore = create<AppState>((set, get) => ({
                     dominantDosha: user.dominantDosha,
                     menstrualCycleStart: user.menstrualCycleStart,
                     musicPreferences: user.musicPreferences,
-                    gender: user.gender
+                    gender: user.gender,
+                    profilePicture: user.profilePicture
                 })
             });
         } catch (err) {
@@ -186,7 +193,7 @@ export const useUserStore = create<AppState>((set, get) => ({
             const data = await response.json();
             if (data.success) {
                 set({ user: data.user });
-                if (data.user.doshaComposition && data.user.dominantDosha) {
+                if (data.user.doshaComposition && data.user.dominantDosha && (data.user.doshaComposition.vata + data.user.doshaComposition.pitta + data.user.doshaComposition.kapha > 0)) {
                     localStorage.setItem('prakriti', JSON.stringify(data.user.doshaComposition));
                     localStorage.setItem('dominantPrakriti', data.user.dominantDosha);
                 }
@@ -209,8 +216,7 @@ export const useUserStore = create<AppState>((set, get) => ({
 
     setDoshaComposition: (composition, dominant) => {
         set((state) => ({
-            user: { ...state.user, doshaComposition: composition, dominantDosha: dominant },
-            currentStep: 'assessment'
+            user: { ...state.user, doshaComposition: composition, dominantDosha: dominant }
         }));
         get().syncUserProfile();
     },
@@ -246,5 +252,77 @@ export const useUserStore = create<AppState>((set, get) => ({
             assessmentAnswers: {},
             currentStep: 'assessment'
         });
+    },
+
+    changeEmail: async (newEmail, password) => {
+        const { token } = get();
+        if (!token) return { success: false, message: 'No authentication token found' };
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/auth/change-email`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ newEmail, password })
+            });
+            const data = await response.json();
+            if (data.success) {
+                set({ user: data.user });
+                return { success: true };
+            }
+            return { success: false, message: data.message || data.error || 'Failed to change email' };
+        } catch (err) {
+            console.error("Change email failed:", err);
+            return { success: false, message: 'Connection to server failed' };
+        }
+    },
+
+    changePassword: async (currentPassword, newPassword) => {
+        const { token } = get();
+        if (!token) return { success: false, message: 'No authentication token found' };
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/auth/change-password`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ currentPassword, newPassword })
+            });
+            const data = await response.json();
+            if (data.success) {
+                // If backend serialized user is returned, set it
+                if (data.user) set({ user: data.user });
+                return { success: true };
+            }
+            return { success: false, message: data.message || data.error || 'Failed to change password' };
+        } catch (err) {
+            console.error("Change password failed:", err);
+            return { success: false, message: 'Connection to server failed' };
+        }
+    },
+
+    deleteAccount: async () => {
+        const { token } = get();
+        if (!token) return { success: false, message: 'No authentication token found' };
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/auth/delete-account`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
+            if (data.success) {
+                get().logout();
+                return { success: true };
+            }
+            return { success: false, message: data.message || data.error || 'Failed to delete account' };
+        } catch (err) {
+            console.error("Delete account failed:", err);
+            return { success: false, message: 'Connection to server failed' };
+        }
     },
 }));

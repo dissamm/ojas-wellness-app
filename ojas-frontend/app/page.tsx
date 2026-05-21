@@ -33,7 +33,7 @@ const LargeHeroLotus = () => (
 
 export default function Home() {
   const router = useRouter();
-  const { currentStep, isAuthenticated } = useUserStore();
+  const { currentStep, isAuthenticated, user } = useUserStore();
 
   if (currentStep !== 'name') {
     return <WellnessFlow />;
@@ -42,7 +42,7 @@ export default function Home() {
   const handleBeginJourney = (e: React.MouseEvent) => {
     e.preventDefault();
     if (isAuthenticated) {
-      router.push(hasCompletedPrakriti() ? '/dashboard' : '/prakriti');
+      router.push(hasCompletedPrakriti(user) ? '/dashboard' : '/prakriti');
     } else {
       router.push('/register');
     }

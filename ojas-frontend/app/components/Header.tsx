@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useUserStore } from '../store/userStore';
+import { useTranslation, translations } from '../store/languageStore';
+import { ProfileDrawer } from './ProfileDrawer';
 
 export const Header = () => {
   const pathname = usePathname();
@@ -14,6 +16,8 @@ export const Header = () => {
 
   const [isDark, setIsDark] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setIsMounted(true);
@@ -48,18 +52,18 @@ export const Header = () => {
     }
   };
 
-  const links = isMounted && isAuthenticated
+  const links: { name: string; path: string; key: keyof typeof translations['en'] }[] = isMounted && isAuthenticated
     ? [
-        { name: 'Dashboard', path: '/dashboard' },
-        { name: 'Rituals', path: '/rituals' },
-        { name: 'Prakriti', path: '/prakriti' },
-        { name: 'Cycle', path: '/cycle' },
-        { name: 'Music', path: '/music' },
-      ].filter(link => !(link.name === 'Cycle' && user?.gender === 'male'))
+        { name: 'Dashboard', path: '/dashboard', key: 'dashboard' as const },
+        { name: 'Rituals', path: '/rituals', key: 'rituals' as const },
+        { name: 'Prakriti', path: '/prakriti', key: 'prakriti' as const },
+        { name: 'Cycle', path: '/cycle', key: 'cycle' as const },
+        { name: 'Music', path: '/music', key: 'music' as const },
+      ].filter(link => !(link.key === 'cycle' && user?.gender === 'male'))
     : isMounted
     ? [
-        { name: 'Login', path: '/login' },
-        { name: 'Register', path: '/register' },
+        { name: 'Login', path: '/login', key: 'login' as const },
+        { name: 'Register', path: '/register', key: 'register' as const },
       ]
     : [];
 
@@ -87,7 +91,7 @@ export const Header = () => {
               const isActive = pathname === link.path;
               return (
                 <Link 
-                  key={link.name} 
+                  key={link.key} 
                   href={link.path}
                   className={`text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] transition-colors duration-300 pb-0.5 border-b ${
                     isActive 
@@ -95,7 +99,7 @@ export const Header = () => {
                       : 'text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white border-transparent'
                   }`}
                 >
-                  {link.name}
+                  {t(link.key)}
                 </Link>
               );
             })}
@@ -113,26 +117,37 @@ export const Header = () => {
           {/* Profile Initials / Log In Action */}
           {isMounted && isAuthenticated ? (
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-mono border border-stone-300/80 dark:border-stone-800 text-stone-600 dark:text-stone-450 bg-white/40 dark:bg-stone-900/40 shadow-[0_1px_3px_rgba(28,25,22,0.02)] select-none">
-                {userInitial}
-              </div>
+              <button
+                onClick={() => setIsProfileOpen(true)}
+                className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center text-[10px] font-mono border border-stone-300/80 dark:border-stone-800 text-stone-600 dark:text-stone-450 bg-white/40 dark:bg-stone-900/40 shadow-[0_1px_3px_rgba(28,25,22,0.02)] select-none cursor-pointer hover:border-[#C27A5D] transition-all duration-300"
+                aria-label="Open profile settings"
+              >
+                {user?.profilePicture ? (
+                  <img src={user.profilePicture} alt={user.name} className="w-full h-full object-cover" />
+                ) : (
+                  userInitial
+                )}
+              </button>
               <button
                 onClick={() => logout()}
                 className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-stone-500 hover:text-[#C27A5D] dark:text-stone-450 dark:hover:text-[#C27A5D] transition-colors duration-300 cursor-pointer select-none"
               >
-                Logout
+                {t('logout')}
               </button>
             </div>
           ) : isMounted ? (
             <Link 
               href="/login"
-              className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-stone-550 dark:text-stone-400 hover:text-[#C27A5D] dark:hover:text-[#C27A5D] transition-colors duration-300"
+              className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-stone-500 dark:text-stone-400 hover:text-[#C27A5D] dark:hover:text-[#C27A5D] transition-colors duration-300"
             >
-              Sign In
+              {t('signIn')}
             </Link>
           ) : null}
         </div>
       </div>
+
+      {/* Profile Sidebar Panel */}
+      <ProfileDrawer isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
     </header>
   );
 };
