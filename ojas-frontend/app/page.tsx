@@ -8,25 +8,81 @@ import WellnessFlow from './WellnessFlow';
 import { Disclaimer } from './components/Disclaimer';
 import { hasCompletedPrakriti } from './lib/dominantDosha';
 
-// Large Hero Blooming Lotus (Interactive & Centered above Headline)
+// Large Hero Blooming Lotus (Golden SVG — same as dashboard greeting icon)
 const LargeHeroLotus = () => (
   <div className="mb-12 flex justify-center pointer-events-auto select-none">
     <div className="relative flex items-center justify-center">
       {/* Layer 1: Outer Pulse/Glow Backdrop */}
       <span className="absolute inline-flex w-40 h-40 md:w-48 md:h-48 rounded-full bg-[#C27A5D]/10 blur-2xl animate-pulse"></span>
-      
+
       {/* Layer 2: Main Outer Pinging Ring */}
       <span className="absolute inline-flex w-32 h-32 md:w-36 md:h-36 rounded-full border border-[#C27A5D]/20 animate-[ping_3.5s_cubic-bezier(0,0,0.2,1)_infinite]"></span>
-      
+
       {/* Layer 3: Secondary Delayed Inner Pinging Ring */}
       <span className="absolute inline-flex w-24 h-24 md:w-28 md:h-28 rounded-full border border-[#C27A5D]/30 animate-[ping_3.5s_cubic-bezier(0,0,0.2,1)_infinite] [animation-delay:1s]"></span>
-      
-      {/* Layer 4: Interactive Floating Lotus Image */}
-      <img src="/lotus.png" 
-           alt="Ojas blooming lotus mark" 
-           width="140" 
-           height="140" 
-           className="relative w-28 h-28 md:w-32 md:h-32 object-contain drop-shadow-[0_10px_30px_rgba(194,122,93,0.35)] animate-[float_6s_ease-in-out_infinite]" />
+
+      {/* Layer 4: Golden SVG Lotus (same as dashboard) — floating animation */}
+      <div className="relative w-28 h-28 md:w-32 md:h-32 animate-[float_6s_ease-in-out_infinite] drop-shadow-[0_10px_30px_rgba(194,122,93,0.35)]">
+        <svg viewBox="0 0 100 100" fill="none" className="w-full h-full">
+          {/* Center Petal */}
+          <path
+            d="M50,85 C50,85 42,65 50,50 C58,65 50,85 50,85Z"
+            fill="url(#hero-centerGradient)"
+            opacity="0"
+            style={{ animation: 'bloom-center 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards', transformOrigin: '50px 85px' }}
+          />
+          {/* Inner Left Petal */}
+          <path
+            d="M50,85 C50,85 28,75 22,58 C34,52 44,70 50,85Z"
+            fill="url(#hero-innerGradient)"
+            opacity="0"
+            style={{ animation: 'bloom-left-inner 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards', transformOrigin: '50px 85px' }}
+          />
+          {/* Inner Right Petal */}
+          <path
+            d="M50,85 C50,85 72,75 78,58 C66,52 56,70 50,85Z"
+            fill="url(#hero-innerGradient)"
+            opacity="0"
+            style={{ animation: 'bloom-right-inner 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards', transformOrigin: '50px 85px' }}
+          />
+          {/* Outer Left Petal */}
+          <path
+            d="M50,85 C50,85 18,80 12,58 C28,48 40,68 50,85Z"
+            fill="url(#hero-outerGradient)"
+            opacity="0"
+            style={{ animation: 'bloom-left-outer 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards', transformOrigin: '50px 85px' }}
+          />
+          {/* Outer Right Petal */}
+          <path
+            d="M50,85 C50,85 82,80 88,58 C72,48 60,68 50,85Z"
+            fill="url(#hero-outerGradient)"
+            opacity="0"
+            style={{ animation: 'bloom-right-outer 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards', transformOrigin: '50px 85px' }}
+          />
+          {/* Subtle Glow */}
+          <circle cx="50" cy="55" r="30" fill="url(#hero-glowGradient)" opacity="0.25" className="animate-pulse" />
+
+          <defs>
+            <radialGradient id="hero-centerGradient" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stopColor="#F5D0A9" />
+              <stop offset="60%" stopColor="#C27A5D" />
+              <stop offset="100%" stopColor="#A8573C" />
+            </radialGradient>
+            <radialGradient id="hero-innerGradient" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stopColor="#FDBA74" />
+              <stop offset="100%" stopColor="#C27A5D" />
+            </radialGradient>
+            <radialGradient id="hero-outerGradient" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stopColor="#FCD34D" />
+              <stop offset="100%" stopColor="#FDBA74" />
+            </radialGradient>
+            <radialGradient id="hero-glowGradient" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#F5D0A9" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="#C27A5D" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+        </svg>
+      </div>
     </div>
   </div>
 );

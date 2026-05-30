@@ -6,6 +6,7 @@ import { usePrakritiStore } from '../store/prakritiStore';
 import { useUserStore } from '../store/userStore';
 import { useCycleStore } from '../store/cycleStore';
 import { useRouter } from 'next/navigation';
+import { getJyotishProfile } from '../utils/jyotishData';
 
 const PRAKRITI_QUESTIONS = [
   {
@@ -351,6 +352,7 @@ export default function PrakritiPage() {
   const { setPrakriti } = usePrakritiStore();
   const { user, setDoshaComposition } = useUserStore();
   const { cycle } = useCycleStore();
+  const jyotish = getJyotishProfile(user?.dateOfBirth);
   
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [scores, setScores] = useState({ Vata: 0, Pitta: 0, Kapha: 0 });
@@ -359,7 +361,7 @@ export default function PrakritiPage() {
   const [submitted, setSubmitted] = useState(false);
 
   // Tab & Context States for Results page
-  const [activeTab, setActiveTab] = useState<'overview' | 'bodymind' | 'diet' | 'lifestyle' | 'rhythms'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'bodymind' | 'diet' | 'lifestyle' | 'rhythms' | 'jyotish'>('overview');
   const [dualCtx, setDualCtx] = useState<'pri' | 'sec'>('pri');
 
   // Rhythm Checklist state
@@ -698,6 +700,7 @@ export default function PrakritiPage() {
                 { id: 'diet', label: 'Diet' },
                 { id: 'lifestyle', label: 'Lifestyle' },
                 { id: 'rhythms', label: 'Rhythms' },
+                { id: 'jyotish', label: 'Jyotish' },
               ] as const).map((tab) => (
                 <button
                   key={tab.id}
@@ -1431,6 +1434,120 @@ export default function PrakritiPage() {
                         </div>
                       );
                     })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* JYOTISH PANE */}
+            {activeTab === 'jyotish' && (
+              <div className="space-y-8 animate-fade-rise">
+                {/* Birth Chart Overview Card */}
+                <div className="w-full bg-[#1C1C1A] border border-stone-850 rounded-3xl p-8 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.3)] text-[#FAF6F0]">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-bold mb-3 block">
+                    JANMA KUNDALI · BIRTH CHART SUMMARY
+                  </span>
+                  
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 my-6 border-y border-white/5 py-6">
+                    <div>
+                      <div className="text-[9px] font-mono uppercase tracking-wider text-stone-400">Sun Sign</div>
+                      <div className="text-lg font-serif italic mt-1 text-[#FAF6F0]">{jyotish.sunSign.english}</div>
+                      <div className="text-[9px] font-mono text-stone-500">{jyotish.sunSign.rashi} Rashi</div>
+                    </div>
+                    <div>
+                      <div className="text-[9px] font-mono uppercase tracking-wider text-stone-400">Moon Sign</div>
+                      <div className="text-lg font-serif italic mt-1 text-[#FAF6F0]">{jyotish.moonSign.english}</div>
+                      <div className="text-[9px] font-mono text-stone-500">{jyotish.moonSign.rashi} Rashi</div>
+                    </div>
+                    <div>
+                      <div className="text-[9px] font-mono uppercase tracking-wider text-stone-400">Ascendant</div>
+                      <div className="text-lg font-serif italic mt-1 text-[#FAF6F0]">{jyotish.lagna.english}</div>
+                      <div className="text-[9px] font-mono text-stone-500">{jyotish.lagna.rashi} Rashi</div>
+                    </div>
+                    <div>
+                      <div className="text-[9px] font-mono uppercase tracking-wider text-stone-400">Nakshatra</div>
+                      <div className="text-lg font-serif italic mt-1 text-[#FAF6F0]">{jyotish.nakshatra}</div>
+                    </div>
+                  </div>
+
+                  <p className="text-stone-300 text-sm font-serif italic leading-relaxed">
+                    &ldquo;{jyotish.insightQuote}&rdquo;
+                  </p>
+                </div>
+
+                {/* Prakriti & Jyotish Overlap Card */}
+                <div className="w-full bg-white/40 border border-stone-200/50 rounded-3xl p-8 backdrop-blur-md shadow-[0_4px_20px_-4px_rgba(28,25,22,0.03)]">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-bold mb-3 block">
+                    GRAHA-DOSHA SYNERGY · ELEMENTAL OVERLAP
+                  </span>
+                  
+                  <p className="text-xs text-stone-500 font-inter leading-relaxed mb-6">
+                    Ayurvedic constitutions (Prakriti) and Vedic astrology (Jyotish) are twin disciplines. Prakriti reflects the physical manifestation of elements, while Jyotish outlines their cosmic origins.
+                  </p>
+
+                  <div className="space-y-4">
+                    {/* Vata Row */}
+                    <div className="p-5 bg-blue-500/5 border border-blue-500/10 rounded-2xl">
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <span className="text-[10px] font-mono font-bold tracking-wider text-blue-600 block">VATA · AIR & ETHER</span>
+                          <span className="text-xs font-mono text-stone-400">Governed by ☿ Mercury + ♀ Venus</span>
+                        </div>
+                        <span className="px-3 py-1 bg-blue-500/10 text-blue-600 rounded-full font-mono text-xs font-bold">
+                          Prakriti: {scores.Vata} pts
+                        </span>
+                      </div>
+                      <p className="text-xs text-stone-600 leading-relaxed font-inter">
+                        Mercury governs raw intellect and nervous flow (Vata), while Venus directs sensory refinement. 
+                        {jyotish.sunSign.english === 'Gemini' || jyotish.moonSign.english === 'Gemini' ? (
+                          <span className="text-[#C27A5D] font-medium ml-1">Your Gemini placement heightens Mercury&apos;s mental stimulation, correlating with your Vata scores.</span>
+                        ) : (
+                          <span className="text-stone-505 ml-1">Your birth placements show steady Vata mental resonance.</span>
+                        )}
+                      </p>
+                    </div>
+
+                    {/* Pitta Row */}
+                    <div className="p-5 bg-[#C27A5D]/5 border border-[#C27A5D]/10 rounded-2xl">
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <span className="text-[10px] font-mono font-bold tracking-wider text-[#C27A5D] block">PITTA · FIRE</span>
+                          <span className="text-xs font-mono text-stone-400">Governed by ☉ Sun + ♂ Mars</span>
+                        </div>
+                        <span className="px-3 py-1 bg-[#C27A5D]/10 text-[#C27A5D] rounded-full font-mono text-xs font-bold">
+                          Prakriti: {scores.Pitta} pts
+                        </span>
+                      </div>
+                      <p className="text-xs text-stone-600 leading-relaxed font-inter">
+                        Sun represents raw metabolic fire (Agni), and Mars controls directional drive and transformation (Pitta).
+                        {jyotish.sunSign.english === 'Aries' || jyotish.sunSign.english === 'Leo' ? (
+                          <span className="text-[#C27A5D] font-medium ml-1">Your fiery solar placement fuels Agni directly, complementing your Pitta scores.</span>
+                        ) : (
+                          <span className="text-stone-505 ml-1">Your birth planets suggest a balanced metabolic fire.</span>
+                        )}
+                      </p>
+                    </div>
+
+                    {/* Kapha Row */}
+                    <div className="p-5 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl">
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <span className="text-[10px] font-mono font-bold tracking-wider text-emerald-600 block">KAPHA · WATER & EARTH</span>
+                          <span className="text-xs font-mono text-stone-400">Governed by ☽ Moon + ♃ Jupiter</span>
+                        </div>
+                        <span className="px-3 py-1 bg-emerald-500/10 text-emerald-650 rounded-full font-mono text-xs font-bold text-emerald-600">
+                          Prakriti: {scores.Kapha} pts
+                        </span>
+                      </div>
+                      <p className="text-xs text-stone-600 leading-relaxed font-inter">
+                        Moon governs bodily fluids and emotional attachment (Kapha), while Jupiter expands wisdom and physical tissue.
+                        {jyotish.moonSign.english === 'Scorpio' || jyotish.lagna.english === 'Cancer' ? (
+                          <span className="text-[#C27A5D] font-medium ml-1">Your Lagna/Moon water elements add intuitive depth that grounds physical tissues.</span>
+                        ) : (
+                          <span className="text-stone-505 ml-1">Your planetary matrix supports stable Kapha expansion.</span>
+                        )}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>

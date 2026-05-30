@@ -17,6 +17,7 @@ export interface UserData {
     musicPreferences?: string[];
     gender?: string;
     profilePicture?: string;
+    dateOfBirth?: string;
 }
 
 export interface AppState {
@@ -37,7 +38,7 @@ export interface AppState {
     setToken: (token: string | null) => void;
     logout: () => void;
     loginUser: (email: string, password: string) => Promise<boolean>;
-    registerUser: (username: string, email: string, password: string, name: string, gender: string) => Promise<boolean>;
+    registerUser: (username: string, email: string, password: string, name: string, gender: string, dateOfBirth?: string) => Promise<boolean>;
     syncUserProfile: () => Promise<void>;
     loadProfileFromToken: () => Promise<void>;
     
@@ -122,7 +123,7 @@ export const useUserStore = create<AppState>((set, get) => ({
         }
     },
 
-    registerUser: async (username, email, password, name, gender) => {
+    registerUser: async (username, email, password, name, gender, dateOfBirth) => {
         try {
             if (typeof window !== 'undefined') {
                 localStorage.removeItem('cycle');
@@ -138,7 +139,7 @@ export const useUserStore = create<AppState>((set, get) => ({
             const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, email, password, name, gender })
+                body: JSON.stringify({ username, email, password, name, gender, dateOfBirth })
             });
             const data = await response.json();
             if (data.success) {
@@ -171,7 +172,8 @@ export const useUserStore = create<AppState>((set, get) => ({
                     menstrualCycleStart: user.menstrualCycleStart,
                     musicPreferences: user.musicPreferences,
                     gender: user.gender,
-                    profilePicture: user.profilePicture
+                    profilePicture: user.profilePicture,
+                    dateOfBirth: user.dateOfBirth
                 })
             });
         } catch (err) {

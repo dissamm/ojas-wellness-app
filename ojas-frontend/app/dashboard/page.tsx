@@ -14,6 +14,9 @@ import { getRitualsForDosha, getTopThreeRituals } from '../utils/ritualsData';
 import { useMoodPrediction } from '../lib/api';
 import { getDominantDoshaLabel } from '../lib/dominantDosha';
 import { Disclaimer } from '../components/Disclaimer';
+import { SleepCheckinModal } from '../components/SleepCheckinModal';
+import { useSleepStore, SleepLog } from '../store/sleepStore';
+import { getJyotishProfile } from '../utils/jyotishData';
 
 // Custom, fine-line SVG Blooming Lotus Logo
 const LotusLogo = ({ size = "lg", animated = true }) => {
@@ -139,6 +142,12 @@ export default function Dashboard() {
   
   const [greeting, setGreeting] = useState("Good morning");
 
+  // ── Sleep check-in state ──────────────────────────────────────
+  const { hasDoneCheckinToday, getTodayLog } = useSleepStore();
+  const [showSleepModal, setShowSleepModal] = useState(false);
+  const [sleepModalSkipped, setSleepModalSkipped] = useState(false);
+  const [todaySleepLog, setTodaySleepLog] = useState<SleepLog | null>(null);
+
   // Client-side sequential onboarding guards
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -180,7 +189,32 @@ export default function Dashboard() {
     if (hour < 12) setGreeting("Good morning");
     else if (hour < 17) setGreeting("Good afternoon");
     else setGreeting("Good evening");
+
+    // Auto-show sleep modal in morning window if not done today
+    if (hour >= 5 && hour < 11 && !hasDoneCheckinToday()) {
+      const skippedKey = `ojas_sleep_skipped_${new Date().toISOString().slice(0, 10)}`;
+      if (!localStorage.getItem(skippedKey)) {
+        setTimeout(() => setShowSleepModal(true), 1200);
+      } else {
+        setSleepModalSkipped(true);
+      }
+    }
+    // Load today's log if it exists
+    const existing = getTodayLog();
+    if (existing) setTodaySleepLog(existing);
   }, []);
+
+  const handleSleepModalClose = () => {
+    setShowSleepModal(false);
+    const skippedKey = `ojas_sleep_skipped_${new Date().toISOString().slice(0, 10)}`;
+    localStorage.setItem(skippedKey, 'true');
+    setSleepModalSkipped(true);
+  };
+
+  const handleSleepComplete = (log: SleepLog) => {
+    setTodaySleepLog(log);
+    setSleepModalSkipped(false);
+  };
 
   const {
     predictedMood,
@@ -205,6 +239,8 @@ export default function Dashboard() {
   const pittaVal = user?.doshaComposition?.pitta || prakriti?.pitta || 45;
   const kaphaVal = user?.doshaComposition?.kapha || prakriti?.kapha || 20;
 
+  const jyotish = getJyotishProfile(user?.dateOfBirth);
+
   const getDinacharyaPhase = () => {
     const hour = new Date().getHours();
     if (hour >= 6 && hour < 10) return { phase: "Kapha (Stabilizing)", tip: "Ideal for steady physical work, light exercise, and grounding routines." };
@@ -218,13 +254,48 @@ export default function Dashboard() {
     ? user.musicPreferences.map((p: string) => p.charAt(0).toUpperCase() + p.slice(1)).join(", ")
     : "Solfeggio Frequencies & Calibrated Indie Pop";
 
+  // Sleep depth display helpers
+  const DEPTH_ICONS: Record<string, string> = { restless:'🌑', light:'🌒', deep:'🌕', dreamless:'🌙' };
+  const DREAM_LABELS: Record<string, string> = { vivid:'Vivid', anxious:'Anxious', peaceful:'Peaceful', intense:'Intense', confusing:'Confusing', nodreams:'No Dreams' };
+
   return (
+    <>
+    {/* Sleep check-in modal */}
+    {showSleepModal && (
+      <SleepCheckinModal
+        userName={user?.name || 'friend'}
+        dominantDosha={dominantDoshaText}
+        moonPhase={moonPhase || 'Waning Crescent'}
+        onClose={handleSleepModalClose}
+        onComplete={handleSleepComplete}
+      />
+    )}
+
     <div className="min-h-screen bg-background text-foreground font-inter selection:bg-[#C27A5D]/10 flex flex-col justify-between transition-colors duration-500">
       <div>
         <Header />
         <Disclaimer className="mt-6 -mb-4" />
         
         <main className="max-w-7xl mx-auto px-6 py-10 md:px-12 md:py-14 w-full">
+          {/* Sleep check-in pill reminder (shown when modal was skipped) */}
+          {sleepModalSkipped && !todaySleepLog && (
+            <div className="mb-6 flex items-center justify-between bg-[#FDF6EC] dark:bg-stone-900/60 border border-orange-100/50 dark:border-stone-850 rounded-2xl px-5 py-3">
+              <button
+                onClick={() => { setSleepModalSkipped(false); setShowSleepModal(true); }}
+                className="text-[10px] font-mono uppercase tracking-wider text-[#C27A5D] hover:text-stone-900 dark:hover:text-white transition-colors cursor-pointer"
+              >
+                ☽ LOG YOUR MORNING · SLEEP CHECK-IN →
+              </button>
+              <button
+                onClick={() => setSleepModalSkipped(false)}
+                className="text-stone-400 hover:text-stone-700 dark:hover:text-stone-300 text-sm cursor-pointer"
+                aria-label="Dismiss reminder"
+              >
+                ×
+              </button>
+            </div>
+          )}
+
           {/* Compiled Resonance Blueprint Banner */}
           <div className="mb-10 animate-fade-rise">
             <Card className="p-6 md:p-8 bg-[#FAF6F0]/80 dark:bg-stone-900/60 border border-[#C27A5D]/20 dark:border-stone-800 relative overflow-hidden backdrop-blur-md">
@@ -315,6 +386,105 @@ export default function Dashboard() {
             </Card>
           </div>
 
+          {/* JYOTISH · PLANETARY MATRIX */}
+          <div className="mb-10 animate-fade-rise" style={{ animationDelay: '0.1s' }}>
+            <Card className="p-6 md:p-8 bg-[#FAF6F0]/80 dark:bg-stone-900/60 border border-[#C27A5D]/20 dark:border-stone-800 relative overflow-hidden backdrop-blur-md">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#C27A5D]/5 rounded-full blur-3xl pointer-events-none" />
+              
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-stone-200/50 dark:border-stone-800 pb-6 mb-6">
+                <div>
+                  <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-bold block mb-1">
+                    JYOTISH · PLANETARY MATRIX
+                  </span>
+                  <h2 className="text-2xl md:text-3xl font-serif font-normal text-[#1C1917] dark:text-[#FAF6F0]">
+                    Your <span className="italic text-[#C27A5D]">Cosmic</span> Alignment
+                  </h2>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#C27A5D] animate-pulse" />
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#C27A5D] font-bold">
+                    Planetary Layer Active
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                {/* Column 1: Birth Chart */}
+                <div className="flex flex-col gap-2">
+                  <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold flex items-center gap-2">
+                    <span>☉</span> BIRTH CHART
+                  </div>
+                  <div>
+                    <h3 className="font-serif italic text-xl text-[#1C1917] dark:text-[#FAF6F0] mb-1">
+                      Sun in {jyotish.sunSign.english} • Moon in {jyotish.moonSign.english}
+                    </h3>
+                    <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed font-inter">
+                      {jyotish.dominantInfluence}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Column 2: Today's Transit */}
+                <div className="flex flex-col gap-2">
+                  <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold flex items-center gap-2">
+                    <span>☿</span> TODAY&apos;S TRANSIT
+                  </div>
+                  <div>
+                    <h3 className="font-serif italic text-xl text-[#1C1917] dark:text-[#FAF6F0] mb-1">
+                      Mercury Retrograde
+                    </h3>
+                    <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed font-inter">
+                      Until June 18. Avoid new contracts and major decisions. Ideal for inner reflection and revisiting practices.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Column 3: Numerology */}
+                <div className="flex flex-col gap-2">
+                  <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold flex items-center gap-2">
+                    <span>🔢</span> NUMEROLOGY
+                  </div>
+                  <div>
+                    <h3 className="font-serif italic text-xl text-[#1C1917] dark:text-[#FAF6F0] mb-1">
+                      Life Path {jyotish.lifePathNumber}
+                    </h3>
+                    <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed font-inter">
+                      {jyotish.lifePathTagline}. {jyotish.lifePathDescription}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Lower Planet Pill Row */}
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-6 border-t border-stone-200/50 dark:border-stone-850">
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1 rounded-full text-[9px] font-mono font-bold uppercase tracking-widest border border-[#C27A5D] bg-[#C27A5D]/5 text-[#C27A5D]">
+                    ☿ Mercury Rx
+                  </span>
+                  <span className="px-3 py-1 rounded-full text-[9px] font-mono uppercase tracking-widest border border-stone-300/40 dark:border-stone-800 text-stone-500 dark:text-stone-400">
+                    ♀ Venus in Taurus
+                  </span>
+                  <span className="px-3 py-1 rounded-full text-[9px] font-mono uppercase tracking-widest border border-stone-300/40 dark:border-stone-800 text-stone-500 dark:text-stone-400">
+                    ♂ Mars in Leo
+                  </span>
+                  <span className="px-3 py-1 rounded-full text-[9px] font-mono uppercase tracking-widest border border-stone-300/40 dark:border-stone-800 text-stone-500 dark:text-stone-400">
+                    ♃ Jupiter in Gemini
+                  </span>
+                  <span className="px-3 py-1 rounded-full text-[9px] font-mono uppercase tracking-widest border border-stone-300/40 dark:border-stone-800 text-stone-500 dark:text-stone-400 font-bold">
+                    ☽ Waning Gibbous · Day 14
+                  </span>
+                </div>
+                
+                <Link
+                  href="/jyotish"
+                  className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#C27A5D] hover:text-[#B06B50] transition-colors self-end sm:self-auto cursor-pointer"
+                >
+                  OPEN FULL JYOTISH REPORT →
+                </Link>
+              </div>
+            </Card>
+          </div>
+
           {/* Main 2-Column Responsive Layout Grid */}
           <div className="grid lg:grid-cols-12 gap-10 md:gap-14 items-start">
             
@@ -350,6 +520,46 @@ export default function Dashboard() {
                   &ldquo;{dailyAffirmation || "I am the container for infinite peace, rooted in the earth, reaching for the light."}&rdquo;
                 </p>
               </div>
+
+              {/* Sleep Log Card (shown after morning check-in is completed) */}
+              {todaySleepLog && (
+                <div className="bg-[#FDF6EC] dark:bg-stone-900/60 border border-orange-100/50 dark:border-stone-850 rounded-[28px] p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold">
+                      LAST NIGHT · SLEEP LOG
+                    </div>
+                    <span className="text-[9px] font-mono text-stone-400 uppercase tracking-wider">
+                      {todaySleepLog.moonPhase || moonPhase || 'Waning Crescent'}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {todaySleepLog.sleepDepth && (
+                      <span className="px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-wider rounded-full border bg-white/60 dark:bg-stone-900/50 border-stone-200/60 dark:border-stone-700 text-stone-700 dark:text-stone-300">
+                        {DEPTH_ICONS[todaySleepLog.sleepDepth]} {todaySleepLog.sleepDepth}
+                      </span>
+                    )}
+                    {todaySleepLog.hoursSlept && (
+                      <span className="px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-wider rounded-full border bg-white/60 dark:bg-stone-900/50 border-stone-200/60 dark:border-stone-700 text-stone-700 dark:text-stone-300">
+                        {todaySleepLog.hoursSlept}h slept
+                      </span>
+                    )}
+                    {todaySleepLog.dreamThemes[0] && (
+                      <span className="px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-wider rounded-full border bg-white/60 dark:bg-stone-900/50 border-stone-200/60 dark:border-stone-700 text-stone-700 dark:text-stone-300">
+                        {DREAM_LABELS[todaySleepLog.dreamThemes[0]]}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed mb-3">
+                    {dominantDoshaText} elevated — evening wind-down rituals recommended tonight.
+                  </p>
+                  <Link
+                    href="/sleep"
+                    className="text-[10px] font-mono uppercase tracking-wider text-[#C27A5D] border-b border-[#C27A5D]/30 hover:text-stone-900 dark:hover:text-white transition-colors"
+                  >
+                    OPEN SLEEP HISTORY →
+                  </Link>
+                </div>
+              )}
 
               {/* Dosha Constitution Card (Relocated to left column for layout balance) */}
               <Card className="flex flex-col justify-between">
@@ -630,6 +840,29 @@ export default function Dashboard() {
                 </div>
               </div>
 
+              {/* Aahar Today Widget */}
+              <div className="bg-[#FDF6EC] dark:bg-stone-900/60 border border-orange-100/50 dark:border-stone-850 rounded-[32px] p-8 flex flex-col gap-4 shadow-[0_4px_20px_-4px_rgba(28,25,22,0.01)] transition-all duration-300">
+                <div className="flex justify-between items-center">
+                  <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold">
+                    AAHAR · TODAY
+                  </div>
+                  <span className="text-[9px] font-mono text-stone-400 dark:text-stone-500 uppercase tracking-wider">
+                    Nourishment Log
+                  </span>
+                </div>
+                <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
+                  You haven&rsquo;t logged today&rsquo;s meals yet.
+                </p>
+                <div>
+                  <Link
+                    href="/aahar"
+                    className="text-[10px] font-mono uppercase tracking-wider text-[#C27A5D] border-b border-[#C27A5D]/30 hover:text-stone-900 dark:hover:text-white transition-colors"
+                  >
+                    OPEN FOOD LOG →
+                  </Link>
+                </div>
+              </div>
+
             </div>
 
           </div>
@@ -642,5 +875,6 @@ export default function Dashboard() {
         <div>© OJAS RITUAL MMXXVI</div>
       </footer>
     </div>
+    </>
   );
 }

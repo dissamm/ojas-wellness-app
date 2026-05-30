@@ -46,6 +46,28 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [showRules, setShowRules] = useState(false);
   const [passwordWarning, setPasswordWarning] = useState('');
+  
+  const [dobDay, setDobDay] = useState('');
+  const [dobMonth, setDobMonth] = useState('');
+  const [dobYear, setDobYear] = useState('');
+
+  const daysList = Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, '0'));
+  const monthsList = [
+    { value: '01', label: 'January' },
+    { value: '02', label: 'February' },
+    { value: '03', label: 'March' },
+    { value: '04', label: 'April' },
+    { value: '05', label: 'May' },
+    { value: '06', label: 'June' },
+    { value: '07', label: 'July' },
+    { value: '08', label: 'August' },
+    { value: '09', label: 'September' },
+    { value: '10', label: 'October' },
+    { value: '11', label: 'November' },
+    { value: '12', label: 'December' },
+  ];
+  const currentYear = new Date().getFullYear();
+  const yearsList = Array.from({ length: 120 }, (_, i) => String(currentYear - i));
 
   const hasSequential = hasSequentialCharacters(password);
   const rules = [
@@ -58,7 +80,7 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username || !email || !name || !password || !gender) {
+    if (!username || !email || !name || !password || !gender || !dobDay || !dobMonth || !dobYear) {
       setError('All fields are required.');
       return;
     }
@@ -73,7 +95,8 @@ export default function RegisterPage() {
     setError('');
 
     try {
-      const success = await registerUser(username, email, password, name, gender);
+      const dob = `${dobYear}-${dobMonth}-${dobDay}`;
+      const success = await registerUser(username, email, password, name, gender, dob);
       if (success) {
         // New user registered -> begin Prakriti questionnaire
         router.push('/prakriti');
@@ -217,6 +240,58 @@ export default function RegisterPage() {
                       Male
                     </button>
                   </div>
+                </div>
+
+                <div className="mb-5">
+                  <label className="block text-[9px] font-mono uppercase tracking-wider mb-1.5 font-bold text-stone-400">
+                    Date of Birth
+                  </label>
+                  <div className="flex w-full gap-3">
+                    <select
+                      value={dobDay}
+                      disabled={loading}
+                      onChange={(e) => setDobDay(e.target.value)}
+                      className={`flex-1 py-3 px-4 rounded-2xl text-xs font-mono border transition-all duration-300 bg-[#FAF6F0] border-stone-300/40 dark:bg-stone-900/40 dark:border-stone-800 focus:outline-none focus:border-[#C27A5D] focus:ring-1 focus:ring-[#C27A5D]/30 select-none cursor-pointer ${
+                        dobDay ? 'text-[#1C1917] dark:text-[#FAF6F0]' : 'text-stone-400'
+                      }`}
+                    >
+                      <option value="">DD</option>
+                      {daysList.map((d) => (
+                        <option key={d} value={d} className="text-[#1C1917] dark:bg-stone-900 dark:text-[#FAF6F0]">{d}</option>
+                      ))}
+                    </select>
+
+                    <select
+                      value={dobMonth}
+                      disabled={loading}
+                      onChange={(e) => setDobMonth(e.target.value)}
+                      className={`flex-1 py-3 px-4 rounded-2xl text-xs font-mono border transition-all duration-300 bg-[#FAF6F0] border-stone-300/40 dark:bg-stone-900/40 dark:border-stone-800 focus:outline-none focus:border-[#C27A5D] focus:ring-1 focus:ring-[#C27A5D]/30 select-none cursor-pointer ${
+                        dobMonth ? 'text-[#1C1917] dark:text-[#FAF6F0]' : 'text-stone-400'
+                      }`}
+                    >
+                      <option value="">MM</option>
+                      {monthsList.map((m) => (
+                        <option key={m.value} value={m.value} className="text-[#1C1917] dark:bg-stone-900 dark:text-[#FAF6F0]">{m.label}</option>
+                      ))}
+                    </select>
+
+                    <select
+                      value={dobYear}
+                      disabled={loading}
+                      onChange={(e) => setDobYear(e.target.value)}
+                      className={`flex-1 py-3 px-4 rounded-2xl text-xs font-mono border transition-all duration-300 bg-[#FAF6F0] border-stone-300/40 dark:bg-stone-900/40 dark:border-stone-800 focus:outline-none focus:border-[#C27A5D] focus:ring-1 focus:ring-[#C27A5D]/30 select-none cursor-pointer ${
+                        dobYear ? 'text-[#1C1917] dark:text-[#FAF6F0]' : 'text-stone-400'
+                      }`}
+                    >
+                      <option value="">YYYY</option>
+                      {yearsList.map((y) => (
+                        <option key={y} value={y} className="text-[#1C1917] dark:bg-stone-900 dark:text-[#FAF6F0]">{y}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <p className="text-stone-400 dark:text-stone-500 font-mono text-[9px] mt-1.5 uppercase tracking-wider leading-relaxed">
+                    Used for Jyotish planetary alignment and numerology insights
+                  </p>
                 </div>
 
                 {error && (

@@ -246,6 +246,16 @@ export default function MusicPage() {
             {/* RIGHT COLUMN: Active Playlist details */}
             <div className="lg:col-span-7 w-full space-y-6">
 
+              {/* Mercury Rx adjustment banner */}
+              <div className="px-4 py-2.5 bg-[#C27A5D]/10 border border-[#C27A5D]/20 rounded-2xl flex items-center justify-between gap-3 animate-pulse">
+                <span className="text-[10px] font-mono font-bold tracking-wider text-[#C27A5D] uppercase">
+                  ☿ FREQUENCIES ADJUSTED FOR MERCURY RETROGRADE
+                </span>
+                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-[#C27A5D]/20 text-[#C27A5D] font-bold">
+                  432HZ PRIORITIZED
+                </span>
+              </div>
+
               {activeTab === 'curated' ? (
                 /* Tab Curated: Indian Indie Pop Gems */
                 <Card variant="dark" className="border-[#C27A5D]/10">
@@ -354,7 +364,7 @@ export default function MusicPage() {
               ) : (
                 /* Tab Solfeggio: Vedic Solfeggio soundscapes */
                 <div className="space-y-6">
-                  {SOLFEGGIO_SOUNDSCAPES.map((sound, idx) => (
+                  {[...SOLFEGGIO_SOUNDSCAPES].sort((a, b) => (a.frequency === '432Hz' ? -1 : b.frequency === '432Hz' ? 1 : 0)).map((sound, idx) => (
                     <Card key={idx} variant="dark" className="border-[#C27A5D]/10 hover:border-[#C27A5D]/30 transition-all duration-300">
                       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                         <div className="flex items-center gap-4">

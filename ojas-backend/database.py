@@ -34,18 +34,22 @@ def init_db():
         cursor.execute("SELECT profile_picture FROM users LIMIT 1")
     except sqlite3.OperationalError:
         cursor.execute("ALTER TABLE users ADD COLUMN profile_picture TEXT")
+    try:
+        cursor.execute("SELECT date_of_birth FROM users LIMIT 1")
+    except sqlite3.OperationalError:
+        cursor.execute("ALTER TABLE users ADD COLUMN date_of_birth TEXT")
     conn.commit()
     conn.close()
 
-def create_user(username, email, password, name, gender=None):
+def create_user(username, email, password, name, gender=None, date_of_birth=None):
     email = email.lower().strip()
     password_hash = generate_password_hash(password)
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
-            'INSERT INTO users (username, email, password_hash, name, gender) VALUES (?, ?, ?, ?, ?)',
-            (username, email, password_hash, name, gender)
+            'INSERT INTO users (username, email, password_hash, name, gender, date_of_birth) VALUES (?, ?, ?, ?, ?, ?)',
+            (username, email, password_hash, name, gender, date_of_birth)
         )
         conn.commit()
         user_id = cursor.lastrowid
@@ -70,7 +74,7 @@ def get_user_by_id(user_id):
     conn.close()
     return user
 
-def update_user_profile(user_id, name=None, dosha_composition=None, dominant_dosha=None, menstrual_cycle_start=None, music_preferences=None, gender=None, profile_picture=None):
+def update_user_profile(user_id, name=None, dosha_composition=None, dominant_dosha=None, menstrual_cycle_start=None, music_preferences=None, gender=None, profile_picture=None, date_of_birth=None):
     conn = get_db_connection()
     cursor = conn.cursor()
     
@@ -98,6 +102,9 @@ def update_user_profile(user_id, name=None, dosha_composition=None, dominant_dos
     if profile_picture is not None:
         updates.append("profile_picture = ?")
         params.append(profile_picture)
+    if date_of_birth is not None:
+        updates.append("date_of_birth = ?")
+        params.append(date_of_birth)
         
     if not updates:
         conn.close()

@@ -9,6 +9,7 @@ export interface Ritual {
     link?: string;       // Link to YouTube/Spotify for guided activities
     linkText?: string;
     linkType?: 'spotify' | 'youtube' | 'generic';
+    planetaryTag?: string; // e.g. "☿ Mercury Rx"
     phaseModifications?: {
         Menstrual?: Partial<Omit<Ritual, 'id' | 'time' | 'dosha' | 'phaseModifications'>>;
         Follicular?: Partial<Omit<Ritual, 'id' | 'time' | 'dosha' | 'phaseModifications'>>;

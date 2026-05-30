@@ -448,7 +448,8 @@ def serialize_user(user):
         'menstrualCycleStart': user['menstrual_cycle_start'],
         'musicPreferences': json.loads(user['music_preferences']) if user['music_preferences'] else None,
         'gender': user['gender'] if ('gender' in user.keys() and user['gender'] is not None) else 'female',
-        'profilePicture': user['profile_picture'] if ('profile_picture' in user.keys() and user['profile_picture'] is not None) else None
+        'profilePicture': user['profile_picture'] if ('profile_picture' in user.keys() and user['profile_picture'] is not None) else None,
+        'dateOfBirth': user['date_of_birth'] if ('date_of_birth' in user.keys() and user['date_of_birth'] is not None) else None
     }
 
 @app.route('/api/auth/register', methods=['POST'])
@@ -460,6 +461,7 @@ def register():
         password = data.get('password')
         name = data.get('name')
         gender = data.get('gender', 'female')
+        date_of_birth = data.get('dateOfBirth')
         
         print(f"[REGISTER DEBUG] Attempting signup for email: {email}, username: {username}")
         
@@ -467,7 +469,7 @@ def register():
             print("[REGISTER DEBUG] Missing required fields")
             return jsonify({'success': False, 'message': 'All fields are required'}), 400
             
-        user_id = create_user(username, email, password, name, gender)
+        user_id = create_user(username, email, password, name, gender, date_of_birth)
         print(f"[REGISTER DEBUG] Database result user_id: {user_id}")
         
         if not user_id:
@@ -550,6 +552,7 @@ def update_profile(current_user):
         music_preferences = data.get('musicPreferences')
         gender = data.get('gender')
         profile_picture = data.get('profilePicture')
+        date_of_birth = data.get('dateOfBirth')
         
         # Serialize JSON fields if present
         dosha_comp_str = json.dumps(dosha_composition) if dosha_composition is not None else None
@@ -563,7 +566,8 @@ def update_profile(current_user):
             menstrual_cycle_start=menstrual_cycle_start,
             music_preferences=music_pref_str,
             gender=gender,
-            profile_picture=profile_picture
+            profile_picture=profile_picture,
+            date_of_birth=date_of_birth
         )
         
         if not success:
