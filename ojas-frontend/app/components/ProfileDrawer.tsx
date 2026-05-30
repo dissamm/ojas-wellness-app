@@ -211,7 +211,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
           </h2>
           <button 
             onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center border border-stone-300/40 dark:border-stone-800 text-stone-500 hover:text-[#C27A5D] hover:border-[#C27A5D] transition-colors"
+            className="w-8 h-8 rounded-full flex items-center justify-center border border-stone-300/40 dark:border-stone-800 text-stone-500 hover:text-[#c06080] hover:border-[#c06080] transition-colors"
           >
             <X size={16} />
           </button>
@@ -254,11 +254,11 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
                     type="text" 
                     value={newName} 
                     onChange={(e) => setNewName(e.target.value)} 
-                    className="px-3 py-1.5 rounded-lg border border-stone-300 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-800 dark:text-stone-200 text-sm focus:outline-none focus:border-[#C27A5D]"
+                    className="px-3 py-1.5 rounded-lg border border-stone-300 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-800 dark:text-stone-200 text-sm focus:outline-none focus:border-[#c06080]"
                   />
                   <button 
                     onClick={handleSaveName}
-                    className="p-2 rounded-lg bg-[#C27A5D] text-white hover:bg-[#B06B50] transition-colors"
+                    className="p-2 rounded-lg bg-[#c06080] text-white hover:bg-[#B06B50] transition-colors"
                   >
                     <Check size={14} />
                   </button>
@@ -276,7 +276,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
                   </span>
                   <button 
                     onClick={() => setIsEditingName(true)}
-                    className="text-stone-400 hover:text-[#C27A5D] transition-colors"
+                    className="text-stone-400 hover:text-[#c06080] transition-colors"
                     title={t('editProfile')}
                   >
                     <Edit2 size={12} />
@@ -297,7 +297,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
             <div>
               <button 
                 onClick={() => setActiveAccountSection(activeAccountSection === 'email' ? 'none' : 'email')}
-                className="w-full flex items-center justify-between text-xs py-2 text-stone-600 dark:text-stone-300 hover:text-[#C27A5D] transition-colors"
+                className="w-full flex items-center justify-between text-xs py-2 text-stone-600 dark:text-stone-300 hover:text-[#c06080] transition-colors"
               >
                 <span className="flex items-center gap-2"><Mail size={14} /> {t('changeEmail')}</span>
                 <span>{activeAccountSection === 'email' ? '−' : '+'}</span>
@@ -310,7 +310,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
                       type="email" 
                       value={emailInput}
                       onChange={(e) => setEmailInput(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-300/60 dark:border-stone-800 text-xs text-stone-800 dark:text-stone-200 focus:outline-none focus:border-[#C27A5D]"
+                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-300/60 dark:border-stone-800 text-xs text-stone-800 dark:text-stone-200 focus:outline-none focus:border-[#c06080]"
                       required
                     />
                   </div>
@@ -320,7 +320,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
                       type="password" 
                       value={emailPasswordInput}
                       onChange={(e) => setEmailPasswordInput(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-300/60 dark:border-stone-800 text-xs text-stone-800 dark:text-stone-200 focus:outline-none focus:border-[#C27A5D]"
+                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-300/60 dark:border-stone-800 text-xs text-stone-800 dark:text-stone-200 focus:outline-none focus:border-[#c06080]"
                       required
                     />
                   </div>
@@ -331,7 +331,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
                   )}
                   <button 
                     type="submit" 
-                    className="w-full py-2 bg-[#C27A5D] hover:bg-[#B06B50] text-white text-xs font-mono uppercase tracking-wider rounded-xl transition-colors font-bold"
+                    className="w-full py-2 bg-[#c06080] hover:bg-[#B06B50] text-white text-xs font-mono uppercase tracking-wider rounded-xl transition-colors font-bold"
                   >
                     {t('save')}
                   </button>
@@ -343,7 +343,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
             <div>
               <button 
                 onClick={() => setActiveAccountSection(activeAccountSection === 'password' ? 'none' : 'password')}
-                className="w-full flex items-center justify-between text-xs py-2 text-stone-600 dark:text-stone-300 hover:text-[#C27A5D] transition-colors"
+                className="w-full flex items-center justify-between text-xs py-2 text-stone-600 dark:text-stone-300 hover:text-[#c06080] transition-colors"
               >
                 <span className="flex items-center gap-2"><Lock size={14} /> {t('changePassword')}</span>
                 <span>{activeAccountSection === 'password' ? '−' : '+'}</span>
@@ -356,7 +356,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
                       type="password" 
                       value={currentPasswordInput}
                       onChange={(e) => setCurrentPasswordInput(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-300/60 dark:border-stone-800 text-xs text-stone-800 dark:text-stone-200 focus:outline-none focus:border-[#C27A5D]"
+                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-300/60 dark:border-stone-800 text-xs text-stone-800 dark:text-stone-200 focus:outline-none focus:border-[#c06080]"
                       required
                     />
                   </div>
@@ -366,7 +366,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
                       type="password" 
                       value={newPasswordInput}
                       onChange={(e) => setNewPasswordInput(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-300/60 dark:border-stone-800 text-xs text-stone-800 dark:text-stone-200 focus:outline-none focus:border-[#C27A5D]"
+                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-300/60 dark:border-stone-800 text-xs text-stone-800 dark:text-stone-200 focus:outline-none focus:border-[#c06080]"
                       required
                     />
                   </div>
@@ -377,7 +377,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
                   )}
                   <button 
                     type="submit" 
-                    className="w-full py-2 bg-[#C27A5D] hover:bg-[#B06B50] text-white text-xs font-mono uppercase tracking-wider rounded-xl transition-colors font-bold"
+                    className="w-full py-2 bg-[#c06080] hover:bg-[#B06B50] text-white text-xs font-mono uppercase tracking-wider rounded-xl transition-colors font-bold"
                   >
                     {t('save')}
                   </button>
@@ -429,7 +429,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
               </span>
               <button 
                 onClick={handleToggleTheme}
-                className="w-9 h-5 rounded-full bg-stone-300 dark:bg-[#C27A5D] p-0.5 relative transition-colors duration-300"
+                className="w-9 h-5 rounded-full bg-stone-300 dark:bg-[#c06080] p-0.5 relative transition-colors duration-300"
               >
                 <div className={`w-4 h-4 rounded-full bg-white transition-transform duration-300 ${isDarkMode ? 'translate-x-4' : 'translate-x-0'}`} />
               </button>
@@ -443,7 +443,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
               </span>
               <button 
                 onClick={handleToggleNotifications}
-                className={`w-9 h-5 rounded-full p-0.5 relative transition-colors duration-300 ${notificationsOn ? 'bg-[#C27A5D]' : 'bg-stone-300 dark:bg-stone-800'}`}
+                className={`w-9 h-5 rounded-full p-0.5 relative transition-colors duration-300 ${notificationsOn ? 'bg-[#c06080]' : 'bg-stone-300 dark:bg-stone-800'}`}
               >
                 <div className={`w-4 h-4 rounded-full bg-white transition-transform duration-300 ${notificationsOn ? 'translate-x-4' : 'translate-x-0'}`} />
               </button>
@@ -459,7 +459,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
               <select 
                 value={language}
                 onChange={(e) => setLanguage(e.target.value as Language)}
-                className="w-full px-4 py-2.5 rounded-xl border border-stone-300/60 dark:border-stone-800 bg-white dark:bg-stone-900 text-xs text-stone-800 dark:text-stone-200 focus:outline-none focus:border-[#C27A5D] uppercase tracking-wider font-mono cursor-pointer"
+                className="w-full px-4 py-2.5 rounded-xl border border-stone-300/60 dark:border-stone-800 bg-white dark:bg-stone-900 text-xs text-stone-800 dark:text-stone-200 focus:outline-none focus:border-[#c06080] uppercase tracking-wider font-mono cursor-pointer"
               >
                 <option value="en">English</option>
                 <option value="hi">हिन्दी (Hindi)</option>
@@ -488,7 +488,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
                   placeholder={t('subject')}
                   value={helpSubject}
                   onChange={(e) => setHelpSubject(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-300/60 dark:border-stone-800 text-xs text-stone-800 dark:text-stone-200 focus:outline-none focus:border-[#C27A5D]"
+                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-300/60 dark:border-stone-800 text-xs text-stone-800 dark:text-stone-200 focus:outline-none focus:border-[#c06080]"
                   required
                 />
               </div>
@@ -498,7 +498,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
                   rows={3}
                   value={helpMessage}
                   onChange={(e) => setHelpMessage(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-300/60 dark:border-stone-800 text-xs text-stone-800 dark:text-stone-200 focus:outline-none focus:border-[#C27A5D]"
+                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-300/60 dark:border-stone-800 text-xs text-stone-800 dark:text-stone-200 focus:outline-none focus:border-[#c06080]"
                   required
                 />
               </div>
@@ -509,7 +509,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
               )}
               <button 
                 type="submit" 
-                className="w-full py-2 bg-[#C27A5D] hover:bg-[#B06B50] text-white text-xs font-mono uppercase tracking-wider rounded-xl transition-colors font-bold"
+                className="w-full py-2 bg-[#c06080] hover:bg-[#B06B50] text-white text-xs font-mono uppercase tracking-wider rounded-xl transition-colors font-bold"
               >
                 {t('submitMessage')}
               </button>
@@ -526,7 +526,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
             <div className="border-b border-stone-200/50 dark:border-stone-850">
               <button 
                 onClick={() => setActiveLearnSection(activeLearnSection === 'tutorials' ? 'none' : 'tutorials')}
-                className="w-full flex items-center justify-between text-xs py-2 text-stone-600 dark:text-stone-400 hover:text-[#C27A5D]"
+                className="w-full flex items-center justify-between text-xs py-2 text-stone-600 dark:text-stone-400 hover:text-[#c06080]"
               >
                 <span>{t('tutorials')}</span>
                 <span>{activeLearnSection === 'tutorials' ? '−' : '+'}</span>
@@ -542,7 +542,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
             <div className="border-b border-stone-200/50 dark:border-stone-850">
               <button 
                 onClick={() => setActiveLearnSection(activeLearnSection === 'usage' ? 'none' : 'usage')}
-                className="w-full flex items-center justify-between text-xs py-2 text-stone-600 dark:text-stone-400 hover:text-[#C27A5D]"
+                className="w-full flex items-center justify-between text-xs py-2 text-stone-600 dark:text-stone-400 hover:text-[#c06080]"
               >
                 <span>{t('usagePolicy')}</span>
                 <span>{activeLearnSection === 'usage' ? '−' : '+'}</span>
@@ -558,7 +558,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
             <div>
               <button 
                 onClick={() => setActiveLearnSection(activeLearnSection === 'privacy' ? 'none' : 'privacy')}
-                className="w-full flex items-center justify-between text-xs py-2 text-stone-600 dark:text-stone-400 hover:text-[#C27A5D]"
+                className="w-full flex items-center justify-between text-xs py-2 text-stone-600 dark:text-stone-400 hover:text-[#c06080]"
               >
                 <span>{t('privacyPolicy')}</span>
                 <span>{activeLearnSection === 'privacy' ? '−' : '+'}</span>
@@ -575,7 +575,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
           <div className="pt-4 border-t border-stone-200 dark:border-stone-850">
             <button 
               onClick={() => { logout(); onClose(); }}
-              className="w-full py-3 bg-[#C27A5D]/10 hover:bg-[#C27A5D]/25 border border-[#C27A5D]/20 text-[#C27A5D] text-xs font-mono uppercase tracking-[0.15em] font-bold rounded-2xl transition-all duration-300 text-center select-none"
+              className="w-full py-3 bg-[#c06080]/10 hover:bg-[#c06080]/25 border border-[#c06080]/20 text-[#c06080] text-xs font-mono uppercase tracking-[0.15em] font-bold rounded-2xl transition-all duration-300 text-center select-none"
             >
               {t('logout')}
             </button>

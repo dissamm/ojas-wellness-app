@@ -32,7 +32,6 @@ export async function predictMood(params: PredictMoodParams): Promise<Prediction
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      estrogen: 50,
       ...params,
     }),
   });
@@ -75,7 +74,6 @@ export const useMoodPrediction = (
         const data = await predictMood({
           cycle_day: day,
           date: today.toISOString().split('T')[0],
-          estrogen: 50,
           prakriti: dominantDoshaText,
         });
 

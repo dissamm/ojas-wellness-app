@@ -16,8 +16,8 @@ export const Select = ({
     ...props
 }: SelectProps) => {
     const baseStyle = variant === 'dark'
-        ? "bg-white/5 border border-white/10 text-white focus:border-[#C27A5D] focus:ring-1 focus:ring-[#C27A5D]/30"
-        : "bg-[#FAF6F0] border border-stone-300/40 text-[#1C1917] focus:border-[#C27A5D] focus:ring-1 focus:ring-[#C27A5D]/30";
+        ? "bg-white/5 border border-white/10 text-white focus:border-[#c06080] focus:ring-1 focus:ring-[#c06080]/30"
+        : "bg-[#FAF6F0] border border-stone-300/40 text-[#1C1917] focus:border-[#c06080] focus:ring-1 focus:ring-[#c06080]/30";
 
     return (
         <div className="mb-5">

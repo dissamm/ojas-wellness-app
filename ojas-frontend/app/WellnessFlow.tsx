@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useUserStore } from './store/userStore';
 import { DoshaAnimation } from './components/flows/DoshaAnimation';
 import { PrakritiAssessment } from './components/flows/PrakritiAssessment';
@@ -13,6 +13,12 @@ export default function WellnessFlow() {
     const currentStep = useUserStore((state) => state.currentStep);
     const setCurrentStep = useUserStore((state) => state.setCurrentStep);
     const user = useUserStore((state) => state.user);
+
+    const [predictionData, setPredictionData] = useState<{
+        predictedMood: number | null;
+        moodType: string;
+        cyclePhase: string;
+    } | null>(null);
 
     useEffect(() => {
         if (currentStep === 'menstrual-moon' && user?.gender === 'male') {
@@ -34,11 +40,21 @@ export default function WellnessFlow() {
 
     if (currentStep === 'menstrual-moon') {
         if (user?.gender === 'male') return null;
-        return <MenstrualMoonCorrelation />;
+        return (
+            <MenstrualMoonCorrelation 
+                onPredictionComplete={(data) => setPredictionData(data)} 
+            />
+        );
     }
 
     if (currentStep === 'music') {
-        return <MusicRecommendations />;
+        return (
+            <MusicRecommendations 
+                predictedMood={predictionData?.predictedMood ?? null}
+                moodType={predictionData?.moodType ?? ''}
+                cyclePhase={predictionData?.cyclePhase ?? ''}
+            />
+        );
     }
 
     if (currentStep === 'companion') {

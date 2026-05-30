@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useUserStore } from '../store/userStore';
 import { useTranslation, translations } from '../store/languageStore';
+import { ProfileDrawer } from './ProfileDrawer';
 
 export const Header = () => {
   const pathname = usePathname();
@@ -15,6 +16,7 @@ export const Header = () => {
 
   const [isDark, setIsDark] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -57,17 +59,16 @@ export const Header = () => {
   const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : 'A';
 
   return (
-    <header className="w-full backdrop-blur-md px-6 py-4 md:px-12 md:py-5 border-b border-[#1C1917]/5 dark:border-stone-800/80 bg-[#F4EFEA]/80 dark:bg-[#12100E]/80 sticky top-0 z-50 transition-colors duration-300">
+    <header className="w-full backdrop-blur-md px-6 py-4 md:px-12 md:py-5 border-b border-white/10 bg-[#120d22] sticky top-0 z-50 transition-colors duration-300">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-
-        {/* Left Metadata */}
-        <div className="text-[10px] md:text-xs font-mono uppercase tracking-[0.25em] font-medium text-stone-400 dark:text-stone-500 select-none">
+        {/* Left Metadata (Sleek and Monospaced) */}
+        <div className="text-[10px] md:text-xs font-mono uppercase tracking-[0.25em] font-medium text-[#f7f3f8]/40 select-none">
           REF. 882 / 2026
         </div>
 
         {/* Center Brand */}
         <Link href="/" className="group flex items-center">
-          <span className="font-cormorant italic text-3xl font-medium tracking-normal text-[#C27A5D] group-hover:text-[#1C1917] dark:group-hover:text-white transition-colors duration-500">
+          <span className="font-cormorant italic text-3xl font-medium tracking-normal text-[#c06080] group-hover:text-[#f7f3f8] transition-colors duration-500">
             Ojas<sup className="text-[9px] font-sans align-super left-0.5">®</sup>
           </span>
         </Link>
@@ -82,9 +83,9 @@ export const Header = () => {
                   key={link.key}
                   href={link.path}
                   className={`text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] transition-colors duration-300 pb-0.5 border-b ${
-                    isActive
-                      ? 'text-[#C27A5D] font-bold border-[#C27A5D]/60'
-                      : 'text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white border-transparent'
+                    isActive 
+                      ? 'text-[#c06080] font-bold border-[#c06080]/60' 
+                      : 'text-[#f7f3f8]/70 hover:text-[#f7f3f8] border-transparent'
                   }`}
                 >
                   {t(link.key)}
@@ -96,27 +97,29 @@ export const Header = () => {
           {/* Dark Mode Toggle */}
           <button
             onClick={toggleDarkMode}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-xs border border-stone-300/80 dark:border-stone-800 text-stone-600 dark:text-stone-450 bg-white/40 dark:bg-stone-900/40 hover:border-[#C27A5D] dark:hover:border-[#C27A5D] hover:text-[#C27A5D] dark:hover:text-[#C27A5D] transition-colors duration-300 cursor-pointer select-none"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-xs border border-white/15 text-[#f7f3f8] bg-white/5 hover:border-[#c06080] hover:text-[#c06080] transition-colors duration-300 cursor-pointer select-none"
             aria-label="Toggle theme"
           >
             {isDark ? '☀️' : '🌙'}
           </button>
 
-          {/* Profile Avatar → /profile, Logout */}
+          {/* Profile Initials / Log In Action */}
           {isMounted && isAuthenticated ? (
             <div className="flex items-center gap-2.5">
-              <Link
-                href="/profile"
-                className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center text-[10px] font-mono border border-stone-300/80 dark:border-stone-800 text-stone-600 dark:text-stone-450 bg-white/40 dark:bg-stone-900/40 select-none hover:border-[#C27A5D] hover:shadow-[0_0_0_2px_rgba(194,122,93,0.2)] transition-all duration-300"
-                aria-label="Profile settings"
+              <button
+                onClick={() => setIsProfileOpen(true)}
+                className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center text-[10px] font-mono border border-white/15 text-[#f7f3f8] bg-white/5 shadow-[0_1px_3px_rgba(0,0,0,0.2)] select-none cursor-pointer hover:border-[#c06080] transition-all duration-300"
+                aria-label="Open profile settings"
               >
                 {user?.profilePicture ? (
                   <img src={user.profilePicture} alt={user.name} className="w-full h-full object-cover" />
-                ) : userInitial}
-              </Link>
+                ) : (
+                  userInitial
+                )}
+              </button>
               <button
                 onClick={() => logout()}
-                className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-stone-500 hover:text-[#C27A5D] dark:text-stone-450 dark:hover:text-[#C27A5D] transition-colors duration-300 cursor-pointer select-none"
+                className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#f7f3f8]/70 hover:text-[#c06080] transition-colors duration-300 cursor-pointer select-none"
               >
                 {t('logout')}
               </button>
@@ -124,13 +127,16 @@ export const Header = () => {
           ) : isMounted ? (
             <Link
               href="/login"
-              className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-stone-500 dark:text-stone-400 hover:text-[#C27A5D] dark:hover:text-[#C27A5D] transition-colors duration-300"
+              className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#f7f3f8]/70 hover:text-[#c06080] transition-colors duration-300"
             >
               {t('signIn')}
             </Link>
           ) : null}
         </div>
       </div>
+
+      {/* Profile Sidebar Panel */}
+      <ProfileDrawer isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
     </header>
   );
 };

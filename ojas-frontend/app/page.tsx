@@ -13,76 +13,20 @@ const LargeHeroLotus = () => (
   <div className="mb-12 flex justify-center pointer-events-auto select-none">
     <div className="relative flex items-center justify-center">
       {/* Layer 1: Outer Pulse/Glow Backdrop */}
-      <span className="absolute inline-flex w-40 h-40 md:w-48 md:h-48 rounded-full bg-[#C27A5D]/10 blur-2xl animate-pulse"></span>
-
+      <span className="absolute inline-flex w-40 h-40 md:w-48 md:h-48 rounded-full bg-[#c06080]/10 blur-2xl animate-pulse"></span>
+      
       {/* Layer 2: Main Outer Pinging Ring */}
-      <span className="absolute inline-flex w-32 h-32 md:w-36 md:h-36 rounded-full border border-[#C27A5D]/20 animate-[ping_3.5s_cubic-bezier(0,0,0.2,1)_infinite]"></span>
-
+      <span className="absolute inline-flex w-32 h-32 md:w-36 md:h-36 rounded-full border border-[#c06080]/20 animate-[ping_3.5s_cubic-bezier(0,0,0.2,1)_infinite]"></span>
+      
       {/* Layer 3: Secondary Delayed Inner Pinging Ring */}
-      <span className="absolute inline-flex w-24 h-24 md:w-28 md:h-28 rounded-full border border-[#C27A5D]/30 animate-[ping_3.5s_cubic-bezier(0,0,0.2,1)_infinite] [animation-delay:1s]"></span>
-
-      {/* Layer 4: Golden SVG Lotus (same as dashboard) — floating animation */}
-      <div className="relative w-28 h-28 md:w-32 md:h-32 animate-[float_6s_ease-in-out_infinite] drop-shadow-[0_10px_30px_rgba(194,122,93,0.35)]">
-        <svg viewBox="0 0 100 100" fill="none" className="w-full h-full">
-          {/* Center Petal */}
-          <path
-            d="M50,85 C50,85 42,65 50,50 C58,65 50,85 50,85Z"
-            fill="url(#hero-centerGradient)"
-            opacity="0"
-            style={{ animation: 'bloom-center 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards', transformOrigin: '50px 85px' }}
-          />
-          {/* Inner Left Petal */}
-          <path
-            d="M50,85 C50,85 28,75 22,58 C34,52 44,70 50,85Z"
-            fill="url(#hero-innerGradient)"
-            opacity="0"
-            style={{ animation: 'bloom-left-inner 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards', transformOrigin: '50px 85px' }}
-          />
-          {/* Inner Right Petal */}
-          <path
-            d="M50,85 C50,85 72,75 78,58 C66,52 56,70 50,85Z"
-            fill="url(#hero-innerGradient)"
-            opacity="0"
-            style={{ animation: 'bloom-right-inner 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards', transformOrigin: '50px 85px' }}
-          />
-          {/* Outer Left Petal */}
-          <path
-            d="M50,85 C50,85 18,80 12,58 C28,48 40,68 50,85Z"
-            fill="url(#hero-outerGradient)"
-            opacity="0"
-            style={{ animation: 'bloom-left-outer 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards', transformOrigin: '50px 85px' }}
-          />
-          {/* Outer Right Petal */}
-          <path
-            d="M50,85 C50,85 82,80 88,58 C72,48 60,68 50,85Z"
-            fill="url(#hero-outerGradient)"
-            opacity="0"
-            style={{ animation: 'bloom-right-outer 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards', transformOrigin: '50px 85px' }}
-          />
-          {/* Subtle Glow */}
-          <circle cx="50" cy="55" r="30" fill="url(#hero-glowGradient)" opacity="0.25" className="animate-pulse" />
-
-          <defs>
-            <radialGradient id="hero-centerGradient" cx="50%" cy="40%" r="60%">
-              <stop offset="0%" stopColor="#F5D0A9" />
-              <stop offset="60%" stopColor="#C27A5D" />
-              <stop offset="100%" stopColor="#A8573C" />
-            </radialGradient>
-            <radialGradient id="hero-innerGradient" cx="50%" cy="40%" r="60%">
-              <stop offset="0%" stopColor="#FDBA74" />
-              <stop offset="100%" stopColor="#C27A5D" />
-            </radialGradient>
-            <radialGradient id="hero-outerGradient" cx="50%" cy="40%" r="60%">
-              <stop offset="0%" stopColor="#FCD34D" />
-              <stop offset="100%" stopColor="#FDBA74" />
-            </radialGradient>
-            <radialGradient id="hero-glowGradient" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#F5D0A9" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="#C27A5D" stopOpacity="0" />
-            </radialGradient>
-          </defs>
-        </svg>
-      </div>
+      <span className="absolute inline-flex w-24 h-24 md:w-28 md:h-28 rounded-full border border-[#c06080]/30 animate-[ping_3.5s_cubic-bezier(0,0,0.2,1)_infinite] [animation-delay:1s]"></span>
+      
+      {/* Layer 4: Interactive Floating Lotus Image */}
+      <img src="/lotus.png" 
+           alt="Ojas blooming lotus mark" 
+           width="140" 
+           height="140" 
+           className="relative w-28 h-28 md:w-32 md:h-32 object-contain drop-shadow-[0_10px_30px_rgba(194,122,93,0.35)] animate-[float_6s_ease-in-out_infinite]" />
     </div>
   </div>
 );
@@ -110,7 +54,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden bg-background text-foreground flex flex-col justify-between selection:bg-[#C27A5D]/10 transition-colors duration-500">
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-background text-foreground flex flex-col justify-between selection:bg-[#c06080]/10 transition-colors duration-500">
 
       <div>
         <Header />
@@ -121,7 +65,7 @@ export default function Home() {
           <section className="pt-16 pb-24 md:pt-24 md:pb-36 flex flex-col items-center">
             
             {/* Small uppercase copper tag */}
-            <span className="text-[10px] md:text-xs font-mono uppercase tracking-[0.3em] text-[#C27A5D] font-bold mb-6 animate-fade-rise select-none">
+            <span className="text-[10px] md:text-xs font-mono uppercase tracking-[0.3em] text-[#c06080] font-bold mb-6 animate-fade-rise select-none">
               ALIGN WITH THE UNSEEN
             </span>
 
@@ -130,7 +74,7 @@ export default function Home() {
 
             {/* Headline with editorial copper accents */}
             <h1 className="text-5xl sm:text-7xl md:text-8xl font-normal font-cormorant text-[#1C1917] max-w-5xl leading-[1.05] tracking-tight animate-fade-rise text-balance">
-              Sync your <span className="italic text-[#C27A5D]">rhythm</span> with the cosmic pulse.
+              Sync your <span className="italic text-[#c06080]">rhythm</span> with the cosmic pulse.
             </h1>
 
             {/* Description */}
@@ -142,7 +86,7 @@ export default function Home() {
             <div className="animate-fade-rise-delay-2 mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button
                 onClick={handleBeginJourney}
-                className="rounded-full px-10 py-4 text-[10px] font-mono font-bold uppercase tracking-[0.25em] bg-[#1C1917] text-[#F4EFEA] hover:bg-[#C27A5D] active:scale-[0.98] transition-all duration-300 shadow-sm cursor-pointer select-none"
+                className="rounded-full px-10 py-4 text-[10px] font-mono font-bold uppercase tracking-[0.25em] bg-[#1C1917] text-[#F4EFEA] hover:bg-[#c06080] active:scale-[0.98] transition-all duration-300 shadow-sm cursor-pointer select-none"
               >
                 Begin Discovery
               </button>
@@ -160,9 +104,9 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
 
               {/* CARD 1: Prakriti Genesis */}
-              <div className="bg-[#FAF6F0] dark:bg-stone-900/60 rounded-[32px] p-8 border border-[#1C1917]/5 dark:border-stone-850 shadow-[0_4px_30px_rgba(28,25,22,0.02)] flex flex-col justify-between group/card hover:border-[#C27A5D]/20 transition-all duration-500 h-[500px] text-[#1C1917] dark:text-[#FAF6F0]">
+              <div className="bg-[#FAF6F0] dark:bg-stone-900/60 rounded-[32px] p-8 border border-[#1C1917]/5 dark:border-stone-850 shadow-[0_4px_30px_rgba(28,25,22,0.02)] flex flex-col justify-between group/card hover:border-[#c06080]/20 transition-all duration-500 h-[500px] text-[#1C1917] dark:text-[#FAF6F0]">
                 <div>
-                  <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-bold mb-4 block">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-bold mb-4 block">
                     ANALYSIS
                   </span>
                   <h3 className="font-cormorant italic text-3xl text-[#1C1917] dark:text-[#FAF6F0] font-normal mb-3">
@@ -175,7 +119,7 @@ export default function Home() {
 
                 {/* Exquisite Meditation SVG illustration */}
                 <div className="my-6 flex justify-center items-center h-40">
-                  <svg className="w-full h-full text-stone-400/30 group-hover/card:text-[#C27A5D]/40 transition-colors duration-500" viewBox="0 0 100 100" fill="none">
+                  <svg className="w-full h-full text-stone-400/30 group-hover/card:text-[#c06080]/40 transition-colors duration-500" viewBox="0 0 100 100" fill="none">
                     {/* Outline of aura/stars */}
                     <circle cx="50" cy="50" r="38" stroke="currentColor" strokeWidth="0.75" strokeDasharray="2 3" />
                     <circle cx="50" cy="50" r="28" stroke="currentColor" strokeWidth="0.5" />
@@ -184,16 +128,16 @@ export default function Home() {
                     <path d="M50,34 L50,60 M50,38 L30,48 L20,68 C20,68 35,72 50,72 C65,72 80,68 80,68 L70,48 L50,38 Z" stroke="currentColor" strokeWidth="1" fill="none" />
                     <path d="M30,48 L50,56 L70,48" stroke="currentColor" strokeWidth="1" fill="none" />
                     {/* Core energy spots */}
-                    <circle cx="50" cy="28" r="1.5" fill="#C27A5D" />
-                    <circle cx="50" cy="42" r="1.5" fill="#C27A5D" />
-                    <circle cx="50" cy="54" r="1.5" fill="#C27A5D" />
-                    <circle cx="50" cy="66" r="1.5" fill="#C27A5D" />
+                    <circle cx="50" cy="28" r="1.5" fill="#c06080" />
+                    <circle cx="50" cy="42" r="1.5" fill="#c06080" />
+                    <circle cx="50" cy="54" r="1.5" fill="#c06080" />
+                    <circle cx="50" cy="66" r="1.5" fill="#c06080" />
                   </svg>
                 </div>
 
                 <button
                   onClick={() => router.push('/prakriti')}
-                  className="w-full py-4 rounded-full text-[9px] font-mono font-bold uppercase tracking-[0.25em] bg-[#1C1917] text-[#FAF6F0] hover:bg-[#C27A5D] transition-all duration-300 shadow-sm cursor-pointer select-none"
+                  className="w-full py-4 rounded-full text-[9px] font-mono font-bold uppercase tracking-[0.25em] bg-[#1C1917] text-[#FAF6F0] hover:bg-[#c06080] transition-all duration-300 shadow-sm cursor-pointer select-none"
                 >
                   Begin Analysis
                 </button>
@@ -202,7 +146,7 @@ export default function Home() {
               {/* CARD 2: Lunar Synchronization */}
               <div className="bg-[#1C1917] rounded-[32px] p-8 border border-[#1C1917] shadow-[0_4px_30px_rgba(28,25,22,0.02)] flex flex-col justify-between group/card hover:bg-stone-900 transition-all duration-500 h-[500px] text-[#F4EFEA]">
                 <div>
-                  <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-bold mb-4 block">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-bold mb-4 block">
                     HARMONY
                   </span>
                   <h3 className="font-cormorant italic text-3xl font-normal mb-3 text-[#FAF6F0]">
@@ -217,7 +161,7 @@ export default function Home() {
                 <div className="my-6 flex flex-col justify-center items-center h-40">
                   <svg className="w-24 h-24 text-stone-600" viewBox="0 0 100 100" fill="none">
                     {/* Ambient light ring */}
-                    <circle cx="50" cy="50" r="32" stroke="#C27A5D" strokeOpacity="0.2" strokeWidth="3" />
+                    <circle cx="50" cy="50" r="32" stroke="#c06080" strokeOpacity="0.2" strokeWidth="3" />
                     {/* Solid glowing center moon (Waning Gibbous) */}
                     <circle cx="50" cy="50" r="30" fill="url(#moonGlow)" />
                     {/* Shadow overlay creating the phase */}
@@ -226,27 +170,27 @@ export default function Home() {
                       <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
                         <stop offset="0%" stopColor="#FFF" stopOpacity="0.9" />
                         <stop offset="80%" stopColor="#FAF6F0" stopOpacity="0.75" />
-                        <stop offset="100%" stopColor="#C27A5D" stopOpacity="0.4" />
+                        <stop offset="100%" stopColor="#c06080" stopOpacity="0.4" />
                       </radialGradient>
                     </defs>
                   </svg>
-                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-bold mt-4 select-none">
+                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-bold mt-4 select-none">
                     Waning Gibbous • Day 14
                   </span>
                 </div>
 
                 <button
                   onClick={() => router.push('/cycle')}
-                  className="w-full py-4 rounded-full text-[9px] font-mono font-bold uppercase tracking-[0.25em] bg-[#F4EFEA] text-[#1C1917] hover:bg-[#C27A5D] hover:text-[#F4EFEA] transition-all duration-300 shadow-sm cursor-pointer select-none"
+                  className="w-full py-4 rounded-full text-[9px] font-mono font-bold uppercase tracking-[0.25em] bg-[#F4EFEA] text-[#1C1917] hover:bg-[#c06080] hover:text-[#F4EFEA] transition-all duration-300 shadow-sm cursor-pointer select-none"
                 >
                   Sync Moon
                 </button>
               </div>
 
               {/* CARD 3: Responsive Audio */}
-              <div className="bg-[#FFFFFF] dark:bg-stone-900/60 rounded-[32px] p-8 border border-[#1C1917]/5 dark:border-stone-850 shadow-[0_10px_40px_rgba(28,25,22,0.03)] flex flex-col justify-between group/card hover:border-[#C27A5D]/20 transition-all duration-500 h-[500px] text-[#1C1917] dark:text-[#FAF6F0]">
+              <div className="bg-[#FFFFFF] dark:bg-stone-900/60 rounded-[32px] p-8 border border-[#1C1917]/5 dark:border-stone-850 shadow-[0_10px_40px_rgba(28,25,22,0.03)] flex flex-col justify-between group/card hover:border-[#c06080]/20 transition-all duration-500 h-[500px] text-[#1C1917] dark:text-[#FAF6F0]">
                 <div>
-                  <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-bold mb-4 block">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-bold mb-4 block">
                     FREQUENCY
                   </span>
                   <h3 className="font-cormorant italic text-3xl text-[#1C1917] dark:text-[#FAF6F0] font-normal mb-3">
@@ -266,10 +210,10 @@ export default function Home() {
                     </div>
                     {/* Animated soundwaves */}
                     <div className="flex items-end gap-[2px] h-3 pr-1">
-                      <div className="w-[2px] bg-[#C27A5D] rounded-full animate-[pulse_0.8s_infinite] h-full" />
-                      <div className="w-[2px] bg-[#C27A5D] rounded-full animate-[pulse_1.2s_infinite] h-1/2" style={{ animationDelay: '0.2s' }} />
-                      <div className="w-[2px] bg-[#C27A5D] rounded-full animate-[pulse_1s_infinite] h-3/4" style={{ animationDelay: '0.4s' }} />
-                      <div className="w-[2px] bg-[#C27A5D] rounded-full animate-[pulse_0.7s_infinite] h-2/3" style={{ animationDelay: '0.1s' }} />
+                      <div className="w-[2px] bg-[#c06080] rounded-full animate-[pulse_0.8s_infinite] h-full" />
+                      <div className="w-[2px] bg-[#c06080] rounded-full animate-[pulse_1.2s_infinite] h-1/2" style={{ animationDelay: '0.2s' }} />
+                      <div className="w-[2px] bg-[#c06080] rounded-full animate-[pulse_1s_infinite] h-3/4" style={{ animationDelay: '0.4s' }} />
+                      <div className="w-[2px] bg-[#c06080] rounded-full animate-[pulse_0.7s_infinite] h-2/3" style={{ animationDelay: '0.1s' }} />
                     </div>
                   </div>
                   <div className="flex items-center justify-between p-3 bg-white dark:bg-stone-950/40 rounded-2xl border border-stone-100 dark:border-stone-850 opacity-60">
@@ -283,7 +227,7 @@ export default function Home() {
 
                 <button
                   onClick={() => router.push('/music')}
-                  className="w-full py-4 rounded-full text-[9px] font-mono font-bold uppercase tracking-[0.25em] bg-[#1C1917] text-[#FFFFFF] hover:bg-[#C27A5D] transition-all duration-300 shadow-sm cursor-pointer select-none"
+                  className="w-full py-4 rounded-full text-[9px] font-mono font-bold uppercase tracking-[0.25em] bg-[#1C1917] text-[#FFFFFF] hover:bg-[#c06080] transition-all duration-300 shadow-sm cursor-pointer select-none"
                 >
                   Launch Player
                 </button>
@@ -298,9 +242,9 @@ export default function Home() {
       <footer className="relative z-10 w-full max-w-7xl mx-auto px-8 pb-8 pt-8 border-t border-[#1C1917]/5 flex flex-col md:flex-row items-center justify-between gap-4 text-[10px] font-mono text-stone-400 tracking-widest uppercase">
         <div className="font-cormorant italic text-lg text-stone-600 font-semibold lowercase select-none">ojas.</div>
         <div className="flex gap-6">
-          <a href="#" className="hover:text-[#C27A5D] transition-colors">Privacy</a>
-          <a href="#" className="hover:text-[#C27A5D] transition-colors">Terms</a>
-          <a href="#" className="hover:text-[#C27A5D] transition-colors">Archive</a>
+          <a href="#" className="hover:text-[#c06080] transition-colors">Privacy</a>
+          <a href="#" className="hover:text-[#c06080] transition-colors">Terms</a>
+          <a href="#" className="hover:text-[#c06080] transition-colors">Archive</a>
         </div>
         <div className="select-none">© 2026 OJAS</div>
       </footer>

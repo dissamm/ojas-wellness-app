@@ -107,13 +107,13 @@ const LotusLogo = ({ size = "lg", animated = true }) => {
         <defs>
           <radialGradient id="centerGradient" cx="50%" cy="40%" r="60%">
             <stop offset="0%" stopColor="#F5D0A9" />
-            <stop offset="60%" stopColor="#C27A5D" />
+            <stop offset="60%" stopColor="#c06080" />
             <stop offset="100%" stopColor="#A8573C" />
           </radialGradient>
           
           <radialGradient id="innerGradient" cx="50%" cy="40%" r="60%">
             <stop offset="0%" stopColor="#FDBA74" />
-            <stop offset="100%" stopColor="#C27A5D" />
+            <stop offset="100%" stopColor="#c06080" />
           </radialGradient>
           
           <radialGradient id="outerGradient" cx="50%" cy="40%" r="60%">
@@ -123,7 +123,7 @@ const LotusLogo = ({ size = "lg", animated = true }) => {
           
           <radialGradient id="glowGradient" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#F5D0A9" stopOpacity="0.6"/>
-            <stop offset="100%" stopColor="#C27A5D" stopOpacity="0"/>
+            <stop offset="100%" stopColor="#c06080" stopOpacity="0"/>
           </radialGradient>
         </defs>
       </svg>
@@ -271,7 +271,7 @@ export default function Dashboard() {
       />
     )}
 
-    <div className="min-h-screen bg-background text-foreground font-inter selection:bg-[#C27A5D]/10 flex flex-col justify-between transition-colors duration-500">
+    <div className="min-h-screen bg-background text-foreground font-inter selection:bg-[#c06080]/10 flex flex-col justify-between transition-colors duration-500">
       <div>
         <Header />
         <Disclaimer className="mt-6 -mb-4" />
@@ -298,17 +298,17 @@ export default function Dashboard() {
 
           {/* Compiled Resonance Blueprint Banner */}
           <div className="mb-10 animate-fade-rise">
-            <Card className="p-6 md:p-8 bg-[#FAF6F0]/80 dark:bg-stone-900/60 border border-[#C27A5D]/20 dark:border-stone-800 relative overflow-hidden backdrop-blur-md">
+            <Card className="p-6 md:p-8 bg-[#FAF6F0]/80 dark:bg-stone-900/60 border border-[#c06080]/20 dark:border-stone-800 relative overflow-hidden backdrop-blur-md">
               {/* Subtle background graphics */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-[#C27A5D]/5 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#c06080]/5 rounded-full blur-3xl pointer-events-none" />
               
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-stone-200/50 dark:border-stone-800 pb-6 mb-6">
                 <div>
-                  <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-bold block mb-1">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-bold block mb-1">
                     INTEGRATED AYURVEDIC MATRIX
                   </span>
                   <h2 className="text-2xl md:text-3xl font-serif font-normal text-[#1C1917] dark:text-[#FAF6F0]">
-                    Your Resonance <span className="italic text-[#C27A5D]">Blueprint</span>
+                    Your Resonance <span className="italic text-[#c06080]">Blueprint</span>
                   </h2>
                 </div>
                 <div className="flex items-center gap-3">
@@ -322,7 +322,7 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* 1. Prakriti Component */}
                 <div className="flex flex-col gap-2">
-                  <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold flex items-center gap-2">
+                  <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold flex items-center gap-2">
                     <span>🧬</span> CONSTITUTION
                   </div>
                   <div>
@@ -339,7 +339,7 @@ export default function Dashboard() {
                 <div className="flex flex-col gap-2">
                   {user?.gender === 'male' ? (
                     <>
-                      <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold flex items-center gap-2">
+                      <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold flex items-center gap-2">
                         <span>☀️</span> SOLAR DINACHARYA
                       </div>
                       <div>
@@ -353,7 +353,7 @@ export default function Dashboard() {
                     </>
                   ) : (
                     <>
-                      <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold flex items-center gap-2">
+                      <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold flex items-center gap-2">
                         <span>🌙</span> LUNAR CYCLE SYNC
                       </div>
                       <div>
@@ -370,7 +370,7 @@ export default function Dashboard() {
 
                 {/* 3. Acoustic Signature Component */}
                 <div className="flex flex-col gap-2">
-                  <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold flex items-center gap-2">
+                  <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold flex items-center gap-2">
                     <span>🎵</span> ACOUSTIC SIGNATURE
                   </div>
                   <div>
@@ -496,13 +496,13 @@ export default function Dashboard() {
                 <LotusLogo size="xl" animated={true} />
                 
                 {/* Active Date Tag */}
-                <div className="text-[10px] md:text-xs font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-semibold">
+                <div className="text-[10px] md:text-xs font-mono uppercase tracking-[0.25em] text-[#c06080] font-semibold">
                   {formattedDate}
                 </div>
 
                 {/* Main Editorial Greeting */}
                 <h1 className="text-4xl md:text-5xl lg:text-[54px] font-normal font-instrument-serif text-[#1C1917] dark:text-[#FAF6F0] leading-[1.08] tracking-tight text-balance">
-                  {greeting}, <span className="italic text-[#C27A5D]">{user?.name || "friend"}</span>. The <span className="italic">sun</span> finds you in <span className="italic">resonance</span>.
+                  {greeting}, <span className="italic text-[#c06080]">{user?.name || "friend"}</span>. The <span className="italic">sun</span> finds you in <span className="italic">resonance</span>.
                 </h1>
 
                 {/* Subtext description */}
@@ -512,7 +512,7 @@ export default function Dashboard() {
               </div>
 
               {/* Daily Affirmation: Typographic block */}
-              <div className="w-full border-l border-[#C27A5D]/30 pl-6 py-2 select-none">
+              <div className="w-full border-l border-[#c06080]/30 pl-6 py-2 select-none">
                 <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-stone-400 dark:text-stone-550 mb-2 font-semibold">
                   DAILY AFFIRMATION
                 </div>
@@ -578,7 +578,7 @@ export default function Dashboard() {
                       </div>
                       <div className="h-1 bg-stone-200/50 rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-[#C27A5D] rounded-full transition-all duration-1000"
+                          className="h-full bg-[#c06080] rounded-full transition-all duration-1000"
                           style={{ width: `${pittaVal}%` }}
                         />
                       </div>
@@ -635,14 +635,14 @@ export default function Dashboard() {
                   <div className="pb-4 md:pb-0 md:pr-4 md:pl-2 first:pl-0 last:pr-0">
                     <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-stone-400 dark:text-stone-550 mb-1.5 font-semibold flex items-center justify-between">
                       <span>ENERGY</span>
-                      <span className="text-[#C27A5D] font-normal">✦</span>
+                      <span className="text-[#c06080] font-normal">✦</span>
                     </div>
                     <div className="font-serif italic text-3xl font-semibold text-[#1C1917] dark:text-[#FAF6F0] mb-3">
                       {currentEnergy ? `${currentEnergy * 10}%` : "70%"}
                     </div>
                     <div className="h-1 bg-stone-200/40 dark:bg-stone-800 rounded-full overflow-hidden w-full max-w-[140px]">
                       <div 
-                        className="h-full bg-[#C27A5D] rounded-full transition-all duration-1000"
+                        className="h-full bg-[#c06080] rounded-full transition-all duration-1000"
                         style={{ width: currentEnergy ? `${currentEnergy * 10}%` : "70%" }}
                       />
                     </div>
@@ -651,9 +651,9 @@ export default function Dashboard() {
                   {/* Mood Estimate or Constitution Section */}
                   {user?.gender === 'male' ? (
                     <div className="pt-4 pb-4 md:pt-0 md:pb-0 md:px-6">
-                      <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] mb-1.5 font-semibold flex items-center justify-between">
+                      <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] mb-1.5 font-semibold flex items-center justify-between">
                         <span>CONSTITUTION</span>
-                        <span className="text-[#C27A5D]">✦</span>
+                        <span className="text-[#c06080]">✦</span>
                       </div>
                       <div className="font-serif italic text-3xl font-semibold text-[#1C1917] dark:text-[#FAF6F0] mb-1">
                         {dominantDoshaText}
@@ -664,9 +664,9 @@ export default function Dashboard() {
                     </div>
                   ) : (
                     <div className="pt-4 pb-4 md:pt-0 md:pb-0 md:px-6">
-                      <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] mb-1.5 font-semibold flex items-center justify-between">
+                      <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] mb-1.5 font-semibold flex items-center justify-between">
                         <span>MOOD SYNC</span>
-                        <span className="text-[#C27A5D]">✦</span>
+                        <span className="text-[#c06080]">✦</span>
                       </div>
                       <div className="font-serif italic text-3xl font-semibold text-[#1C1917] dark:text-[#FAF6F0] mb-1">
                         {predictedMood !== null ? `${predictedMood}/10` : currentMood || "Reflective"}
@@ -680,7 +680,7 @@ export default function Dashboard() {
                   {/* Cycle State Section */}
                   {user?.gender !== 'male' && (
                     <div className="pt-4 md:pt-0 md:pl-6">
-                      <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] mb-1.5 font-semibold flex items-center justify-between">
+                      <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] mb-1.5 font-semibold flex items-center justify-between">
                         <span>CYCLE STATE</span>
                         <span className="text-stone-300 dark:text-stone-700">✦</span>
                       </div>
@@ -693,7 +693,7 @@ export default function Dashboard() {
                       </div>
                       <Link 
                         href="/cycle" 
-                        className="text-[9px] font-mono uppercase tracking-wider text-[#C27A5D] border-b border-[#C27A5D]/30 hover:text-stone-900 dark:hover:text-white transition-colors inline-block"
+                        className="text-[9px] font-mono uppercase tracking-wider text-[#c06080] border-b border-[#c06080]/30 hover:text-stone-900 dark:hover:text-white transition-colors inline-block"
                       >
                         View Alignment →
                       </Link>
@@ -734,16 +734,16 @@ export default function Dashboard() {
                             <div 
                               className={`w-4 h-4 rounded-full border-2 bg-white dark:bg-stone-900 z-10 transition-all duration-500 mb-3 flex items-center justify-center ${
                                 isActive 
-                                  ? 'border-[#C27A5D] scale-125 shadow-sm shadow-[#C27A5D]/20' 
+                                  ? 'border-[#c06080] scale-125 shadow-sm shadow-[#c06080]/20' 
                                   : 'border-stone-300 dark:border-stone-750'
                               }`}
                             >
-                              {isActive && <div className="w-1.5 h-1.5 rounded-full bg-[#C27A5D]" />}
+                              {isActive && <div className="w-1.5 h-1.5 rounded-full bg-[#c06080]" />}
                             </div>
                             {/* Timeline label */}
                             <p 
                               className={`text-[9px] md:text-[10px] font-mono uppercase tracking-[0.15em] transition-colors duration-500 ${
-                                isActive ? 'text-[#C27A5D] font-semibold' : 'text-stone-400 dark:text-stone-500'
+                                isActive ? 'text-[#c06080] font-semibold' : 'text-stone-400 dark:text-stone-500'
                               }`}
                             >
                               {phase}
@@ -759,14 +759,14 @@ export default function Dashboard() {
               {/* Recommended Songs Card */}
               {musicRecommendations && musicRecommendations.length > 0 && (
                 <Card>
-                  <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] mb-4 font-semibold">
+                  <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#c06080] mb-4 font-semibold">
                     🎵 ML MODEL RECOMMENDED FREQUENCIES
                   </div>
                   <div className="space-y-3">
                     {musicRecommendations.map((song, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center justify-between p-4 bg-white/60 dark:bg-stone-900/40 rounded-2xl border border-stone-200/20 dark:border-stone-800 hover:border-[#C27A5D]/30 transition-all duration-300"
+                        className="flex items-center justify-between p-4 bg-white/60 dark:bg-stone-900/40 rounded-2xl border border-stone-200/20 dark:border-stone-800 hover:border-[#c06080]/30 transition-all duration-300"
                       >
                         <div className="flex-1">
                           <p className="font-serif text-stone-900 dark:text-[#FAF6F0] font-normal text-sm">
@@ -777,7 +777,7 @@ export default function Dashboard() {
                           </p>
                         </div>
                         <div className="flex-shrink-0">
-                          <span className="px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-wider bg-orange-500/10 border border-orange-300/40 dark:border-orange-900/40 text-[#C27A5D] rounded-full">
+                          <span className="px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-wider bg-orange-500/10 border border-orange-300/40 dark:border-orange-900/40 text-[#c06080] rounded-full">
                             Active Sync
                           </span>
                         </div>
@@ -789,7 +789,7 @@ export default function Dashboard() {
                   <div className="mt-5 pt-4 border-t border-stone-200/10 text-center">
                     <Link 
                       href="/music" 
-                      className="text-[10px] font-mono uppercase tracking-wider text-[#C27A5D] border-b border-[#C27A5D]/30 hover:text-stone-900 dark:hover:text-white transition-colors inline-block"
+                      className="text-[10px] font-mono uppercase tracking-wider text-[#c06080] border-b border-[#c06080]/30 hover:text-stone-900 dark:hover:text-white transition-colors inline-block"
                     >
                       Open Sound Sanctuary →
                     </Link>
@@ -800,7 +800,7 @@ export default function Dashboard() {
               {/* Ritual Space widget: Redesigned into 3 horizontal columns */}
               <div className="bg-[#FDF6EC] dark:bg-stone-900/60 border border-orange-100/50 dark:border-stone-850 rounded-[32px] p-8 flex flex-col justify-between shadow-[0_4px_20px_-4px_rgba(28,25,22,0.01)] transition-all duration-300">
                 <div>
-                  <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] mb-6 font-semibold flex justify-between items-center">
+                  <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#c06080] mb-6 font-semibold flex justify-between items-center">
                     <span>RITUAL SPACE — TODAY</span>
                     <span className="animate-pulse">● LIVE SYNC</span>
                   </div>
@@ -809,7 +809,7 @@ export default function Dashboard() {
                     {topThreeRituals.map((ritual, index) => (
                       <div key={ritual.id} className={`pt-4 md:pt-0 ${index === 0 ? 'md:pl-0' : 'md:pl-6'} first:pt-0`}>
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-[9px] font-mono font-bold tracking-wider bg-[#C27A5D]/10 text-[#C27A5D] px-2 py-0.5 rounded">
+                          <span className="text-[9px] font-mono font-bold tracking-wider bg-[#c06080]/10 text-[#c06080] px-2 py-0.5 rounded">
                             {ritual.time}
                           </span>
                           <span className="text-[9px] font-mono text-stone-400">
@@ -828,12 +828,12 @@ export default function Dashboard() {
                 </div>
 
                 <div className="mt-8 pt-4 border-t border-orange-150/20 dark:border-stone-800 flex justify-between items-center">
-                  <span className="text-[9px] font-mono text-[#C27A5D]/75 tracking-wider uppercase">
+                  <span className="text-[9px] font-mono text-[#c06080]/75 tracking-wider uppercase">
                     — {dominantDoshaText.toUpperCase()} SYNCED
                   </span>
                   <Link 
                     href="/rituals" 
-                    className="text-[10px] font-mono uppercase tracking-wider text-[#C27A5D] border-b border-[#C27A5D]/30 hover:text-stone-900 dark:hover:text-white transition-colors"
+                    className="text-[10px] font-mono uppercase tracking-wider text-[#c06080] border-b border-[#c06080]/30 hover:text-stone-900 dark:hover:text-white transition-colors"
                   >
                     Open Full Routine →
                   </Link>
