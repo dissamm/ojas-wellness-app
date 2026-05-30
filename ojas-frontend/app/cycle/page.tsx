@@ -12,6 +12,7 @@ import { useCycleStore } from '../store/cycleStore';
 import { useUserStore } from '../store/userStore';
 import { getMusicRecommendations, RecommendedSong } from '../services/musicService';
 import { predictMood, PredictionData } from '../lib/api';
+import { PhaseCard } from '../components/flows/PhaseCard';
 
 export default function CyclePage() {
   const router = useRouter();
@@ -66,7 +67,6 @@ export default function CyclePage() {
       const data = await predictMood({
         cycle_day: cycleDay,
         date: today,
-        estrogen: 50,
       });
       console.log('API Response:', data);
 
@@ -168,34 +168,16 @@ export default function CyclePage() {
     await fetchPrediction(newDay);
   };
 
-  const getMoonIcon = (moonPhase: string) => {
-    const phase = moonPhase?.toLowerCase() || '';
-    if (phase.includes('new')) return '🌑';
-    if (phase.includes('waxing crescent')) return '🌒';
-    if (phase.includes('first quarter')) return '🌓';
-    if (phase.includes('waxing gibbous')) return '🌔';
-    if (phase.includes('full')) return '🌕';
-    if (phase.includes('waning gibbous')) return '🌖';
-    if (phase.includes('last quarter')) return '🌗';
-    if (phase.includes('waning crescent')) return '🌘';
-    return '🌙';
-  };
 
-  const getMoodDescription = (moodScore: number) => {
-    if (moodScore >= 8) return 'Resonant & Radiant — Clear day ahead. ✨';
-    if (moodScore >= 6) return 'Balanced & Peaceful — Positive energy. 🌟';
-    if (moodScore >= 4) return 'Contemplative & Quiet — Take it easy today. 🌿';
-    return 'Slow & Reflective — Honor your physical needs. 💫';
-  };
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-amber-500/20 relative overflow-hidden transition-colors duration-500">
       {/* Sparkle Twinkle Stars Background */}
       <div className="absolute inset-0 pointer-events-none opacity-40 z-0">
-        <div className="absolute w-1 h-1 bg-[#C27A5D]/40 rounded-full top-12 left-1/4 animate-ping"></div>
-        <div className="absolute w-1 h-1 bg-[#C27A5D]/30 rounded-full top-1/3 left-3/4 animate-pulse"></div>
-        <div className="absolute w-1 h-1 bg-[#C27A5D]/40 rounded-full top-2/3 left-1/3 animate-pulse"></div>
-        <div className="absolute w-1.5 h-1.5 bg-[#C27A5D]/20 rounded-full top-4/5 left-4/5 animate-ping"></div>
+        <div className="absolute w-1 h-1 bg-[#c06080]/40 rounded-full top-12 left-1/4 animate-ping"></div>
+        <div className="absolute w-1 h-1 bg-[#c06080]/30 rounded-full top-1/3 left-3/4 animate-pulse"></div>
+        <div className="absolute w-1 h-1 bg-[#c06080]/40 rounded-full top-2/3 left-1/3 animate-pulse"></div>
+        <div className="absolute w-1.5 h-1.5 bg-[#c06080]/20 rounded-full top-4/5 left-4/5 animate-ping"></div>
       </div>
 
       <div className="relative z-10 flex flex-col justify-between min-h-screen">
@@ -215,11 +197,11 @@ export default function CyclePage() {
             
             {/* Hero Section */}
             <div className="mb-10 md:mb-14 text-center animate-fade-rise">
-              <span className="text-[10px] md:text-xs font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-semibold mb-3 block">
+              <span className="text-[10px] md:text-xs font-mono uppercase tracking-[0.25em] text-[#c06080] font-semibold mb-3 block">
                 COSMIC ALIGNMENT
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-[54px] font-normal font-cormorant text-[#1C1917] leading-[1.08] tracking-tight">
-                Cosmic Cycle <span className="italic text-[#C27A5D]">Wisdom</span>
+                Cosmic Cycle <span className="italic text-[#c06080]">Wisdom</span>
               </h1>
               <p className="text-stone-400 font-inter text-sm mt-4 leading-relaxed max-w-xl mx-auto">
                 Sync your menstrual rhythm with the celestial lunar orbits. Discover your daily emotional prediction calibrated through predictive Vedic cycles.
@@ -239,7 +221,7 @@ export default function CyclePage() {
                 
                 {/* Loader View when fetching for the first time */}
                 {loading && !prediction && (
-                  <Card variant="dark" className="text-center py-16 border-[#C27A5D]/10">
+                  <Card variant="dark" className="text-center py-16 border-[#c06080]/10">
                     <div className="animate-spin text-5xl mb-4">🌙</div>
                     <p className="text-stone-300 font-serif italic text-base">Calculating celestial alignments...</p>
                   </Card>
@@ -247,7 +229,7 @@ export default function CyclePage() {
 
                 {/* State A: Logger Form View (isEditing || !cycle) */}
                 {(isEditing || !cycle) ? (
-                  <Card variant="dark" className="w-full border-[#C27A5D]/10 bg-[#0e1220]/45 backdrop-blur-md relative overflow-hidden">
+                  <Card variant="dark" className="w-full border-[#c06080]/10 bg-[#0e1220]/45 backdrop-blur-md relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-xl pointer-events-none" />
                     
                     <div className="flex items-center gap-4 mb-6 border-b border-[#1C1917]/5 pb-4">
@@ -301,7 +283,7 @@ export default function CyclePage() {
                         <button
                           type="submit"
                           disabled={loading}
-                          className="flex-[2] py-4 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1917] text-[#FAF6F0] hover:bg-[#C27A5D] disabled:opacity-30 active:scale-[0.98] transition-all duration-300 shadow-md cursor-pointer"
+                          className="flex-[2] py-4 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1917] text-[#FAF6F0] hover:bg-[#c06080] disabled:opacity-30 active:scale-[0.98] transition-all duration-300 shadow-md cursor-pointer"
                         >
                           {loading ? 'CALIBRATING...' : cycle ? '🔄 UPDATE & RECALIBRATE' : '✨ SYNC & DISCOVER COSMIC FLOW'}
                         </button>
@@ -312,59 +294,27 @@ export default function CyclePage() {
                   /* State B: Results Display (Returning User) */
                   prediction && (
                     <div className="space-y-6">
-                      {/* Daily Harmony Card */}
-                      <Card variant="dark" className="text-center flex flex-col items-center border-[#C27A5D]/10">
-                        <div className="w-20 h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-4xl shadow-[0_0_20px_rgba(253,186,116,0.15)] mb-6">
-                          {getMoonIcon(prediction.moon_phase)}
-                        </div>
+                      <PhaseCard
+                        phase={prediction.cycle_phase || 'Menstrual'}
+                        cycleDay={prediction.day_in_cycle || manualCycleDay}
+                        totalCycleDays={cycleLength}
+                        dominantDosha={user?.dominantDosha || 'Pitta'}
+                        onContinue={() => router.push('/music')}
+                      />
 
-                        <span className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold mb-2">
-                          DAILY HARMONY SCORE
-                        </span>
-
-                        <div className="flex items-baseline gap-2 mb-3">
-                          <span className="text-7xl sm:text-8xl font-cormorant text-[#FAF6F0] font-normal">
-                            {prediction.predicted_mood}
-                          </span>
-                          <span className="text-xl font-mono text-stone-500">/ 10</span>
-                        </div>
-
-                        <p className="text-base sm:text-lg text-stone-300 font-serif italic font-normal leading-relaxed">
-                          &ldquo;{getMoodDescription(prediction.predicted_mood)}&rdquo;
-                        </p>
-                      </Card>
-
-                      {/* Dual Grid details */}
-                      <div className="grid md:grid-cols-2 gap-6">
-                        <Card variant="dark" className="border-[#C27A5D]/10">
-                          <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold mb-2 block">
-                            🔄 CYCLE PHASE
-                          </span>
-                          <h3 className="text-xl sm:text-2xl font-serif italic text-white font-normal mb-1">
-                            {prediction.cycle_phase || 'N/A'}
-                          </h3>
-                          <p className="text-xs font-mono text-stone-400 uppercase tracking-widest mt-1">
-                            Day {prediction.day_in_cycle || manualCycleDay} of {cycleLength}
-                          </p>
-                        </Card>
-
-                        <Card variant="dark" className="border-[#C27A5D]/10">
-                          <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold mb-2 block">
-                            🌙 LUNAR PHASE
-                          </span>
-                          <h3 className="text-xl sm:text-2xl font-serif italic text-white font-normal mb-1">
-                            {prediction.moon_phase || 'N/A'}
-                          </h3>
-                          <p className="text-xs font-mono text-stone-400 uppercase tracking-widest mt-1">
-                            {prediction?.moon_illumination?.toFixed(1) || '0'}% Illuminated
-                          </p>
-                        </Card>
-                      </div>
                       {/* Manual Override Slider */}
-                      <div className="w-full bg-[#FAF6F0] dark:bg-stone-900/60 border border-[#1C1917]/5 dark:border-stone-800 rounded-[24px] p-8 shadow-[0_4px_20px_rgba(28,25,22,0.015)]">
-                        <span className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold mb-4 block">
-                          ALIGN YOUR RHYTHMS (MANUAL OVERRIDE)
-                        </span>
+                      <div className="w-full bg-[#FAF6F0] dark:bg-stone-900/60 border border-[#1C1917]/5 dark:border-stone-800 rounded-[24px] p-6 shadow-[0_4px_20px_rgba(28,25,22,0.015)]">
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold">
+                            ALIGN YOUR RHYTHMS (MANUAL OVERRIDE)
+                          </span>
+                          <button
+                            onClick={() => setIsEditing(true)}
+                            className="text-[9px] font-mono uppercase tracking-wider text-[#c06080] hover:text-[#1C1917] dark:hover:text-white transition duration-300 font-bold cursor-pointer"
+                          >
+                            🔄 Recalibrate Dates
+                          </button>
+                        </div>
 
                         <input
                           type="range"
@@ -372,7 +322,7 @@ export default function CyclePage() {
                           max={cycleLength}
                           value={manualCycleDay}
                           onChange={(e) => handleUpdateCycleDay(parseInt(e.target.value))}
-                          className="w-full h-1 bg-stone-200 dark:bg-stone-800 rounded-lg appearance-none cursor-pointer accent-[#C27A5D]"
+                          className="w-full h-1 bg-stone-200 dark:bg-stone-800 rounded-lg appearance-none cursor-pointer accent-[#c06080]"
                           disabled={loading}
                         />
 
@@ -383,33 +333,17 @@ export default function CyclePage() {
                         </div>
 
                         <p className="text-center font-serif text-[#1C1917] dark:text-[#FAF6F0] text-sm mt-5">
-                          Currently calibrated to: <span className="font-bold font-mono text-[#C27A5D]">Day {manualCycleDay}</span>
+                          Currently calibrated to: <span className="font-bold font-mono text-[#c06080]">Day {manualCycleDay}</span>
                         </p>
-                      </div>
-
-                      {/* Recalibrate & Next step CTAs */}
-                      <div className="flex flex-col sm:flex-row gap-4">
-                        <button
-                          onClick={() => setIsEditing(true)}
-                          className="flex-1 py-4 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] border border-stone-650 text-stone-300 hover:bg-white/5 active:scale-[0.98] transition-all duration-300 cursor-pointer text-center"
-                        >
-                          🔄 Recalibrate
-                        </button>
-                        <button
-                          onClick={() => router.push('/music')}
-                          className="flex-[2] py-4 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] bg-[#FAF6F0] text-[#1C1917] hover:bg-[#C27A5D] hover:text-white active:scale-[0.98] transition-all duration-300 shadow-md cursor-pointer text-center"
-                        >
-                          CONTINUE TO SOUND SANCTUARY →
-                        </button>
                       </div>
                     </div>
                   )
                 )}
 
-                {/* Curated Frequencies / Music Recommendations (Permanently Visible) */}
-                {musicRecommendations.length > 0 && (
-                  <Card variant="dark" className="border-[#C27A5D]/10">
-                    <span className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold mb-6 block">
+                {/* Curated Frequencies / Music Recommendations (Shown only after prediction is ready) */}
+                {prediction && musicRecommendations.length > 0 && (
+                  <Card variant="dark" className="border-[#c06080]/10">
+                    <span className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold mb-6 block">
                       🎵 CURATED FREQUENCIES FOR YOUR PHASE
                     </span>
 
@@ -417,7 +351,7 @@ export default function CyclePage() {
                       {musicRecommendations.map((song: RecommendedSong, idx: number) => (
                         <div
                           key={idx}
-                          className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white/5 rounded-2xl border border-[#1C1917]/5 hover:border-[#C27A5D]/30 transition-all duration-300 gap-3"
+                          className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white/5 rounded-2xl border border-[#1C1917]/5 hover:border-[#c06080]/30 transition-all duration-300 gap-3"
                         >
                           <div className="flex-1">
                             <p className="font-cormorant text-[#FAF6F0] font-normal text-base">
@@ -440,7 +374,7 @@ export default function CyclePage() {
                               href={song.youtubeUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-wider bg-[#C27A5D]/10 hover:bg-[#C27A5D]/20 border border-[#C27A5D]/20 text-[#FAF6F0] rounded-full transition-all duration-300"
+                              className="px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-wider bg-[#c06080]/10 hover:bg-[#c06080]/20 border border-[#c06080]/20 text-[#FAF6F0] rounded-full transition-all duration-300"
                             >
                               🔴 YouTube
                             </a>
@@ -482,9 +416,9 @@ export default function CyclePage() {
 
             {/* Bottom Row Information Cards */}
             <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-start pt-6 border-t border-[#1C1917]/5 animate-fade-rise-delay-2">
-              <Card variant="dark" className="text-center flex flex-col items-center border-[#C27A5D]/10">
+              <Card variant="dark" className="text-center flex flex-col items-center border-[#c06080]/10">
                 <p className="text-3xl mb-3">🧠</p>
-                <h4 className="text-xs font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold mb-2">
+                <h4 className="text-xs font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold mb-2">
                   PREDICTIVE VEDIC MODELING
                 </h4>
                 <p className="text-stone-400 text-xs leading-relaxed font-inter">
@@ -492,9 +426,9 @@ export default function CyclePage() {
                 </p>
               </Card>
 
-              <Card variant="dark" className="text-center flex flex-col items-center border-[#C27A5D]/10">
+              <Card variant="dark" className="text-center flex flex-col items-center border-[#c06080]/10">
                 <p className="text-3xl mb-3">🌙</p>
-                <h4 className="text-xs font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold mb-2">
+                <h4 className="text-xs font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold mb-2">
                   COSMIC CALIBRATION DATA
                 </h4>
                 <p className="text-stone-400 text-xs leading-relaxed font-inter">

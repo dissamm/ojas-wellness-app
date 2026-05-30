@@ -36,7 +36,7 @@ export default function RitualsPage() {
     }
 
     // Extract cycle state
-    const { day: cycleDay, phase: cyclePhase } = getCycleStateFromStore(cycle);
+    const { phase: cyclePhase } = getCycleStateFromStore(cycle);
 
     // Get final personalized rituals
     const rituals: Ritual[] = hydrated ? getRitualsForDosha(dominantDosha, cyclePhase, user?.gender !== 'male' && showPhaseMod) : [];
@@ -48,7 +48,7 @@ export default function RitualsPage() {
             return 'bg-blue-500/10 text-blue-500 dark:text-blue-400 border border-blue-500/20';
         }
         if (name === 'pitta') {
-            return 'bg-[#C27A5D]/10 text-[#C27A5D] border border-[#C27A5D]/20';
+            return 'bg-[#c06080]/10 text-[#c06080] border border-[#c06080]/20';
         }
         return 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20';
     };
@@ -65,13 +65,13 @@ export default function RitualsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-[#C27A5D]/10 relative overflow-hidden transition-colors duration-500">
+        <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-[#c06080]/10 relative overflow-hidden transition-colors duration-500">
             {/* Sparkle Twinkle Background */}
             <div className="absolute inset-0 pointer-events-none opacity-30 z-0">
-                <div className="absolute w-1 h-1 bg-[#C27A5D]/40 rounded-full top-20 left-10 animate-ping"></div>
-                <div className="absolute w-1.5 h-1.5 bg-[#C27A5D]/30 rounded-full top-1/4 left-2/3 animate-pulse"></div>
-                <div className="absolute w-1 h-1 bg-[#C27A5D]/40 rounded-full top-2/3 left-1/5 animate-pulse"></div>
-                <div className="absolute w-1.5 h-1.5 bg-[#C27A5D]/20 rounded-full top-3/4 left-5/6 animate-ping"></div>
+                <div className="absolute w-1 h-1 bg-[#c06080]/40 rounded-full top-20 left-10 animate-ping"></div>
+                <div className="absolute w-1.5 h-1.5 bg-[#c06080]/30 rounded-full top-1/4 left-2/3 animate-pulse"></div>
+                <div className="absolute w-1 h-1 bg-[#c06080]/40 rounded-full top-2/3 left-1/5 animate-pulse"></div>
+                <div className="absolute w-1.5 h-1.5 bg-[#c06080]/20 rounded-full top-3/4 left-5/6 animate-ping"></div>
             </div>
 
             <div className="relative z-10 flex flex-col justify-between min-h-screen">
@@ -91,47 +91,17 @@ export default function RitualsPage() {
 
                         {/* Title Hero Banner */}
                         <div className="text-center space-y-4 animate-fade-rise">
-                            <span className="text-[10px] md:text-xs font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-semibold block">
+                            <span className="text-[10px] md:text-xs font-mono uppercase tracking-[0.25em] text-[#c06080] font-semibold block">
                                 Personalized Routines
                             </span>
                             <h1 className="text-4xl md:text-5xl lg:text-[54px] font-normal font-cormorant text-[#1C1917] dark:text-[#FAF6F0] leading-[1.08] tracking-tight">
-                                Daily <span className="italic text-[#C27A5D]">Ritual</span> Sanctuary
+                                Daily <span className="italic text-[#c06080]">Ritual</span> Sanctuary
                             </h1>
                             <p className="text-stone-500 dark:text-stone-400 text-sm max-w-xl mx-auto leading-relaxed">
                                 Align your daily clock with the seasonal rhythms, planetary phases, and biological blueprints calibrated specifically for your energy.
                             </p>
                         </div>
 
-                        {/* User Profile Metrics Bar */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-rise-delay">
-                            <Card className="flex flex-col justify-center items-center text-center p-6">
-                                <span className="text-[9px] font-mono uppercase tracking-widest text-stone-400 mb-2">Dominant Constitution</span>
-                                <span className="text-2xl font-serif italic text-stone-800 dark:text-stone-100 font-semibold">{dominantDosha}</span>
-                                <span className="text-[9px] font-mono text-stone-400 mt-1 uppercase">Prakriti Profile</span>
-                            </Card>
-
-                            {user?.gender !== 'male' ? (
-                                <Card className="flex flex-col justify-center items-center text-center p-6">
-                                    <span className="text-[9px] font-mono uppercase tracking-widest text-stone-400 mb-2">Cycle Phase Synchronization</span>
-                                    <span className="text-2xl font-serif italic text-[#C27A5D] font-semibold">{cycle ? cyclePhase : 'Unsynced'}</span>
-                                    <span className="text-[9px] font-mono text-stone-400 mt-1 uppercase">
-                                        {cycle ? `Day ${cycleDay} of ${cycle.cycleLengthDays} days` : 'Visit Cycle tab to sync'}
-                                    </span>
-                                </Card>
-                            ) : (
-                                <Card className="flex flex-col justify-center items-center text-center p-6">
-                                    <span className="text-[9px] font-mono uppercase tracking-widest text-stone-400 mb-2">Ayurvedic Daily Rhythm</span>
-                                    <span className="text-2xl font-serif italic text-stone-800 dark:text-stone-100 font-semibold">Dinacharya</span>
-                                    <span className="text-[9px] font-mono text-stone-400 mt-1 uppercase">Dominant Dosha Centered</span>
-                                </Card>
-                            )}
-
-                            <Card className="flex flex-col justify-center items-center text-center p-6">
-                                <span className="text-[9px] font-mono uppercase tracking-widest text-stone-400 mb-2">Active Recommendations</span>
-                                <span className="text-2xl font-serif italic text-stone-800 dark:text-stone-100 font-semibold">{rituals.length} Practices</span>
-                                <span className="text-[9px] font-mono text-stone-400 mt-1 uppercase">Dynamic schedule</span>
-                            </Card>
-                        </div>
 
                         {/* Interactive Phase Toggle Banner */}
                         {user?.gender !== 'male' && (
@@ -153,7 +123,7 @@ export default function RitualsPage() {
                                     <button
                                         onClick={() => setShowPhaseMod(!showPhaseMod)}
                                         className={`w-14 h-8 rounded-full p-1 transition-colors duration-500 ease-in-out cursor-pointer ${
-                                            showPhaseMod ? 'bg-[#C27A5D]' : 'bg-stone-300 dark:bg-stone-800'
+                                            showPhaseMod ? 'bg-[#c06080]' : 'bg-stone-300 dark:bg-stone-800'
                                         }`}
                                         aria-label="Toggle phase-specific modifications"
                                     >
@@ -192,7 +162,7 @@ export default function RitualsPage() {
                                                     <div className="space-y-4 flex-1">
                                                         <div className="flex flex-wrap items-center gap-3">
                                                             {/* Time Badge */}
-                                                            <span className="px-3.5 py-1 text-[10px] font-mono font-bold tracking-widest uppercase bg-[#C27A5D]/10 text-[#C27A5D] rounded-full">
+                                                            <span className="px-3.5 py-1 text-[10px] font-mono font-bold tracking-widest uppercase bg-[#c06080]/10 text-[#c06080] rounded-full">
                                                                 {ritual.time}
                                                             </span>
 
@@ -258,7 +228,7 @@ export default function RitualsPage() {
                                                                     href={ritual.link}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
-                                                                    className="px-5 py-3 rounded-full text-[9px] font-mono font-bold uppercase tracking-widest bg-[#C27A5D]/10 hover:bg-[#C27A5D]/20 border border-[#C27A5D]/25 text-[#C27A5D] transition-all duration-300 inline-flex items-center gap-2 active:scale-95"
+                                                                    className="px-5 py-3 rounded-full text-[9px] font-mono font-bold uppercase tracking-widest bg-[#c06080]/10 hover:bg-[#c06080]/20 border border-[#c06080]/25 text-[#c06080] transition-all duration-300 inline-flex items-center gap-2 active:scale-95"
                                                                 >
                                                                     ✨ {ritual.linkText || 'Guided Activity'}
                                                                 </a>

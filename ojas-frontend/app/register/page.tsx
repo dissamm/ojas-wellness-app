@@ -89,10 +89,10 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-[#C27A5D]/10 relative overflow-hidden transition-colors duration-500">
+    <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-[#c06080]/10 relative overflow-hidden transition-colors duration-500">
       {/* Decorative ambient blobs */}
       <div className="absolute inset-0 pointer-events-none opacity-30 z-0">
-        <div className="absolute w-[400px] h-[400px] bg-[#C27A5D]/5 rounded-full blur-3xl -top-40 -left-40 animate-pulse"></div>
+        <div className="absolute w-[400px] h-[400px] bg-[#c06080]/5 rounded-full blur-3xl -top-40 -left-40 animate-pulse"></div>
         <div className="absolute w-[300px] h-[300px] bg-[#8A5A44]/5 rounded-full blur-3xl bottom-10 right-10"></div>
       </div>
 
@@ -102,11 +102,11 @@ export default function RegisterPage() {
 
           <main className="max-w-md mx-auto px-6 py-12 md:py-24 w-full animate-fade-rise">
             <div className="text-center mb-8">
-              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-semibold mb-2 block">
+              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-semibold mb-2 block">
                 BEGIN THE RITUAL
               </span>
               <h1 className="text-3xl md:text-4xl font-normal font-cormorant text-[#1C1917] dark:text-[#FAF6F0] leading-tight">
-                Create your <span className="italic text-[#C27A5D]">Ojas Account</span>
+                Create your <span className="italic text-[#c06080]">Ojas Account</span>
               </h1>
               <p className="text-stone-400 font-inter text-xs mt-3 leading-relaxed">
                 Connect your Ayurvedic rhythms and celestial cycle alignments with persistent cloud backups.
@@ -198,8 +198,8 @@ export default function RegisterPage() {
                       onClick={() => setGender('female')}
                       className={`flex-1 py-3 px-4 rounded-2xl text-xs font-mono uppercase tracking-widest font-bold border transition-all duration-300 select-none cursor-pointer ${
                         gender === 'female'
-                          ? "bg-[#C27A5D] border-[#C27A5D] text-white shadow-sm"
-                          : "bg-[#FAF6F0] border-stone-300/40 text-stone-600 dark:bg-stone-900/40 dark:border-stone-800 dark:text-stone-400 hover:border-[#C27A5D]/50 hover:text-stone-900 dark:hover:text-white"
+                          ? "bg-[#c06080] border-[#c06080] text-white shadow-sm"
+                          : "bg-[#FAF6F0] border-stone-300/40 text-stone-600 dark:bg-stone-900/40 dark:border-stone-800 dark:text-stone-400 hover:border-[#c06080]/50 hover:text-stone-900 dark:hover:text-white"
                       }`}
                     >
                       Female
@@ -210,8 +210,8 @@ export default function RegisterPage() {
                       onClick={() => setGender('male')}
                       className={`flex-1 py-3 px-4 rounded-2xl text-xs font-mono uppercase tracking-widest font-bold border transition-all duration-300 select-none cursor-pointer ${
                         gender === 'male'
-                          ? "bg-[#C27A5D] border-[#C27A5D] text-white shadow-sm"
-                          : "bg-[#FAF6F0] border-stone-300/40 text-stone-600 dark:bg-stone-900/40 dark:border-stone-800 dark:text-stone-400 hover:border-[#C27A5D]/50 hover:text-stone-900 dark:hover:text-white"
+                          ? "bg-[#c06080] border-[#c06080] text-white shadow-sm"
+                          : "bg-[#FAF6F0] border-stone-300/40 text-stone-600 dark:bg-stone-900/40 dark:border-stone-800 dark:text-stone-400 hover:border-[#c06080]/50 hover:text-stone-900 dark:hover:text-white"
                       }`}
                     >
                       Male
@@ -228,7 +228,7 @@ export default function RegisterPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-4 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1917] text-[#FAF6F0] dark:bg-[#FAF6F0] dark:text-[#1C1917] hover:bg-[#C27A5D] dark:hover:bg-[#C27A5D] dark:hover:text-white disabled:opacity-30 active:scale-[0.98] transition-all duration-300 shadow-md cursor-pointer select-none mt-2"
+                  className="w-full py-4 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1917] text-[#FAF6F0] dark:bg-[#FAF6F0] dark:text-[#1C1917] hover:bg-[#c06080] dark:hover:bg-[#c06080] dark:hover:text-white disabled:opacity-30 active:scale-[0.98] transition-all duration-300 shadow-md cursor-pointer select-none mt-2"
                 >
                   {loading ? 'Creating Account...' : 'Register'}
                 </button>
@@ -239,7 +239,7 @@ export default function RegisterPage() {
                   Have an account?{' '}
                   <Link
                     href="/login"
-                    className="text-[#C27A5D] font-bold hover:underline"
+                    className="text-[#c06080] font-bold hover:underline"
                   >
                     Log in here
                   </Link>

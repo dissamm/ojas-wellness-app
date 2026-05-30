@@ -17,7 +17,7 @@ const DOSHAS = [
         name: 'Pitta',
         elements: 'Fire & Water',
         qualities: ['Hot', 'Sharp', 'Driven', 'Transformative', 'Analytical'],
-        colorClass: 'border-[#C27A5D]/40 text-[#C27A5D]',
+        colorClass: 'border-[#c06080]/40 text-[#c06080]',
         bgClass: 'bg-[#FAF6F0]',
         icon: '🔥',
         description: 'Pitta represents digestion, focus, and heat. When in balance, it breeds razor-sharp intellect, deep ambition, and warm leadership. When high, it causes tension.',
@@ -41,15 +41,15 @@ export const DoshaAnimation = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center px-6 py-16 bg-[#F4EFEA] text-[#1C1917] selection:bg-[#C27A5D]/10">
+        <div className="min-h-screen flex flex-col items-center justify-center px-6 py-16 bg-[#F4EFEA] text-[#1C1917] selection:bg-[#c06080]/10">
             <div className="max-w-6xl w-full">
                 {/* Header Section */}
                 <div className="text-center mb-14 animate-fade-rise">
-                    <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-semibold mb-2 block">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-semibold mb-2 block">
                         AYURVEDIC ARCHETYPES
                     </span>
                     <h1 className="text-4xl md:text-5xl font-serif text-stone-900 mb-3 font-normal leading-tight">
-                        Hello, <span className="italic text-[#C27A5D]">{user.name || 'beautiful soul'}</span>.
+                        Hello, <span className="italic text-[#c06080]">{user.name || 'beautiful soul'}</span>.
                     </h1>
                     <p className="text-stone-500 text-sm max-w-lg mx-auto mt-2 leading-relaxed">
                         In Ayurveda, your mind and body are governed by three primary bio-energetic humors (Doshas). Explore their traits before discovering your dominant constitution.
@@ -61,7 +61,7 @@ export const DoshaAnimation = () => {
                     {DOSHAS.map((dosha, idx) => (
                         <div
                             key={idx}
-                            className={`bg-white/90 border border-stone-200/50 backdrop-blur-md rounded-3xl p-8 shadow-sm flex flex-col justify-between hover:shadow-md hover:border-[#C27A5D]/20 transition-all duration-300`}
+                            className={`bg-white/90 border border-stone-200/50 backdrop-blur-md rounded-3xl p-8 shadow-sm flex flex-col justify-between hover:shadow-md hover:border-[#c06080]/20 transition-all duration-300`}
                         >
                             <div>
                                 {/* Icon & Name Header */}
@@ -104,7 +104,7 @@ export const DoshaAnimation = () => {
                 <div className="text-center animate-fade-rise-delay-2">
                     <button
                         onClick={handleContinue}
-                        className="inline-block rounded-full px-12 py-4.5 text-xs font-mono font-bold uppercase tracking-[0.25em] bg-[#1C1917] text-white hover:bg-[#C27A5D] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-md cursor-pointer"
+                        className="inline-block rounded-full px-12 py-4.5 text-xs font-mono font-bold uppercase tracking-[0.25em] bg-[#1C1917] text-white hover:bg-[#c06080] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-md cursor-pointer"
                     >
                         Discover Your Prakriti (Take Assessment) →
                     </button>

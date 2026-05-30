@@ -23,8 +23,8 @@ export const Input = ({
     const inputType = isPassword ? (showPassword ? 'text' : 'password') : type;
 
     const baseStyle = variant === 'dark'
-        ? "bg-white/5 border border-white/10 text-white focus:border-[#C27A5D] focus:ring-1 focus:ring-[#C27A5D]/30 placeholder-stone-500"
-        : "bg-[#FAF6F0] border border-stone-300/40 text-[#1C1917] focus:border-[#C27A5D] focus:ring-1 focus:ring-[#C27A5D]/30 placeholder-stone-400";
+        ? "bg-white/5 border border-white/10 text-white focus:border-[#c06080] focus:ring-1 focus:ring-[#c06080]/30 placeholder-stone-500"
+        : "bg-[#FAF6F0] border border-stone-300/40 text-[#1C1917] focus:border-[#c06080] focus:ring-1 focus:ring-[#c06080]/30 placeholder-stone-400";
 
     return (
         <div className="mb-5">
@@ -49,7 +49,7 @@ export const Input = ({
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 hover:text-[#C27A5D] dark:hover:text-[#C27A5D] transition-colors focus:outline-none"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 hover:text-[#c06080] dark:hover:text-[#c06080] transition-colors focus:outline-none"
                         aria-label={showPassword ? "Hide password" : "Show password"}
                     >
                         {showPassword ? (

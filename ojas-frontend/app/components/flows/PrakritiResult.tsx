@@ -15,8 +15,8 @@ const DOSHA_DETAILS = {
         symbol: '🔥',
         elements: 'Fire & Water',
         description: 'Pitta embodies focus, courage, and transformation. You are likely highly analytical, driven, and determined. When balanced, you possess clear focus, great metabolic power, and warm leadership.',
-        color: '#C27A5D',
-        accentBg: 'bg-[#FAF6F0] border-[#C27A5D]/30 text-[#C27A5D]',
+        color: '#c06080',
+        accentBg: 'bg-[#FAF6F0] border-[#c06080]/30 text-[#c06080]',
     },
     Kapha: {
         symbol: '🌍',
@@ -47,21 +47,21 @@ export const PrakritiResult = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-start px-4 sm:px-6 py-8 sm:py-12 bg-[#F4EFEA] text-[#1C1917] selection:bg-[#C27A5D]/10 relative">
+        <div className="min-h-screen flex flex-col items-center justify-start px-4 sm:px-6 py-8 sm:py-12 bg-[#F4EFEA] text-[#1C1917] selection:bg-[#c06080]/10 relative">
             <div className="max-w-2xl w-full">
                 
                 {/* 1. Top Sticky Control Panel: Instantly perform retake or continue actions */}
                 <div className="sticky top-4 z-30 mb-8 w-full bg-white/75 backdrop-blur-md rounded-2xl border border-stone-200/50 p-4 shadow-md flex items-center justify-between gap-4 animate-fade-rise">
                     <button
                         onClick={handleRetakeClick}
-                        className="px-4 sm:px-5 py-2.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider border border-[#C27A5D]/30 text-[#C27A5D] hover:bg-[#FAF6F0]/45 active:scale-[0.98] transition duration-300 cursor-pointer"
+                        className="px-4 sm:px-5 py-2.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider border border-[#c06080]/30 text-[#c06080] hover:bg-[#FAF6F0]/45 active:scale-[0.98] transition duration-300 cursor-pointer"
                     >
                         ↺ Retake Analysis
                     </button>
 
                     <button
                         onClick={() => setCurrentStep(user?.gender === 'male' ? 'music' : 'menstrual-moon')}
-                        className="px-5 sm:px-6 py-2.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-[#C27A5D] hover:bg-[#b0674a] text-white active:scale-[0.98] transition duration-300 shadow-sm cursor-pointer"
+                        className="px-5 sm:px-6 py-2.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-[#c06080] hover:bg-[#b0674a] text-white active:scale-[0.98] transition duration-300 shadow-sm cursor-pointer"
                     >
                         Continue to Sanctuary →
                     </button>
@@ -69,11 +69,11 @@ export const PrakritiResult = () => {
 
                 {/* Header Section */}
                 <div className="text-center mb-8 animate-fade-rise-delay">
-                    <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-semibold mb-2 block">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-semibold mb-2 block">
                         YOUR CONSTITUTION
                     </span>
                     <h1 className="text-4xl md:text-5xl font-serif font-normal text-[#1C1917] leading-tight">
-                        Your <span className="italic text-[#C27A5D]">Prakriti</span> Profile
+                        Your <span className="italic text-[#c06080]">Prakriti</span> Profile
                     </h1>
                     <p className="text-stone-500 text-sm mt-3 max-w-md mx-auto">
                         Your permanent energetic blueprint based on your natural physical and emotional patterns.
@@ -123,12 +123,12 @@ export const PrakritiResult = () => {
                         {/* Pitta Bar */}
                         <div className="space-y-1">
                             <div className="flex justify-between text-xs font-mono">
-                                <span className="text-[#C27A5D] font-semibold">Pitta (Fire & Water)</span>
+                                <span className="text-[#c06080] font-semibold">Pitta (Fire & Water)</span>
                                 <span>{composition.pitta}%</span>
                             </div>
                             <div className="h-2.5 bg-stone-100 rounded-full overflow-hidden border border-stone-200/30">
                                 <div 
-                                    className="h-full bg-[#C27A5D] rounded-full transition-all duration-1000" 
+                                    className="h-full bg-[#c06080] rounded-full transition-all duration-1000" 
                                     style={{ width: `${composition.pitta}%` }}
                                 />
                             </div>
@@ -163,7 +163,7 @@ export const PrakritiResult = () => {
                 {/* Continue Action (Secondary fallback) */}
                 <button
                     onClick={() => setCurrentStep(user?.gender === 'male' ? 'music' : 'menstrual-moon')}
-                    className="w-full py-4 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] border border-[#C27A5D]/40 text-[#C27A5D] bg-[#FAF6F0]/30 hover:bg-[#FAF6F0] active:scale-[0.98] transition-all duration-300 shadow-md animate-fade-rise-delay-2 cursor-pointer"
+                    className="w-full py-4 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] border border-[#c06080]/40 text-[#c06080] bg-[#FAF6F0]/30 hover:bg-[#FAF6F0] active:scale-[0.98] transition-all duration-300 shadow-md animate-fade-rise-delay-2 cursor-pointer"
                 >
                     {user?.gender === 'male' ? 'Continue to Sound Sanctuary →' : 'Continue to Cycle & Moon Magic →'}
                 </button>
