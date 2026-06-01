@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Inter:wght@400;500;600;700&display=swap');
+@import "./styles/fonts.css";
+@import "./styles/theme.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f7f3f8;
+  --foreground: #1a0a2e;
+  --accent: #c06080;
+  --card-light: #ffffff;
+  --card-dark: #120d22;
+  --border-color: rgba(26, 10, 46, 0.08);
+
+  /* Co-Star accent color custom properties */
+  --color-ojas-menstrual: #1a0a2e;
+  --color-ojas-follicular: #c06080;
+  --color-ojas-ovulation: #FF6B9D;
+  --color-ojas-luteal: #B8A8D8;
+
+  /* Shadows from design system */
+  --shadow-sm: 0 4px 16px rgba(26, 10, 46, 0.05);
+  --shadow-md: 0 8px 32px rgba(26, 10, 46, 0.08);
+  --shadow-lg: 0 12px 48px rgba(26, 10, 46, 0.12);
+}
+
+:root.dark, html.dark {
+  --background: #f7f3f8;
+  --foreground: #1a0a2e;
+  --accent: #c06080;
+  --card-light: #ffffff;
+  --card-dark: #120d22;
+  --border-color: rgba(26, 10, 46, 0.08);
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Inter', system-ui, sans-serif;
+  transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Typography override for headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+}
+
+/* Scrollbar styling (dark mode) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0F0F0F;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2D2D2D;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3D3D3D;
+}
+
+/* Smooth animations for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

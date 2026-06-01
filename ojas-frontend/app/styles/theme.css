@@ -1,0 +1,201 @@
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-rise {
+  animation: fade-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-rise-delay {
+  animation: fade-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+  opacity: 0; /* Hidden initially */
+}
+
+.animate-fade-rise-delay-2 {
+  animation: fade-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+  opacity: 0; /* Hidden initially */
+}
+
+/* Custom Lotus Bloom Animation Keyframes */
+@keyframes bloom-center {
+  0% {
+    transform: scale(0.3, 0.3) translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1, 1) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bloom-left-inner {
+  0% {
+    transform: rotate(0deg) scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(-12deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes bloom-right-inner {
+  0% {
+    transform: rotate(0deg) scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(12deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes bloom-left-outer {
+  0% {
+    transform: rotate(0deg) scale(0.3);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(-28deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes bloom-right-outer {
+  0% {
+    transform: rotate(0deg) scale(0.3);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(28deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes ripple-grow {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* Animated Petal Utility Classes */
+.animate-bloom-center {
+  animation: bloom-center 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: 12px 22px;
+}
+
+.animate-bloom-left-inner {
+  animation: bloom-left-inner 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+  transform-origin: 12px 22px;
+}
+
+.animate-bloom-right-inner {
+  animation: bloom-right-inner 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+  transform-origin: 12px 22px;
+}
+
+.animate-bloom-left-outer {
+  animation: bloom-left-outer 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+  transform-origin: 12px 22px;
+}
+
+.animate-bloom-right-outer {
+  animation: bloom-right-outer 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+  transform-origin: 12px 22px;
+}
+
+.animate-ripple-grow {
+  animation: ripple-grow 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: 12px 21px;
+}
+
+/* Interactive Lotus Styles for micro-interactions */
+.lotus-interactive path {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+}
+
+.lotus-interactive:hover .petal-center {
+  transform: scale(1.08, 1.08) translateY(-1px) !important;
+}
+
+.lotus-interactive:hover .petal-left-inner {
+  transform: rotate(-18deg) scale(1.02) !important;
+}
+
+.lotus-interactive:hover .petal-right-inner {
+  transform: rotate(18deg) scale(1.02) !important;
+}
+
+.lotus-interactive:hover .petal-left-outer {
+  transform: rotate(-36deg) scale(1.05) !important;
+}
+
+.lotus-interactive:hover .petal-right-outer {
+  transform: rotate(36deg) scale(1.05) !important;
+}
+
+/* Premium Continuous Floating/Breathing Animation */
+@keyframes lotus-float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 4px 15px rgba(223, 128, 96, 0.08));
+  }
+  50% {
+    transform: translateY(-8px) scale(1.03);
+    filter: drop-shadow(0 15px 30px rgba(223, 128, 96, 0.16));
+  }
+}
+
+.animate-lotus-float {
+  animation: lotus-float 6s ease-in-out infinite;
+}
+
+/* Serene luxury-minimal theme additions */
+.border-fine {
+  border: 1px solid var(--border-color);
+}
+
+.bg-card-light {
+  background-color: var(--card-light);
+}
+
+.bg-card-dark {
+  background-color: var(--card-dark);
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.bg-accent {
+  background-color: var(--accent);
+}
+
+.border-accent {
+  border-color: var(--accent);
+}
+
+.bg-cream-bg {
+  background-color: var(--background);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(-1.5deg);
+  }
+}
