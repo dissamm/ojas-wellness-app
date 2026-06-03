@@ -296,7 +296,7 @@ export const PrakritiAssessment = () => {
     const vedicFact = VEDIC_FACTS[question.id] || "Ancient Ayurvedic practices balance your mind and body frame.";
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-12 bg-[#F4EFEA] text-[#1C1917] selection:bg-[#c06080]/10">
+        <div className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-12 bg-background text-primary selection:bg-secondary/10">
             <div className="max-w-2xl w-full">
                 {/* Progress Header */}
                 <div className="mb-6 sm:mb-8 animate-fade-rise">
@@ -305,7 +305,7 @@ export const PrakritiAssessment = () => {
                         <span className="font-semibold text-stone-600">{currentQ + 1} / {QUESTIONS.length}</span>
                     </div>
                     <div className="h-1.5 bg-stone-200/50 rounded-full overflow-hidden">
-                        <div className="h-full bg-[#c06080] rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
+                        <div className="h-full bg-secondary rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
                     </div>
                 </div>
 
@@ -313,7 +313,7 @@ export const PrakritiAssessment = () => {
                 <div className="bg-white/90 border border-stone-200/50 backdrop-blur-md rounded-3xl p-6 sm:p-8 md:p-10 shadow-xl animate-fade-rise-delay flex flex-col justify-between min-h-[500px]">
                     <div>
                         <div className="flex items-center justify-between mb-4">
-                            <span className="text-[10px] md:text-xs font-mono uppercase tracking-[0.2em] text-[#c06080] font-bold">
+                            <span className="text-[10px] md:text-xs font-mono uppercase tracking-[0.2em] text-secondary font-bold">
                                 {question.category}
                             </span>
                             <span className="text-[9px] md:text-[10px] font-mono text-stone-400 font-semibold bg-stone-100 px-2 py-0.5 rounded-md uppercase">
@@ -334,8 +334,8 @@ export const PrakritiAssessment = () => {
                                       onClick={() => handleAnswer(opt.dosha)}
                                       className={`w-full text-left p-4 sm:p-5 rounded-2xl border transition-all duration-300 font-serif italic text-base sm:text-lg shadow-sm hover:translate-x-1 cursor-pointer leading-normal sm:leading-relaxed ${
                                           isSelected 
-                                          ? 'border-[#c06080] bg-[#FAF6F0]/45 text-stone-950 ring-1 ring-[#c06080]/30' 
-                                          : 'border-stone-200/80 bg-white/40 hover:border-[#c06080] hover:bg-[#FAF6F0]/30 text-stone-850 hover:text-stone-950'
+                                          ? 'border-secondary bg-on-primary/45 text-stone-950 ring-1 ring-[#c06080]/30' 
+                                          : 'border-stone-200/80 bg-white/40 hover:border-secondary hover:bg-on-primary/30 text-stone-850 hover:text-stone-950'
                                       }`}
                                   >
                                       {opt.text}
@@ -348,11 +348,11 @@ export const PrakritiAssessment = () => {
                     {/* Always-Visible Vedic Fact Box & Navigation Action Bar */}
                     <div className="mt-8 pt-6 border-t border-stone-100 space-y-6">
                         {/* Beautiful Vedic Fact Box */}
-                        <div className="p-4 sm:p-5 bg-[#F4EFEA] rounded-2xl border border-[#c06080]/10 flex gap-3.5 items-start relative overflow-hidden transition-all duration-300">
-                            <div className="absolute top-0 right-0 w-20 h-20 bg-[#c06080]/5 rounded-full blur-xl pointer-events-none" />
+                        <div className="p-4 sm:p-5 bg-background rounded-2xl border border-secondary/10 flex gap-3.5 items-start relative overflow-hidden transition-all duration-300">
+                            <div className="absolute top-0 right-0 w-20 h-20 bg-secondary/5 rounded-full blur-xl pointer-events-none" />
                             <span className="text-xl sm:text-2xl mt-0.5 select-none leading-none">💡</span>
                             <div className="space-y-1">
-                                <span className="text-[9px] font-mono uppercase tracking-[0.15em] text-[#c06080] font-bold block">
+                                <span className="text-[9px] font-mono uppercase tracking-[0.15em] text-secondary font-bold block">
                                     VEDIC COMPASS INSIGHT
                                 </span>
                                 <p className="text-stone-600 text-xs sm:text-sm font-inter leading-relaxed">
@@ -366,7 +366,7 @@ export const PrakritiAssessment = () => {
                             <button
                                 onClick={handleBack}
                                 disabled={currentQ === 0}
-                                className="px-5 py-2.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider border border-stone-200 hover:border-[#c06080] text-stone-600 hover:text-[#c06080] hover:bg-stone-50 disabled:opacity-30 disabled:hover:border-stone-200 disabled:hover:text-stone-600 disabled:hover:bg-transparent transition duration-300 cursor-pointer disabled:cursor-not-allowed"
+                                className="px-5 py-2.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider border border-stone-200 hover:border-secondary text-stone-600 hover:text-secondary hover:bg-stone-50 disabled:opacity-30 disabled:hover:border-stone-200 disabled:hover:text-stone-600 disabled:hover:bg-transparent transition duration-300 cursor-pointer disabled:cursor-not-allowed"
                             >
                                 ← Back
                             </button>

@@ -24,11 +24,11 @@ const sectionList: { key: Section; label: string; icon: React.ReactNode }[] = [
 ];
 
 // Shared Tailwind class strings
-const inputCls = 'w-full px-4 py-3 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-sm text-stone-800 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:border-[#C27A5D] transition-colors';
+const inputCls = 'w-full px-4 py-3 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-sm text-stone-800 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:border-secondary transition-colors';
 const labelCls = 'block text-[9px] font-mono uppercase tracking-[0.2em] font-bold text-stone-400 mb-1.5';
-const saveBtnCls = 'px-6 py-2.5 bg-[#C27A5D] hover:bg-[#B06B50] text-white text-[10px] font-mono uppercase tracking-[0.18em] rounded-full transition-colors font-bold';
+const saveBtnCls = 'px-6 py-2.5 bg-secondary hover:bg-[#B06B50] text-white text-[10px] font-mono uppercase tracking-[0.18em] rounded-full transition-colors font-bold';
 const blockCls = 'bg-white dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 rounded-2xl overflow-hidden';
-const rowCls = 'w-full flex items-center justify-between px-5 py-[18px] text-sm text-stone-600 dark:text-stone-300 hover:text-[#C27A5D] cursor-pointer transition-colors';
+const rowCls = 'w-full flex items-center justify-between px-5 py-[18px] text-sm text-stone-600 dark:text-stone-300 hover:text-secondary cursor-pointer transition-colors';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -237,13 +237,13 @@ export default function ProfilePage() {
         return (
           <div className="space-y-8">
             <div>
-              <h2 className="font-cormorant text-4xl font-medium text-stone-800 dark:text-stone-100 mb-2">Account</h2>
+              <h2 className="font-quote text-4xl font-medium text-stone-800 dark:text-stone-100 mb-2">Account</h2>
               <p className="text-sm text-stone-500 leading-relaxed">Manage your login credentials and account data.</p>
             </div>
 
             {/* Profile Details (Sex & Date of Birth) */}
             <div className={`${blockCls} p-6 space-y-5`}>
-              <h3 className="font-mono text-[10px] uppercase tracking-wider text-[#C27A5D] font-bold">Profile Details</h3>
+              <h3 className="font-mono text-[10px] uppercase tracking-wider text-secondary font-bold">Profile Details</h3>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {/* Biological Sex */}
@@ -252,7 +252,7 @@ export default function ProfilePage() {
                   <select
                     value={profileGender}
                     onChange={(e) => setProfileGender(e.target.value)}
-                    className="w-full px-4 py-3 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-sm text-stone-800 dark:text-stone-100 focus:outline-none focus:border-[#C27A5D] transition-colors cursor-pointer select-none"
+                    className="w-full px-4 py-3 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-sm text-stone-800 dark:text-stone-100 focus:outline-none focus:border-secondary transition-colors cursor-pointer select-none"
                   >
                     <option value="female">Female</option>
                     <option value="male">Male</option>
@@ -266,7 +266,7 @@ export default function ProfilePage() {
                     <select
                       value={profileDobDay}
                       onChange={(e) => setProfileDobDay(e.target.value)}
-                      className={`flex-1 px-3 py-3 rounded-2xl border bg-white dark:bg-stone-900 text-sm focus:outline-none focus:border-[#C27A5D] transition-colors cursor-pointer select-none ${
+                      className={`flex-1 px-3 py-3 rounded-2xl border bg-white dark:bg-stone-900 text-sm focus:outline-none focus:border-secondary transition-colors cursor-pointer select-none ${
                         profileDobDay ? 'text-stone-800 dark:text-stone-100' : 'text-stone-400'
                       } ${
                         profileDobDay ? 'border-stone-200 dark:border-stone-800' : 'border-stone-200 dark:border-stone-800'
@@ -279,7 +279,7 @@ export default function ProfilePage() {
                     <select
                       value={profileDobMonth}
                       onChange={(e) => setProfileDobMonth(e.target.value)}
-                      className={`flex-1 px-3 py-3 rounded-2xl border bg-white dark:bg-stone-900 text-sm focus:outline-none focus:border-[#C27A5D] transition-colors cursor-pointer select-none ${
+                      className={`flex-1 px-3 py-3 rounded-2xl border bg-white dark:bg-stone-900 text-sm focus:outline-none focus:border-secondary transition-colors cursor-pointer select-none ${
                         profileDobMonth ? 'text-stone-800 dark:text-stone-100' : 'text-stone-400'
                       } ${
                         profileDobMonth ? 'border-stone-200 dark:border-stone-800' : 'border-stone-200 dark:border-stone-800'
@@ -292,7 +292,7 @@ export default function ProfilePage() {
                     <select
                       value={profileDobYear}
                       onChange={(e) => setProfileDobYear(e.target.value)}
-                      className={`flex-1 px-3 py-3 rounded-2xl border bg-white dark:bg-stone-900 text-sm focus:outline-none focus:border-[#C27A5D] transition-colors cursor-pointer select-none ${
+                      className={`flex-1 px-3 py-3 rounded-2xl border bg-white dark:bg-stone-900 text-sm focus:outline-none focus:border-secondary transition-colors cursor-pointer select-none ${
                         profileDobYear ? 'text-stone-800 dark:text-stone-100' : 'text-stone-400'
                       } ${
                         profileDobYear ? 'border-stone-200 dark:border-stone-800' : 'border-stone-200 dark:border-stone-800'
@@ -326,7 +326,7 @@ export default function ProfilePage() {
             {/* Change Email */}
             <div className={blockCls}>
               <button className={rowCls} onClick={() => setOpenAccountForm(openAccountForm === 'email' ? 'none' : 'email')}>
-                <span className="flex items-center gap-3"><Mail size={15} className="text-[#C27A5D]" /><span>Change Email</span></span>
+                <span className="flex items-center gap-3"><Mail size={15} className="text-secondary" /><span>Change Email</span></span>
                 <ChevronRight size={15} className={`text-stone-400 transition-transform ${openAccountForm === 'email' ? 'rotate-90' : ''}`} />
               </button>
               {openAccountForm === 'email' && (
@@ -344,7 +344,7 @@ export default function ProfilePage() {
             {/* Change Password */}
             <div className={blockCls}>
               <button className={rowCls} onClick={() => setOpenAccountForm(openAccountForm === 'password' ? 'none' : 'password')}>
-                <span className="flex items-center gap-3"><Lock size={15} className="text-[#C27A5D]" /><span>Change Password</span></span>
+                <span className="flex items-center gap-3"><Lock size={15} className="text-secondary" /><span>Change Password</span></span>
                 <ChevronRight size={15} className={`text-stone-400 transition-transform ${openAccountForm === 'password' ? 'rotate-90' : ''}`} />
               </button>
               {openAccountForm === 'password' && (
@@ -385,20 +385,20 @@ export default function ProfilePage() {
         return (
           <div className="space-y-8">
             <div>
-              <h2 className="font-cormorant text-4xl font-medium text-stone-800 dark:text-stone-100 mb-2">Settings</h2>
+              <h2 className="font-quote text-4xl font-medium text-stone-800 dark:text-stone-100 mb-2">Settings</h2>
               <p className="text-sm text-stone-500 leading-relaxed">Customize your experience.</p>
             </div>
 
             <div className={blockCls}>
               <div className={rowCls}>
                 <span className="flex items-center gap-3">
-                  {isDark ? <Moon size={15} className="text-[#C27A5D]" /> : <Sun size={15} className="text-[#C27A5D]" />}
+                  {isDark ? <Moon size={15} className="text-secondary" /> : <Sun size={15} className="text-secondary" />}
                   <div>
                     <p className="text-sm font-medium text-stone-700 dark:text-stone-200">{isDark ? 'Night Mode' : 'Day Mode'}</p>
                     <p className="text-[11px] text-stone-400 mt-0.5">Switch between light and dark theme</p>
                   </div>
                 </span>
-                <button onClick={handleToggleDark} className={`w-11 h-6 rounded-full p-0.5 transition-colors duration-300 ${isDark ? 'bg-[#C27A5D]' : 'bg-stone-300'}`}>
+                <button onClick={handleToggleDark} className={`w-11 h-6 rounded-full p-0.5 transition-colors duration-300 ${isDark ? 'bg-secondary' : 'bg-stone-300'}`}>
                   <div className={`w-5 h-5 rounded-full bg-white shadow transition-transform duration-300 ${isDark ? 'translate-x-5' : 'translate-x-0'}`} />
                 </button>
               </div>
@@ -407,13 +407,13 @@ export default function ProfilePage() {
             <div className={blockCls}>
               <div className={rowCls}>
                 <span className="flex items-center gap-3">
-                  <Bell size={15} className="text-[#C27A5D]" />
+                  <Bell size={15} className="text-secondary" />
                   <div>
                     <p className="text-sm font-medium text-stone-700 dark:text-stone-200">Notifications</p>
                     <p className="text-[11px] text-stone-400 mt-0.5">Receive wellness reminders and updates</p>
                   </div>
                 </span>
-                <button onClick={handleToggleNotifs} className={`w-11 h-6 rounded-full p-0.5 transition-colors duration-300 ${notifs ? 'bg-[#C27A5D]' : 'bg-stone-300'}`}>
+                <button onClick={handleToggleNotifs} className={`w-11 h-6 rounded-full p-0.5 transition-colors duration-300 ${notifs ? 'bg-secondary' : 'bg-stone-300'}`}>
                   <div className={`w-5 h-5 rounded-full bg-white shadow transition-transform duration-300 ${notifs ? 'translate-x-5' : 'translate-x-0'}`} />
                 </button>
               </div>
@@ -425,7 +425,7 @@ export default function ProfilePage() {
         return (
           <div className="space-y-8">
             <div>
-              <h2 className="font-cormorant text-4xl font-medium text-stone-800 dark:text-stone-100 mb-2">Language</h2>
+              <h2 className="font-quote text-4xl font-medium text-stone-800 dark:text-stone-100 mb-2">Language</h2>
               <p className="text-sm text-stone-500 leading-relaxed">Choose your preferred display language.</p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -442,16 +442,16 @@ export default function ProfilePage() {
                   onClick={() => setLanguage(lang.code)}
                   className={`flex items-center justify-between px-5 py-4 rounded-2xl border transition-all duration-200 text-left ${
                     language === lang.code
-                      ? 'border-[#C27A5D] bg-[#C27A5D]/5 dark:bg-[#C27A5D]/10'
+                      ? 'border-secondary bg-secondary/5 dark:bg-secondary/10'
                       : 'border-stone-200 dark:border-stone-800 hover:border-stone-300 dark:hover:border-stone-700 bg-white dark:bg-stone-900'
                   }`}
                 >
                   <div>
-                    <p className={`font-medium text-sm ${language === lang.code ? 'text-[#C27A5D]' : 'text-stone-700 dark:text-stone-200'}`}>{lang.label}</p>
+                    <p className={`font-medium text-sm ${language === lang.code ? 'text-secondary' : 'text-stone-700 dark:text-stone-200'}`}>{lang.label}</p>
                     <p className="text-[10px] font-mono text-stone-400 uppercase tracking-wider mt-0.5">{lang.sub}</p>
                   </div>
                   {language === lang.code && (
-                    <div className="w-5 h-5 rounded-full bg-[#C27A5D] flex items-center justify-center shrink-0">
+                    <div className="w-5 h-5 rounded-full bg-secondary flex items-center justify-center shrink-0">
                       <Check size={11} className="text-white" />
                     </div>
                   )}
@@ -465,7 +465,7 @@ export default function ProfilePage() {
         return (
           <div className="space-y-8">
             <div>
-              <h2 className="font-cormorant text-4xl font-medium text-stone-800 dark:text-stone-100 mb-2">Get Help</h2>
+              <h2 className="font-quote text-4xl font-medium text-stone-800 dark:text-stone-100 mb-2">Get Help</h2>
               <p className="text-sm text-stone-500 leading-relaxed">Having trouble? Send us a message and we will respond within 24 hours.</p>
             </div>
             <form onSubmit={handleHelpSubmit} className="space-y-5 max-w-xl">
@@ -487,7 +487,7 @@ export default function ProfilePage() {
         return (
           <div className="space-y-8">
             <div>
-              <h2 className="font-cormorant text-4xl font-medium text-stone-800 dark:text-stone-100 mb-2">Learn More</h2>
+              <h2 className="font-quote text-4xl font-medium text-stone-800 dark:text-stone-100 mb-2">Learn More</h2>
               <p className="text-sm text-stone-500 leading-relaxed">Understand how Ojas works and how your data is handled.</p>
             </div>
             <div className="space-y-3">
@@ -530,7 +530,7 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen bg-[#F8F4EE] dark:bg-[#0F0D0B] flex items-center justify-center">
         <div className="animate-pulse flex flex-col items-center">
-          <div className="w-12 h-12 border-4 border-[#C27A5D] border-t-transparent rounded-full animate-spin mb-4" />
+          <div className="w-12 h-12 border-4 border-secondary border-t-transparent rounded-full animate-spin mb-4" />
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-stone-500">Loading Profile...</span>
         </div>
       </div>
@@ -538,7 +538,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8F4EE] dark:bg-[#0F0D0B] text-[#1C1917] dark:text-[#FAF6F0] transition-colors duration-300">
+    <div className="min-h-screen bg-[#F8F4EE] dark:bg-[#0F0D0B] text-primary dark:text-on-primary transition-colors duration-300">
       <Header />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-8 md:py-12">
@@ -546,7 +546,7 @@ export default function ProfilePage() {
         {/* Back to dashboard */}
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.2em] text-stone-400 hover:text-[#C27A5D] transition-colors mb-10 group"
+          className="inline-flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.2em] text-stone-400 hover:text-secondary transition-colors mb-10 group"
         >
           <ArrowLeft size={13} className="transition-transform group-hover:-translate-x-0.5" />
           Back to Dashboard
@@ -556,7 +556,7 @@ export default function ProfilePage() {
         {!mobileShowMenu && (
           <button
             onClick={() => setMobileShowMenu(true)}
-            className="md:hidden inline-flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.2em] text-stone-400 hover:text-[#C27A5D] transition-colors mb-6 group"
+            className="md:hidden inline-flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.2em] text-stone-400 hover:text-secondary transition-colors mb-6 group"
           >
             <ArrowLeft size={13} className="transition-transform group-hover:-translate-x-0.5" />
             All Sections
@@ -590,22 +590,22 @@ export default function ProfilePage() {
                   <div className="flex items-center gap-2 w-full max-w-[200px]">
                     <input
                       type="text" value={newName} onChange={e => setNewName(e.target.value)}
-                      className="flex-1 px-3 py-1.5 text-sm rounded-xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-stone-800 dark:text-stone-100 focus:outline-none focus:border-[#C27A5D] text-center"
+                      className="flex-1 px-3 py-1.5 text-sm rounded-xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-stone-800 dark:text-stone-100 focus:outline-none focus:border-secondary text-center"
                     />
-                    <button onClick={handleSaveName} className="p-1.5 rounded-lg bg-[#C27A5D] text-white hover:bg-[#B06B50] transition-colors"><Check size={12} /></button>
+                    <button onClick={handleSaveName} className="p-1.5 rounded-lg bg-secondary text-white hover:bg-[#B06B50] transition-colors"><Check size={12} /></button>
                     <button onClick={() => { setIsEditingName(false); setNewName(user?.name || ''); }} className="p-1.5 rounded-lg border border-stone-300 dark:border-stone-700 text-stone-500 hover:text-red-500"><X size={12} /></button>
                   </div>
                 ) : (
                   <div className="flex items-center gap-1.5">
-                    <span className="font-cormorant text-xl font-semibold text-stone-800 dark:text-stone-100">{user?.name || 'Your Name'}</span>
-                    <button onClick={() => setIsEditingName(true)} className="text-stone-400 hover:text-[#C27A5D] transition-colors">
+                    <span className="font-quote text-xl font-semibold text-stone-800 dark:text-stone-100">{user?.name || 'Your Name'}</span>
+                    <button onClick={() => setIsEditingName(true)} className="text-stone-400 hover:text-secondary transition-colors">
                       <Edit2 size={11} />
                     </button>
                   </div>
                 )}
                 <span className="text-[11px] font-mono text-stone-400 mt-1">{user?.email}</span>
                 {user?.dominantDosha && (
-                  <span className="mt-2 px-2.5 py-0.5 bg-[#C27A5D]/10 dark:bg-[#C27A5D]/15 rounded-full text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D]">
+                  <span className="mt-2 px-2.5 py-0.5 bg-secondary/10 dark:bg-secondary/15 rounded-full text-[9px] font-mono uppercase tracking-[0.2em] text-secondary">
                     {user.dominantDosha}
                   </span>
                 )}
@@ -619,11 +619,11 @@ export default function ProfilePage() {
                     onClick={() => switchSection(s.key)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 text-left ${
                       activeSection === s.key
-                        ? 'bg-[#C27A5D]/10 dark:bg-[#C27A5D]/15 text-[#C27A5D]'
+                        ? 'bg-secondary/10 dark:bg-secondary/15 text-secondary'
                         : 'text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800/50 hover:text-stone-700 dark:hover:text-stone-200'
                     }`}
                   >
-                    <span className={activeSection === s.key ? 'text-[#C27A5D]' : 'text-stone-400 dark:text-stone-500'}>{s.icon}</span>
+                    <span className={activeSection === s.key ? 'text-secondary' : 'text-stone-400 dark:text-stone-500'}>{s.icon}</span>
                     <span className="font-mono text-[10px] uppercase tracking-[0.18em] font-bold">{s.label}</span>
                   </button>
                 ))}

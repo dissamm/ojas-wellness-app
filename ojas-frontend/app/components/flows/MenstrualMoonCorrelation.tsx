@@ -150,7 +150,7 @@ export const MenstrualMoonCorrelation = ({
     const getMoonStyle = () => {
         const lower = moonPhase.toLowerCase();
         if (lower.includes('new')) {
-            return { lightClass: 'bg-[#1A1A1A] border border-white/10', glowClass: 'shadow-[inset_0_0_20px_rgba(255,255,255,0.02)]' };
+            return { lightClass: 'bg-primary border border-white/10', glowClass: 'shadow-[inset_0_0_20px_rgba(255,255,255,0.02)]' };
         }
         if (lower.includes('crescent') || lower.includes('waxing')) {
             return { lightClass: 'bg-gradient-to-r from-[#1A1A1A] via-stone-800 to-amber-200/90', glowClass: 'shadow-[0_0_30px_rgba(253,186,116,0.18),_inset_-10px_-10px_20px_rgba(0,0,0,0.8)] border border-amber-300/10' };
@@ -165,11 +165,11 @@ export const MenstrualMoonCorrelation = ({
     const moonStyle = getMoonStyle();
 
     return (
-        <div className="min-h-screen bg-[#0F0F0F] text-[#F5F1ED] relative overflow-hidden flex flex-col items-center justify-center px-6 py-12 selection:bg-amber-500/20">
+        <div className="min-h-screen bg-background text-on-primary relative overflow-hidden flex flex-col items-center justify-center px-6 py-12 selection:bg-amber-500/20">
             {/* Sparkle Twinkle Stars Background */}
             <div className="absolute inset-0 pointer-events-none opacity-40">
                 <div className="absolute w-1 h-1 bg-[#1a0a2e]/40 rounded-full top-12 left-1/4 animate-ping"></div>
-                <div className="absolute w-1 h-1 bg-[#c06080]/30 rounded-full top-1/3 left-3/4 animate-pulse"></div>
+                <div className="absolute w-1 h-1 bg-secondary/30 rounded-full top-1/3 left-3/4 animate-pulse"></div>
                 <div className="absolute w-1 h-1 bg-[#FF6B9D]/40 rounded-full top-2/3 left-1/3 animate-pulse"></div>
                 <div className="absolute w-1.5 h-1.5 bg-[#B8A8D8]/20 rounded-full top-4/5 left-4/5 animate-ping"></div>
             </div>
@@ -177,10 +177,10 @@ export const MenstrualMoonCorrelation = ({
             <div className="max-w-2xl w-full relative z-10">
                 {/* Header Block */}
                 <div className="text-center mb-8">
-                    <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-semibold mb-2 block">
+                    <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-secondary font-semibold mb-2 block">
                         CELESTIAL RHYTHM
                     </span>
-                    <h1 className="text-4xl md:text-5xl font-serif font-normal italic tracking-wider text-[#c06080] mb-3">
+                    <h1 className="text-4xl md:text-5xl font-serif font-normal italic tracking-wider text-secondary mb-3">
                         Cycle & Moon Magic
                     </h1>
                     <p className="text-[#A8A8A8] text-sm max-w-md mx-auto leading-relaxed">
@@ -189,7 +189,7 @@ export const MenstrualMoonCorrelation = ({
                 </div>
 
                 {/* Primary Glassmorphic Input Panel */}
-                <div className="bg-[#1A1A1A] border border-white/5 shadow-md backdrop-blur-xl rounded-card p-8 shadow-2xl mb-6 text-left">
+                <div className="bg-primary border border-white/5 shadow-md backdrop-blur-xl rounded-card p-8 shadow-2xl mb-6 text-left">
                     {/* Glowing Realistic Moon */}
                     <div className="text-center mb-8 flex flex-col items-center justify-center">
                         <div className={`relative w-28 h-28 rounded-full ${moonStyle.lightClass} ${moonStyle.glowClass} transition-all duration-700 overflow-hidden flex items-center justify-center mb-4`}>
@@ -198,10 +198,10 @@ export const MenstrualMoonCorrelation = ({
                             <div className="absolute w-6 h-6 rounded-full bg-black/10 blur-[1px] top-6 left-6"></div>
                             <div className="absolute w-8 h-8 rounded-full bg-black/15 blur-[2px] bottom-6 right-8"></div>
                         </div>
-                        <h3 className="text-xs font-mono uppercase tracking-widest text-[#c06080] font-bold mb-1">
+                        <h3 className="text-xs font-mono uppercase tracking-widest text-secondary font-bold mb-1">
                             Current Lunar Alignment
                         </h3>
-                        <p className="font-serif italic text-xl text-[#F5F1ED]">{moonPhase || 'Waxing Crescent'}</p>
+                        <p className="font-serif italic text-xl text-on-primary">{moonPhase || 'Waxing Crescent'}</p>
                     </div>
 
                     <div className="border-t border-white/10 my-6"></div>
@@ -216,7 +216,7 @@ export const MenstrualMoonCorrelation = ({
                                 type="date"
                                 value={cycleStartDate}
                                 onChange={(e) => setCycleStartDate(e.target.value)}
-                                className="w-full bg-[#2D2D2D] border border-white/10 rounded-input py-3 px-4 text-[#F5F1ED] focus:outline-none focus:border-[#c06080] transition-colors cursor-pointer text-sm font-mono"
+                                className="w-full bg-[#2D2D2D] border border-white/10 rounded-input py-3 px-4 text-on-primary focus:outline-none focus:border-secondary transition-colors cursor-pointer text-sm font-mono"
                             />
                         </div>
 
@@ -227,11 +227,11 @@ export const MenstrualMoonCorrelation = ({
                             <select
                                 value={cycleLength}
                                 onChange={(e) => setCycleLength(parseInt(e.target.value))}
-                                className="w-full bg-[#2D2D2D] border border-white/10 rounded-input py-3 px-4 text-[#F5F1ED] focus:outline-none focus:border-[#c06080] transition-colors cursor-pointer text-sm font-mono"
+                                className="w-full bg-[#2D2D2D] border border-white/10 rounded-input py-3 px-4 text-on-primary focus:outline-none focus:border-secondary transition-colors cursor-pointer text-sm font-mono"
                             >
                                 {Array.from({ length: 15 }, (_, i) => {
                                     const days = i + 21;
-                                    return <option key={days} value={days} className="bg-[#1A1A1A] text-[#F5F1ED]">{days} days</option>;
+                                    return <option key={days} value={days} className="bg-primary text-on-primary">{days} days</option>;
                                 })}
                             </select>
                         </div>
@@ -239,7 +239,7 @@ export const MenstrualMoonCorrelation = ({
                         <button
                             onClick={handleAnalyze}
                             disabled={!cycleStartDate || mlLoading}
-                            className="w-full py-3.5 rounded-button text-xs font-mono font-bold uppercase tracking-[0.2em] bg-[#F5F1ED] text-[#0F0F0F] hover:bg-[#c06080] hover:text-[#F5F1ED] border border-transparent disabled:opacity-30 active:scale-[0.98] transition-all duration-300 shadow-lg cursor-pointer flex justify-center items-center gap-2"
+                            className="w-full py-3.5 rounded-button text-xs font-mono font-bold uppercase tracking-[0.2em] bg-[#F5F1ED] text-[#0F0F0F] hover:bg-secondary hover:text-on-primary border border-transparent disabled:opacity-30 active:scale-[0.98] transition-all duration-300 shadow-lg cursor-pointer flex justify-center items-center gap-2"
                         >
                             {mlLoading ? (
                                 <>
@@ -262,7 +262,7 @@ export const MenstrualMoonCorrelation = ({
                 {showInsights && (
                     <div className="mt-8 text-left w-full space-y-6">
                         <div className="text-center">
-                            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-bold block">
+                            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-secondary font-bold block">
                                 Interactive Phase Explorer
                             </span>
                         </div>
@@ -275,8 +275,8 @@ export const MenstrualMoonCorrelation = ({
                               className={`
                                 py-2 px-1 rounded-button text-[10px] sm:text-xs font-semibold transition-all cursor-pointer text-center
                                 ${previewPhase === p
-                                  ? 'bg-[#2D2D2D] text-[#F5F1ED] border border-white/10'
-                                  : 'bg-[#1A1A1A] text-[#A8A8A8] hover:bg-[#2D2D2D] border border-transparent'
+                                  ? 'bg-[#2D2D2D] text-on-primary border border-white/10'
+                                  : 'bg-primary text-[#A8A8A8] hover:bg-[#2D2D2D] border border-transparent'
                                 }
                               `}
                             >

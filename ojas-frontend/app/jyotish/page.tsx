@@ -121,7 +121,7 @@ export default function JyotishPage() {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[#F0EBE3] dark:bg-[#12100E] text-[#1C1917] dark:text-[#FAF6F0] transition-colors duration-300">
+    <div className="relative min-h-screen w-full bg-background text-foreground transition-colors duration-300">
       <Header />
 
       <main className="max-w-4xl mx-auto px-6 md:px-10 py-14 md:py-20 space-y-10">
@@ -135,11 +135,11 @@ export default function JyotishPage() {
 
         {/* Page Header */}
         <div className="animate-fade-rise">
-          <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#C27A5D] font-bold mb-4">
+          <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-secondary font-bold mb-4">
             VEDIC ASTROLOGY · JYOTISH
           </div>
-          <h1 className="text-4xl md:text-5xl font-normal font-cormorant text-[#1C1917] dark:text-[#FAF6F0] leading-tight mb-4">
-            Your <em className="italic text-[#C27A5D]">Jyotish</em> Blueprint
+          <h1 className="text-4xl md:text-5xl font-normal font-quote text-primary dark:text-on-primary leading-tight mb-4">
+            Your <em className="italic text-secondary">Jyotish</em> Blueprint
           </h1>
           <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed max-w-xl">
             Your birth chart, planetary transits, and numerology woven into your daily Ayurvedic practice.
@@ -147,9 +147,9 @@ export default function JyotishPage() {
         </div>
 
         {/* Section 1: Birth Chart Overview Card */}
-        <div className="bg-[#1C1C1A] dark:bg-[#111110] rounded-[32px] p-8 text-[#FAF6F0] shadow-xl relative overflow-hidden transition-all duration-500 border border-stone-850">
-          <div className="absolute top-0 right-0 w-48 h-48 bg-[#C27A5D]/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-bold mb-5">
+        <div className="bg-primary dark:bg-[#111110] rounded-[32px] p-8 text-on-primary shadow-xl relative overflow-hidden transition-all duration-500 border border-stone-850">
+          <div className="absolute top-0 right-0 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-secondary font-bold mb-5">
             JANMA KUNDALI · BIRTH CHART
           </div>
 
@@ -178,7 +178,7 @@ export default function JyotishPage() {
 
           <button
             onClick={() => setHealthInsightExpanded(!healthInsightExpanded)}
-            className="text-[10px] font-mono uppercase tracking-wider text-[#C27A5D] hover:text-white transition-colors cursor-pointer border-b border-[#C27A5D]/30"
+            className="text-[10px] font-mono uppercase tracking-wider text-secondary hover:text-white transition-colors cursor-pointer border-b border-secondary/30"
           >
             {healthInsightExpanded ? 'HIDE INSIGHTS ↑' : 'WHAT DOES THIS MEAN FOR MY HEALTH? →'}
           </button>
@@ -200,7 +200,7 @@ export default function JyotishPage() {
 
         {/* Section 2: Active Transits Card */}
         <Card className="relative overflow-hidden">
-          <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-bold mb-6">
+          <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-secondary font-bold mb-6">
             ACTIVE TRANSITS · THIS MONTH
           </div>
 
@@ -225,7 +225,7 @@ export default function JyotishPage() {
                 className={`px-4 py-2 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider transition-all duration-300 flex-shrink-0 cursor-pointer ${
                   addedTransitIds['transit-mercury']
                     ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20'
-                    : 'bg-[#C27A5D]/10 hover:bg-[#C27A5D]/20 text-[#C27A5D] border border-[#C27A5D]/20 active:scale-95'
+                    : 'bg-secondary/10 hover:bg-secondary/20 text-secondary border border-secondary/20 active:scale-95'
                 }`}
               >
                 {addedTransitIds['transit-mercury'] ? '✓ ADDED TO RITUALS' : '+ ADD TO RITUALS'}
@@ -252,7 +252,7 @@ export default function JyotishPage() {
                 className={`px-4 py-2 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider transition-all duration-300 flex-shrink-0 cursor-pointer ${
                   addedTransitIds['transit-venus']
                     ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20'
-                    : 'bg-[#C27A5D]/10 hover:bg-[#C27A5D]/20 text-[#C27A5D] border border-[#C27A5D]/20 active:scale-95'
+                    : 'bg-secondary/10 hover:bg-secondary/20 text-secondary border border-secondary/20 active:scale-95'
                 }`}
               >
                 {addedTransitIds['transit-venus'] ? '✓ ADDED TO RITUALS' : '+ ADD TO RITUALS'}
@@ -279,7 +279,7 @@ export default function JyotishPage() {
                 className={`px-4 py-2 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider transition-all duration-300 flex-shrink-0 cursor-pointer ${
                   addedTransitIds['transit-mars']
                     ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20'
-                    : 'bg-[#C27A5D]/10 hover:bg-[#C27A5D]/20 text-[#C27A5D] border border-[#C27A5D]/20 active:scale-95'
+                    : 'bg-secondary/10 hover:bg-secondary/20 text-secondary border border-secondary/20 active:scale-95'
                 }`}
               >
                 {addedTransitIds['transit-mars'] ? '✓ ADDED TO RITUALS' : '+ ADD TO RITUALS'}
@@ -306,7 +306,7 @@ export default function JyotishPage() {
                 className={`px-4 py-2 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider transition-all duration-300 flex-shrink-0 cursor-pointer ${
                   addedTransitIds['transit-jupiter']
                     ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20'
-                    : 'bg-[#C27A5D]/10 hover:bg-[#C27A5D]/20 text-[#C27A5D] border border-[#C27A5D]/20 active:scale-95'
+                    : 'bg-secondary/10 hover:bg-secondary/20 text-secondary border border-secondary/20 active:scale-95'
                 }`}
               >
                 {addedTransitIds['transit-jupiter'] ? '✓ ADDED TO RITUALS' : '+ ADD TO RITUALS'}
@@ -317,7 +317,7 @@ export default function JyotishPage() {
 
         {/* Section 3: Numerology Card */}
         <Card>
-          <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-bold mb-6">
+          <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-secondary font-bold mb-6">
             ANKA JYOTISH · NUMEROLOGY
           </div>
 
@@ -328,7 +328,7 @@ export default function JyotishPage() {
                   LIFE PATH NUMBER
                 </span>
                 <div className="flex items-baseline gap-4">
-                  <span className="text-5xl font-serif font-semibold text-[#C27A5D]">
+                  <span className="text-5xl font-serif font-semibold text-secondary">
                     {jyotish.lifePathNumber}
                   </span>
                   <span className="text-base font-serif italic text-stone-850 dark:text-white font-medium">
@@ -386,7 +386,7 @@ export default function JyotishPage() {
                   key={item.n}
                   className={`p-2.5 rounded-xl border text-center font-mono ${
                     item.n === jyotish.lifePathNumber
-                      ? 'bg-[#C27A5D]/10 border-[#C27A5D] text-[#C27A5D] font-bold'
+                      ? 'bg-secondary/10 border-secondary text-secondary font-bold'
                       : 'bg-white/40 dark:bg-stone-900/40 border-stone-200/40 dark:border-stone-800 text-stone-400'
                   }`}
                 >
@@ -400,7 +400,7 @@ export default function JyotishPage() {
 
         {/* Section 4: Monthly Wellness Forecast Card */}
         <Card>
-          <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-bold mb-6">
+          <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-secondary font-bold mb-6">
             COSMIC WELLNESS FORECAST · JUNE 2026
           </div>
 
@@ -469,7 +469,7 @@ export default function JyotishPage() {
 
         {/* Section 5: Dosha-Planet Connection Matrix Card */}
         <Card>
-          <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-bold mb-6">
+          <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-secondary font-bold mb-6">
             GRAHA-DOSHA MATRIX
           </div>
 
@@ -483,25 +483,25 @@ export default function JyotishPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-200/30 dark:divide-stone-850">
-                <tr className="hover:bg-[#C27A5D]/5 transition-colors">
+                <tr className="hover:bg-secondary/5 transition-colors">
                   <td className="py-4 font-medium flex items-center gap-2">
                     <span>☿</span> Mercury + <span>♀</span> Venus
                   </td>
-                  <td className="py-4 text-[#C27A5D] font-mono uppercase tracking-wider font-bold">Vata</td>
+                  <td className="py-4 text-secondary font-mono uppercase tracking-wider font-bold">Vata</td>
                   <td className="py-4 text-stone-500">Air + Ether</td>
                 </tr>
-                <tr className="hover:bg-[#C27A5D]/5 transition-colors">
+                <tr className="hover:bg-secondary/5 transition-colors">
                   <td className="py-4 font-medium flex items-center gap-2">
                     <span>☉</span> Sun + <span>♂</span> Mars
                   </td>
-                  <td className="py-4 text-[#C27A5D] font-mono uppercase tracking-wider font-bold">Pitta</td>
+                  <td className="py-4 text-secondary font-mono uppercase tracking-wider font-bold">Pitta</td>
                   <td className="py-4 text-stone-500">Fire</td>
                 </tr>
-                <tr className="hover:bg-[#C27A5D]/5 transition-colors">
+                <tr className="hover:bg-secondary/5 transition-colors">
                   <td className="py-4 font-medium flex items-center gap-2">
                     <span>☽</span> Moon + <span>♃</span> Jupiter
                   </td>
-                  <td className="py-4 text-[#C27A5D] font-mono uppercase tracking-wider font-bold">Kapha</td>
+                  <td className="py-4 text-secondary font-mono uppercase tracking-wider font-bold">Kapha</td>
                   <td className="py-4 text-stone-500">Water + Earth</td>
                 </tr>
               </tbody>
@@ -509,7 +509,7 @@ export default function JyotishPage() {
           </div>
 
           <div className="mt-6 p-4 bg-[#FAF6F0] dark:bg-stone-950/20 border border-stone-200/50 dark:border-stone-800/80 rounded-2xl text-[11px] font-mono text-stone-500 dark:text-stone-400 flex items-start gap-3">
-            <span className="text-[#C27A5D] text-[13px]">☿</span>
+            <span className="text-secondary text-[13px]">☿</span>
             <p>
               <strong>Veda Note:</strong> Mercury is currently retrograde — your Vata constitution is especially sensitive this month. Prioritize nervous alignment practices.
             </p>

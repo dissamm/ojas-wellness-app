@@ -84,7 +84,7 @@ export default function SleepHistoryPage() {
   const patternInsight = generatePattern(logs);
 
   return (
-    <div className="relative min-h-screen w-full bg-[#F0EBE3] dark:bg-[#12100E] text-[#1C1917] dark:text-[#FAF6F0] transition-colors duration-300">
+    <div className="relative min-h-screen w-full bg-background text-foreground transition-colors duration-300">
       <Header />
 
       <main className="max-w-4xl mx-auto px-6 md:px-10 py-14 md:py-20 space-y-10">
@@ -99,11 +99,11 @@ export default function SleepHistoryPage() {
 
         {/* ── Page header */}
         <div className="animate-fade-rise">
-          <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#C27A5D] font-bold mb-4">
+          <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-secondary font-bold mb-4">
             SLEEP ARCHIVE
           </div>
-          <h1 className="text-4xl md:text-5xl font-normal font-cormorant text-[#1C1917] dark:text-[#FAF6F0] leading-tight mb-4">
-            Nightly <em className="italic text-[#C27A5D]">Sleep</em> History
+          <h1 className="text-4xl md:text-5xl font-normal font-quote text-primary dark:text-on-primary leading-tight mb-4">
+            Nightly <em className="italic text-secondary">Sleep</em> History
           </h1>
           <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
             30-day restoration archive, aligned with lunar phases and your {user?.dominantDosha || 'Pitta'} Prakriti.
@@ -111,10 +111,10 @@ export default function SleepHistoryPage() {
         </div>
 
         {/* ── Pattern Insight Card */}
-        <Card className="bg-[#1C1C1A] dark:bg-[#111110] !text-[#FAF6F0] border-0">
+        <Card className="bg-primary dark:bg-[#111110] !text-on-primary border-0">
           <div className="relative z-10">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-[#C27A5D]/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-bold mb-3">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-secondary font-bold mb-3">
               PATTERN INSIGHT · LAST {logs.length} NIGHTS
             </div>
             <p className="text-base text-stone-300 leading-relaxed max-w-lg">
@@ -141,7 +141,7 @@ export default function SleepHistoryPage() {
             return (
               <div
                 key={log.date}
-                className={`grid grid-cols-[auto_1fr_auto_auto_auto] gap-x-4 items-center bg-white/50 dark:bg-stone-900/60 border border-stone-200/40 dark:border-stone-800/80 rounded-2xl px-5 py-4 transition-all duration-300 hover:border-[#C27A5D]/30 ${idx === 0 ? 'ring-1 ring-[#C27A5D]/20' : ''}`}
+                className={`grid grid-cols-[auto_1fr_auto_auto_auto] gap-x-4 items-center bg-white/50 dark:bg-stone-900/60 border border-stone-200/40 dark:border-stone-800/80 rounded-2xl px-5 py-4 transition-all duration-300 hover:border-secondary/30 ${idx === 0 ? 'ring-1 ring-secondary/20' : ''}`}
               >
                 {/* Date */}
                 <div className="min-w-[90px]">
@@ -149,7 +149,7 @@ export default function SleepHistoryPage() {
                     {formatDate(log.date)}
                   </div>
                   {idx === 0 && (
-                    <span className="text-[8px] font-mono font-bold uppercase tracking-wider text-[#C27A5D]">TODAY</span>
+                    <span className="text-[8px] font-mono font-bold uppercase tracking-wider text-secondary">TODAY</span>
                   )}
                 </div>
 
@@ -167,7 +167,7 @@ export default function SleepHistoryPage() {
 
                 {/* Hours */}
                 <div className="text-center">
-                  <div className="text-lg font-cormorant italic font-semibold text-[#1C1917] dark:text-[#FAF6F0]">
+                  <div className="text-lg font-quote italic font-semibold text-primary dark:text-on-primary">
                     {log.hoursSlept ?? '—'}
                   </div>
                   <div className="text-[8px] font-mono text-stone-400 uppercase">HRS</div>
@@ -201,7 +201,7 @@ export default function SleepHistoryPage() {
               </p>
               <Link
                 href="/dashboard"
-                className="mt-6 inline-block text-[10px] font-mono uppercase tracking-wider text-[#C27A5D] border-b border-[#C27A5D]/30"
+                className="mt-6 inline-block text-[10px] font-mono uppercase tracking-wider text-secondary border-b border-secondary/30"
               >
                 GO TO DASHBOARD →
               </Link>

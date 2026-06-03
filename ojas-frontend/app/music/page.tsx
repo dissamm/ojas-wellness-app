@@ -94,7 +94,7 @@ export default function MusicPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-[#c06080]/10 transition-colors duration-500">
+    <div className="min-h-screen bg-background text-foreground selection:bg-secondary/10 transition-colors duration-500">
       <div className="flex flex-col min-h-screen">
         
         {/* Navigation Header */}
@@ -103,11 +103,11 @@ export default function MusicPage() {
         {/* Hero Section */}
         <div className="w-full max-w-7xl mx-auto px-6 md:px-8 pt-12 pb-6">
           <div className="text-center max-w-2xl mx-auto mb-10 animate-fade-rise">
-            <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-bold mb-2 block">
+            <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-secondary font-bold mb-2 block">
               FREQUENCY SANCTUARY
             </span>
-            <h1 className="text-4xl md:text-5xl font-serif font-normal text-[#1C1917] dark:text-[#FAF6F0] leading-tight">
-              Sound <span className="italic text-[#c06080]">Recommendations</span>
+            <h1 className="text-4xl md:text-5xl font-serif font-normal text-primary dark:text-on-primary leading-tight">
+              Sound <span className="italic text-secondary">Recommendations</span>
             </h1>
              <p className="text-stone-500 dark:text-stone-400 text-sm mt-3 leading-relaxed font-inter">
               {user?.gender === 'male' ? (
@@ -124,7 +124,7 @@ export default function MusicPage() {
               onClick={() => setActiveTab('curated')}
               className={`flex-1 pb-4 text-[10px] font-mono font-bold uppercase tracking-wider transition-all duration-300 border-b-2 cursor-pointer ${
                 activeTab === 'curated'
-                  ? 'border-[#c06080] text-[#c06080]'
+                  ? 'border-secondary text-secondary'
                   : 'border-transparent text-stone-400 hover:text-stone-700'
               }`}
             >
@@ -134,7 +134,7 @@ export default function MusicPage() {
               onClick={() => setActiveTab('solfeggio')}
               className={`flex-1 pb-4 text-[10px] font-mono font-bold uppercase tracking-wider transition-all duration-300 border-b-2 cursor-pointer ${
                 activeTab === 'solfeggio'
-                  ? 'border-[#c06080] text-[#c06080]'
+                  ? 'border-secondary text-secondary'
                   : 'border-transparent text-stone-400 hover:text-stone-700'
               }`}
             >
@@ -149,12 +149,12 @@ export default function MusicPage() {
             <div className="lg:col-span-5 w-full space-y-6">
               
               {/* Interactive Vibe Calibrator */}
-              <Card className="border-[#c06080]/10 bg-white/60 dark:bg-stone-900/60 backdrop-blur-md">
-                <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-bold mb-4 block">
+              <Card className="border-secondary/10 bg-white/60 dark:bg-stone-900/60 backdrop-blur-md">
+                <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary font-bold mb-4 block">
                   VIBE & ENERGY CALIBRATOR
                 </span>
                 
-                <h3 className="text-lg font-serif italic text-stone-900 dark:text-[#FAF6F0] mb-2 leading-relaxed">
+                <h3 className="text-lg font-serif italic text-stone-900 dark:text-on-primary mb-2 leading-relaxed">
                   Calibrate Your Current Frequencies
                 </h3>
                 <p className="text-stone-500 text-xs leading-relaxed font-inter mb-6">
@@ -175,10 +175,10 @@ export default function MusicPage() {
                   <span>Vibrant & High</span>
                 </div>
 
-                <div className="p-4 bg-[#FAF6F0] dark:bg-stone-900/60 rounded-2xl border border-stone-200/40 dark:border-stone-800">
+                <div className="p-4 bg-on-primary dark:bg-stone-900/60 rounded-2xl border border-stone-200/40 dark:border-stone-800">
                   <div className="flex justify-between items-center mb-1">
                     <span className="text-[10px] font-mono uppercase text-stone-400">Current Calibrated Level:</span>
-                    <span className="text-xs font-bold font-mono text-[#c06080]">{energyLevel} / 10</span>
+                    <span className="text-xs font-bold font-mono text-secondary">{energyLevel} / 10</span>
                   </div>
                   <p className="text-stone-600 dark:text-stone-300 text-xs font-serif italic leading-relaxed">
                     {energyLevel <= 3 && "🌌 Deep Rest — Calibrated for low-energy, inward-turning rest states."}
@@ -190,8 +190,8 @@ export default function MusicPage() {
               </Card>
 
               {/* Dosha Calibration card */}
-              <Card className="border-[#c06080]/10 bg-white/60 dark:bg-stone-900/60">
-                <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-bold mb-4 block">
+              <Card className="border-secondary/10 bg-white/60 dark:bg-stone-900/60">
+                <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary font-bold mb-4 block">
                   DOSHA ALIGNMENT TARGET
                 </span>
                 <div className="flex gap-2 mb-4 flex-wrap">
@@ -203,7 +203,7 @@ export default function MusicPage() {
                         onClick={() => setSelectedDosha(dosha)}
                         className={`px-4 py-2 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer ${
                           isActive
-                            ? 'bg-[#1C1917] text-white'
+                            ? 'bg-primary text-white'
                             : 'bg-stone-100 hover:bg-stone-200 text-stone-600 border border-stone-200'
                         }`}
                       >
@@ -230,21 +230,21 @@ export default function MusicPage() {
             <div className="lg:col-span-7 w-full space-y-6">
 
               {/* Mercury Rx adjustment banner */}
-              <div className="px-4 py-2.5 bg-[#c06080]/10 border border-[#c06080]/20 rounded-2xl flex items-center justify-between gap-3 animate-pulse">
-                <span className="text-[10px] font-mono font-bold tracking-wider text-[#c06080] uppercase">
+              <div className="px-4 py-2.5 bg-secondary/10 border border-secondary/20 rounded-2xl flex items-center justify-between gap-3 animate-pulse">
+                <span className="text-[10px] font-mono font-bold tracking-wider text-secondary uppercase">
                   ☿ FREQUENCIES ADJUSTED FOR MERCURY RETROGRADE
                 </span>
-                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-[#c06080]/20 text-[#c06080] font-bold">
+                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-secondary/20 text-secondary font-bold">
                   432HZ PRIORITIZED
                 </span>
               </div>
 
               {activeTab === 'curated' ? (
                 /* Tab Curated: Indian Indie Pop Gems */
-                <Card variant="dark" className="border-[#c06080]/10">
+                <Card variant="dark" className="border-secondary/10">
                   <div className="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
                     <div>
-                      <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-bold block">
+                      <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary font-bold block">
                         CURATED SANCTUARY PLAYLIST
                       </span>
                       <h2 className="text-xl sm:text-2xl font-serif italic text-white font-normal mt-1">
@@ -260,7 +260,7 @@ export default function MusicPage() {
                       return (
                         <div
                           key={idx}
-                          className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 hover:border-[#c06080]/30 transition-all duration-300 gap-4"
+                          className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 hover:border-secondary/30 transition-all duration-300 gap-4"
                         >
                           <div className="flex-1 flex items-center gap-4">
                             {/* Interactive Disc Visualizer */}
@@ -272,16 +272,16 @@ export default function MusicPage() {
                             >
                               <span className="z-10">{isPlaying ? '⏸' : '▶'}</span>
                               {isPlaying && (
-                                <div className="absolute inset-0 bg-[#c06080]/25 blur-sm animate-pulse" />
+                                <div className="absolute inset-0 bg-secondary/25 blur-sm animate-pulse" />
                               )}
                             </button>
 
                             <div>
-                              <p className="font-cormorant text-[#FAF6F0] font-normal text-base leading-tight">
+                              <p className="font-quote text-on-primary font-normal text-base leading-tight">
                                 {song.title}
                               </p>
                               <p className="text-xs text-stone-400 mt-1">
-                                {song.artist} • <span className="text-[#c06080] font-mono text-[10px] uppercase tracking-wider">{song.mood} Resonance</span>
+                                {song.artist} • <span className="text-secondary font-mono text-[10px] uppercase tracking-wider">{song.mood} Resonance</span>
                               </p>
                             </div>
                           </div>
@@ -300,7 +300,7 @@ export default function MusicPage() {
                               href={song.youtubeUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-wider bg-[#c06080]/10 hover:bg-[#c06080]/20 border border-[#c06080]/20 text-[#FAF6F0] rounded-full transition-all duration-300"
+                              className="px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-wider bg-secondary/10 hover:bg-secondary/20 border border-secondary/20 text-on-primary rounded-full transition-all duration-300"
                             >
                               🔴 YouTube
                             </a>
@@ -321,17 +321,17 @@ export default function MusicPage() {
                   {activeVisualizer !== null && (
                     <div className="mt-6 p-4 bg-white/5 rounded-2xl border border-white/5 flex items-center justify-between animate-fade-rise">
                       <div className="flex items-center gap-3">
-                        <span className="text-xs font-mono text-[#c06080]">PLAYING SHORTCUT REDIRECT:</span>
+                        <span className="text-xs font-mono text-secondary">PLAYING SHORTCUT REDIRECT:</span>
                         <span className="text-xs font-serif italic text-white">
                           &ldquo;{musicRecommendations[activeVisualizer]?.title} — {musicRecommendations[activeVisualizer]?.artist}&rdquo;
                         </span>
                       </div>
                       {/* Animated Soundwaves */}
                       <div className="flex items-end gap-[3px] h-4">
-                        <div className="w-[3px] bg-[#c06080] rounded-full animate-[pulse_0.8s_infinite] h-full" />
-                        <div className="w-[3px] bg-[#c06080] rounded-full animate-[pulse_1.2s_infinite] h-1/2" style={{ animationDelay: '0.2s' }} />
-                        <div className="w-[3px] bg-[#c06080] rounded-full animate-[pulse_1s_infinite] h-3/4" style={{ animationDelay: '0.4s' }} />
-                        <div className="w-[3px] bg-[#c06080] rounded-full animate-[pulse_0.7s_infinite] h-2/3" style={{ animationDelay: '0.1s' }} />
+                        <div className="w-[3px] bg-secondary rounded-full animate-[pulse_0.8s_infinite] h-full" />
+                        <div className="w-[3px] bg-secondary rounded-full animate-[pulse_1.2s_infinite] h-1/2" style={{ animationDelay: '0.2s' }} />
+                        <div className="w-[3px] bg-secondary rounded-full animate-[pulse_1s_infinite] h-3/4" style={{ animationDelay: '0.4s' }} />
+                        <div className="w-[3px] bg-secondary rounded-full animate-[pulse_0.7s_infinite] h-2/3" style={{ animationDelay: '0.1s' }} />
                       </div>
                     </div>
                   )}
@@ -348,12 +348,12 @@ export default function MusicPage() {
                 /* Tab Solfeggio: Vedic Solfeggio soundscapes */
                 <div className="space-y-6">
                   {[...SOLFEGGIO_SOUNDSCAPES].sort((a, b) => (a.frequency === '432Hz' ? -1 : b.frequency === '432Hz' ? 1 : 0)).map((sound, idx) => (
-                    <Card key={idx} variant="dark" className="border-[#c06080]/10 hover:border-[#c06080]/30 transition-all duration-300">
+                    <Card key={idx} variant="dark" className="border-secondary/10 hover:border-secondary/30 transition-all duration-300">
                       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                         <div className="flex items-center gap-4">
                           <span className="text-3xl p-2 bg-white/5 rounded-2xl border border-white/5">{sound.icon}</span>
                           <div>
-                            <span className="text-xs font-mono font-bold text-[#c06080] uppercase tracking-widest">{sound.frequency} • {sound.purpose}</span>
+                            <span className="text-xs font-mono font-bold text-secondary uppercase tracking-widest">{sound.frequency} • {sound.purpose}</span>
                             <h3 className="text-lg font-serif italic text-white font-normal mt-0.5">{sound.name}</h3>
                           </div>
                         </div>
@@ -361,7 +361,7 @@ export default function MusicPage() {
                           href={sound.streamUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-5 py-2.5 text-[10px] font-mono font-bold uppercase tracking-wider bg-[#c06080] text-white hover:bg-white hover:text-[#1C1917] rounded-full transition-all duration-300 cursor-pointer shadow-md"
+                          className="px-5 py-2.5 text-[10px] font-mono font-bold uppercase tracking-wider bg-secondary text-white hover:bg-white hover:text-primary rounded-full transition-all duration-300 cursor-pointer shadow-md"
                         >
                           🎧 Play Solfeggio
                         </a>
@@ -399,7 +399,7 @@ export default function MusicPage() {
                 }
                 router.push('/dashboard');
               }}
-              className="px-10 py-4.5 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1917] hover:bg-[#c06080] text-white transition-all duration-300 shadow-md cursor-pointer text-center"
+              className="px-10 py-4.5 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] bg-primary hover:bg-secondary text-white transition-all duration-300 shadow-md cursor-pointer text-center"
             >
               COMPILE WELLNESS PORTAL & ENTER DASHBOARD →
             </button>
@@ -408,7 +408,7 @@ export default function MusicPage() {
         </div>
 
         {/* Footer */}
-        <footer className="w-full max-w-7xl mx-auto px-8 pb-6 pt-12 mt-auto border-t border-[#1C1917]/5 flex items-center justify-between text-[9px] md:text-[10px] font-mono text-stone-500 tracking-wider">
+        <footer className="w-full max-w-7xl mx-auto px-8 pb-6 pt-12 mt-auto border-t border-primary/5 flex items-center justify-between text-[9px] md:text-[10px] font-mono text-stone-500 tracking-wider">
           <div>OJAS / SOUND SANCTUARY</div>
           <div>© OJAS RITUAL MMXXVI</div>
         </footer>

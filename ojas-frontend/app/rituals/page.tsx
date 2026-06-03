@@ -158,7 +158,7 @@ const PoseIcon = ({ id }: { id: string }) => {
   }
 
   return (
-    <svg viewBox="0 0 100 100" className="w-12 h-12 stroke-current text-[#c06080] fill-none stroke-[1.5] stroke-linecap-round stroke-linejoin-round select-none">
+    <svg viewBox="0 0 100 100" className="w-12 h-12 stroke-current text-resonant-pink fill-none stroke-[1.5] stroke-linecap-round stroke-linejoin-round select-none">
       {paths}
     </svg>
   );
@@ -168,6 +168,7 @@ const PoseIcon = ({ id }: { id: string }) => {
 export default function RitualsPage() {
     const { prakriti, dominantPrakriti } = usePrakritiStore();
     const { cycle } = useCycleStore();
+    const cycleState = getCycleStateFromStore(cycle);
     const { user } = useUserStore();
     const { t } = useTranslation();
 
@@ -465,7 +466,7 @@ export default function RitualsPage() {
     const getDoshaStyles = (doshaName: string) => {
         const name = doshaName.toLowerCase();
         if (name === 'vata') return 'bg-blue-500/10 text-blue-500 dark:text-blue-400 border border-blue-500/20';
-        if (name === 'pitta') return 'bg-[#c06080]/10 text-[#c06080] border border-[#c06080]/20';
+        if (name === 'pitta') return 'bg-resonant-pink/10 text-resonant-pink border border-resonant-pink/20';
         return 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20';
     };
 
@@ -504,7 +505,7 @@ export default function RitualsPage() {
         if (cleanseActive) {
             if (filteredCleanse.length === 0) {
                 return (
-                    <div className="text-center py-12 border border-dashed border-stone-300/45 dark:border-stone-800 rounded-3xl text-xs font-mono uppercase tracking-wider text-stone-400">
+                    <div className="text-center py-12 border border-dashed border-stone-300/45 dark:border-outline-variant/30 rounded-3xl text-xs font-mono uppercase tracking-wider text-on-surface-variant">
                         No cleanse practices scheduled for this phase.
                     </div>
                 );
@@ -526,8 +527,8 @@ export default function RitualsPage() {
                                     onClick={() => togglePractice(practice.id)}
                                     className={`flex-shrink-0 mt-1 w-6 h-6 rounded-full border-2 transition-all duration-300 cursor-pointer flex items-center justify-center ${
                                         done
-                                            ? 'bg-[#c06080] border-[#c06080]'
-                                            : 'border-stone-300 dark:border-stone-600 hover:border-[#c06080]'
+                                            ? 'bg-resonant-pink border-resonant-pink'
+                                            : 'border-stone-300 dark:border-stone-600 hover:border-resonant-pink'
                                     }`}
                                     aria-label={`Mark ${practice.activity} ${done ? 'incomplete' : 'complete'}`}
                                 >
@@ -541,24 +542,24 @@ export default function RitualsPage() {
                                 {/* Content */}
                                 <div className="flex-1 space-y-2">
                                     <div className="flex flex-wrap items-center gap-2">
-                                        <span className="px-3.5 py-1 text-[10px] font-mono font-bold tracking-widest uppercase bg-[#c06080]/10 text-[#c06080] rounded-full">
+                                        <span className="px-3.5 py-1 text-[10px] font-mono font-bold tracking-widest uppercase bg-resonant-pink/10 text-resonant-pink rounded-full">
                                             {practice.time}
                                         </span>
-                                        <span className="px-3 py-1 text-[10px] font-mono tracking-wider text-stone-400 uppercase">
+                                        <span className="px-3 py-1 text-[10px] font-mono tracking-wider text-on-surface-variant uppercase">
                                             ✦ {practice.duration} Mins
                                         </span>
                                         {practice.cleanseOnly && (
-                                            <span className="px-3 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider bg-[#c06080]/10 border border-[#c06080]/20 text-[#c06080] rounded-full">
+                                            <span className="px-3 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider bg-resonant-pink/10 border border-resonant-pink/20 text-resonant-pink rounded-full">
                                                 Cleanse Practice
                                             </span>
                                         )}
                                         {practice.id === 'nadi' && (
-                                            <span className="px-2 py-0.5 text-[9px] font-mono uppercase tracking-widest rounded-md bg-[#c06080]/10 text-[#c06080] border border-[#c06080]/20 mr-2">
+                                            <span className="px-2 py-0.5 text-[9px] font-mono uppercase tracking-widest rounded-md bg-resonant-pink/10 text-resonant-pink border border-resonant-pink/20 mr-2">
                                                 ☿ Mercury Rx · Especially recommended
                                             </span>
                                         )}
                                         {practice.planetaryTag && (
-                                            <span className="px-2 py-0.5 text-[9px] font-mono uppercase tracking-widest rounded-md bg-[#c06080]/10 text-[#c06080] border border-[#c06080]/20 mr-2">
+                                            <span className="px-2 py-0.5 text-[9px] font-mono uppercase tracking-widest rounded-md bg-resonant-pink/10 text-resonant-pink border border-resonant-pink/20 mr-2">
                                                 {practice.planetaryTag}
                                             </span>
                                         )}
@@ -568,10 +569,10 @@ export default function RitualsPage() {
                                             </span>
                                         ))}
                                     </div>
-                                    <h3 className={`text-xl sm:text-2xl font-serif italic font-normal ${done ? 'line-through text-stone-450' : 'text-stone-900 dark:text-stone-100'}`}>
+                                    <h3 className={`text-xl sm:text-2xl font-serif italic font-normal ${done ? 'line-through text-stone-450' : 'text-primary dark:text-inverse-on-surface'}`}>
                                         {practice.activity}
                                     </h3>
-                                    <p className="text-stone-500 dark:text-stone-400 text-sm leading-relaxed">
+                                    <p className="text-on-surface-variant dark:text-on-surface-variant text-sm leading-relaxed">
                                         {practice.description}
                                     </p>
                                 </div>
@@ -583,7 +584,7 @@ export default function RitualsPage() {
         } else {
             if (filteredStd.length === 0) {
                 return (
-                    <div className="text-center py-12 border border-dashed border-stone-300/45 dark:border-stone-800 rounded-3xl text-xs font-mono uppercase tracking-wider text-stone-400">
+                    <div className="text-center py-12 border border-dashed border-stone-300/45 dark:border-outline-variant/30 rounded-3xl text-xs font-mono uppercase tracking-wider text-on-surface-variant">
                         No rituals scheduled for this phase.
                     </div>
                 );
@@ -608,10 +609,10 @@ export default function RitualsPage() {
                             <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
                                 <div className="space-y-2 flex-1">
                                     <div className="flex flex-wrap items-center gap-2">
-                                        <span className="px-3.5 py-1 text-[10px] font-mono font-bold tracking-widest uppercase bg-[#c06080]/10 text-[#c06080] rounded-full">
+                                        <span className="px-3.5 py-1 text-[10px] font-mono font-bold tracking-widest uppercase bg-resonant-pink/10 text-resonant-pink rounded-full">
                                             {ritual.time}
                                         </span>
-                                        <span className="px-3 py-1 text-[10px] font-mono tracking-wider text-stone-400 uppercase">
+                                        <span className="px-3 py-1 text-[10px] font-mono tracking-wider text-on-surface-variant uppercase">
                                             ✦ {ritual.duration} Mins
                                         </span>
                                         {hasMod && (
@@ -620,12 +621,12 @@ export default function RitualsPage() {
                                             </span>
                                         )}
                                         {ritual.id === 'nadi' && (
-                                            <span className="px-2 py-0.5 text-[9px] font-mono uppercase tracking-widest rounded-md bg-[#c06080]/10 text-[#c06080] border border-[#c06080]/20 mr-2">
+                                            <span className="px-2 py-0.5 text-[9px] font-mono uppercase tracking-widest rounded-md bg-resonant-pink/10 text-resonant-pink border border-resonant-pink/20 mr-2">
                                                 ☿ Mercury Rx · Especially recommended
                                             </span>
                                         )}
                                         {ritual.planetaryTag && (
-                                            <span className="px-2 py-0.5 text-[9px] font-mono uppercase tracking-widest rounded-md bg-[#c06080]/10 text-[#c06080] border border-[#c06080]/20 mr-2">
+                                            <span className="px-2 py-0.5 text-[9px] font-mono uppercase tracking-widest rounded-md bg-resonant-pink/10 text-resonant-pink border border-resonant-pink/20 mr-2">
                                                 {ritual.planetaryTag}
                                             </span>
                                         )}
@@ -635,10 +636,10 @@ export default function RitualsPage() {
                                             </span>
                                         ))}
                                     </div>
-                                    <h3 className="text-xl sm:text-2xl font-serif italic text-stone-900 dark:text-stone-100 font-normal">
+                                    <h3 className="text-xl sm:text-2xl font-serif italic text-primary dark:text-inverse-on-surface font-normal">
                                         {ritual.activity}
                                     </h3>
-                                    <p className="text-stone-500 dark:text-stone-400 text-sm leading-relaxed">
+                                    <p className="text-on-surface-variant dark:text-on-surface-variant text-sm leading-relaxed">
                                         {ritual.description}
                                     </p>
                                     {ritual.id === 'yoga' && (
@@ -648,7 +649,7 @@ export default function RitualsPage() {
                                                     const el = document.getElementById('asana-sanctuary');
                                                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                                                 }}
-                                                className="text-[9px] font-mono uppercase tracking-wider text-[#c06080] border-b border-[#c06080]/30 hover:text-stone-900 dark:hover:text-white transition-colors cursor-pointer select-none"
+                                                className="text-[9px] font-mono uppercase tracking-wider text-resonant-pink border-b border-resonant-pink/30 hover:text-primary dark:hover:text-white transition-colors cursor-pointer select-none"
                                             >
                                                 OPEN ASANA GUIDE →
                                             </button>
@@ -666,7 +667,7 @@ export default function RitualsPage() {
                                                 🔴 {ritual.linkText || 'Watch on YouTube'}
                                             </a>
                                         ) : (
-                                            <a href={ritual.link} target="_blank" rel="noopener noreferrer" className="px-5 py-3 rounded-full text-[9px] font-mono font-bold uppercase tracking-widest bg-[#c06080]/10 hover:bg-[#c06080]/20 border border-[#c06080]/25 text-[#c06080] transition-all duration-300 inline-flex items-center gap-2 active:scale-95">
+                                            <a href={ritual.link} target="_blank" rel="noopener noreferrer" className="px-5 py-3 rounded-full text-[9px] font-mono font-bold uppercase tracking-widest bg-resonant-pink/10 hover:bg-resonant-pink/20 border border-resonant-pink/25 text-resonant-pink transition-all duration-300 inline-flex items-center gap-2 active:scale-95">
                                                 ✨ {ritual.linkText || 'Guided Activity'}
                                             </a>
                                         )}
@@ -694,13 +695,13 @@ export default function RitualsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-[#c06080]/10 relative overflow-hidden transition-colors duration-500">
+        <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-resonant-pink/10 relative overflow-hidden transition-colors duration-500">
             {/* Sparkle Twinkle Background */}
             <div className="absolute inset-0 pointer-events-none opacity-30 z-0">
-                <div className="absolute w-1 h-1 bg-[#c06080]/40 rounded-full top-20 left-10 animate-ping" />
-                <div className="absolute w-1.5 h-1.5 bg-[#c06080]/30 rounded-full top-1/4 left-2/3 animate-pulse" />
-                <div className="absolute w-1 h-1 bg-[#c06080]/40 rounded-full top-2/3 left-1/5 animate-pulse" />
-                <div className="absolute w-1.5 h-1.5 bg-[#c06080]/20 rounded-full top-3/4 left-5/6 animate-ping" />
+                <div className="absolute w-1 h-1 bg-resonant-pink/40 rounded-full top-20 left-10 animate-ping" />
+                <div className="absolute w-1.5 h-1.5 bg-resonant-pink/30 rounded-full top-1/4 left-2/3 animate-pulse" />
+                <div className="absolute w-1 h-1 bg-resonant-pink/40 rounded-full top-2/3 left-1/5 animate-pulse" />
+                <div className="absolute w-1.5 h-1.5 bg-resonant-pink/20 rounded-full top-3/4 left-5/6 animate-ping" />
             </div>
 
             <div className="relative z-10 flex flex-col justify-between min-h-screen">
@@ -711,17 +712,17 @@ export default function RitualsPage() {
                     <main className="max-w-2xl mx-auto px-6 py-16 md:py-24 w-full">
 
                       <div className="flex justify-start mb-12">
-                        <Link href="/dashboard" className="inline-flex items-center gap-2 text-stone-400 hover:text-stone-900 dark:hover:text-white transition text-[10px] font-mono uppercase tracking-widest">
+                        <Link href="/dashboard" className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary dark:hover:text-white transition text-[10px] font-mono uppercase tracking-widest">
                           ← Dashboard
                         </Link>
                       </div>
 
                       <div className="mb-12 text-center space-y-2">
-                        <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-stone-400">
+                        <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-on-surface-variant">
                           {dominantDosha} · {cycle ? cyclePhase : 'No cycle synced'} · Grishma
                         </p>
-                        <h1 className="text-4xl md:text-5xl font-cormorant font-normal text-stone-900 dark:text-stone-100 leading-tight">
-                          What do you need <em className="italic text-[#c06080]">today?</em>
+                        <h1 className="text-4xl md:text-5xl font-headline-md font-normal text-primary dark:text-inverse-on-surface leading-tight">
+                          What do you need <em className="italic text-resonant-pink">today?</em>
                         </h1>
                       </div>
 
@@ -732,7 +733,7 @@ export default function RitualsPage() {
                             label: 'My Daily Routine',
                             sub: 'Dinacharya · Phase rituals',
                             icon: (
-                              <svg viewBox="0 0 24 24" className="w-8 h-8 stroke-current text-[#c06080]/60 group-hover:text-[#c06080] fill-none transition-colors duration-300" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                              <svg viewBox="0 0 24 24" className="w-8 h-8 stroke-current text-resonant-pink/60 group-hover:text-resonant-pink fill-none transition-colors duration-300" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
                                 <circle cx="12" cy="12" r="4" />
                                 <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
                               </svg>
@@ -743,7 +744,7 @@ export default function RitualsPage() {
                             label: 'Begin a Cleanse',
                             sub: 'Panchakarma · Seasonal reset',
                             icon: (
-                              <svg viewBox="0 0 24 24" className="w-8 h-8 stroke-current text-[#c06080]/60 group-hover:text-[#c06080] fill-none transition-colors duration-300" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                              <svg viewBox="0 0 24 24" className="w-8 h-8 stroke-current text-resonant-pink/60 group-hover:text-resonant-pink fill-none transition-colors duration-300" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M12 2C12 2 5 10 5 15a7 7 0 0 0 14 0c0-5-7-13-7-13z" />
                               </svg>
                             ),
@@ -753,7 +754,7 @@ export default function RitualsPage() {
                             label: 'Breathe & Meditate',
                             sub: 'Pranayama · Breath sanctuary',
                             icon: (
-                              <svg viewBox="0 0 24 24" className="w-8 h-8 stroke-current text-[#c06080]/60 group-hover:text-[#c06080] fill-none transition-colors duration-300" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                              <svg viewBox="0 0 24 24" className="w-8 h-8 stroke-current text-resonant-pink/60 group-hover:text-resonant-pink fill-none transition-colors duration-300" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M12 12c0-3 2.5-6 5-6s4 2 4 4-2 4-4 4h-5" />
                                 <path d="M12 12c0-3-2.5-6-5-6S3 8 3 10s2 4 4 4h5" />
                                 <path d="M12 12v6" />
@@ -766,7 +767,7 @@ export default function RitualsPage() {
                             label: 'Yoga Practice',
                             sub: 'Asana · Dosha sequence',
                             icon: (
-                              <svg viewBox="0 0 24 24" className="w-8 h-8 stroke-current text-[#c06080]/60 group-hover:text-[#c06080] fill-none transition-colors duration-300" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                              <svg viewBox="0 0 24 24" className="w-8 h-8 stroke-current text-resonant-pink/60 group-hover:text-resonant-pink fill-none transition-colors duration-300" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
                                 <circle cx="12" cy="4" r="2" />
                                 <path d="M12 6v5l-3 3M12 11l3 3M8 16h8" />
                                 <path d="M7 19c1-1 2.5-1.5 5-1.5s4 .5 5 1.5" />
@@ -777,13 +778,13 @@ export default function RitualsPage() {
                           <button
                             key={mode!}
                             onClick={() => setIntentionMode(mode)}
-                            className="text-left p-6 rounded-3xl border border-stone-200/60 dark:border-stone-800 bg-white/60 dark:bg-stone-900/60 hover:border-[#c06080]/40 hover:bg-[#c06080]/[0.02] transition-all duration-300 active:scale-[0.98] cursor-pointer group"
+                            className="text-left p-6 rounded-3xl border border-outline-variant dark:border-outline-variant/30 bg-surface-container-lowest/60 dark:bg-forest-ink/60 hover:border-resonant-pink/40 hover:bg-resonant-pink/[0.02] transition-all duration-300 active:scale-[0.98] cursor-pointer group"
                           >
                             <div className="mb-5">{icon}</div>
-                            <h2 className="text-lg font-cormorant italic text-stone-900 dark:text-stone-100 leading-snug mb-1">
+                            <h2 className="text-lg font-headline-md italic text-primary dark:text-inverse-on-surface leading-snug mb-1">
                               {label}
                             </h2>
-                            <p className="text-[10px] font-mono uppercase tracking-wider text-stone-400">
+                            <p className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant">
                               {sub}
                             </p>
                           </button>
@@ -793,7 +794,7 @@ export default function RitualsPage() {
                       <div className="text-center">
                         <button
                           onClick={() => setIntentionMode('all')}
-                          className="text-[10px] font-mono uppercase tracking-widest text-stone-400 hover:text-stone-900 dark:hover:text-white border-b border-stone-300/40 hover:border-stone-500 transition-colors cursor-pointer"
+                          className="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant hover:text-primary dark:hover:text-white border-b border-stone-300/40 hover:border-stone-500 transition-colors cursor-pointer"
                         >
                           Show everything →
                         </button>
@@ -810,11 +811,11 @@ export default function RitualsPage() {
                               setIntentionMode(null);
                               localStorage.removeItem('ojas_intention_mode');
                             }}
-                            className="inline-flex items-center gap-2 text-stone-400 hover:text-stone-900 dark:hover:text-white transition text-[10px] font-mono uppercase tracking-widest cursor-pointer"
+                            className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary dark:hover:text-white transition text-[10px] font-mono uppercase tracking-widest cursor-pointer"
                           >
                             ← Change intention
                           </button>
-                          <span className="text-[10px] font-mono uppercase tracking-widest text-[#c06080] font-bold">
+                          <span className="text-[10px] font-mono uppercase tracking-widest text-resonant-pink font-bold">
                             {intentionMode === 'dinacharya' && 'Daily Routine'}
                             {intentionMode === 'cleanse' && 'Panchakarma Cleanse'}
                             {intentionMode === 'pranayama' && 'Breath Sanctuary'}
@@ -829,22 +830,22 @@ export default function RitualsPage() {
                         <div className="animate-fade-rise">
                             <div className="bg-[#1C1C1A] dark:bg-[#111110] rounded-[32px] p-8 md:p-10 text-[#FAF6F0] relative overflow-hidden">
                                 {/* Ambient warm glow */}
-                                <div className="absolute top-0 right-0 w-72 h-72 bg-[#c06080]/10 rounded-full blur-3xl pointer-events-none" />
-                                <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#c06080]/5 rounded-full blur-2xl pointer-events-none" />
+                                <div className="absolute top-0 right-0 w-72 h-72 bg-resonant-pink/10 rounded-full blur-3xl pointer-events-none" />
+                                <div className="absolute bottom-0 left-0 w-48 h-48 bg-resonant-pink/5 rounded-full blur-2xl pointer-events-none" />
 
                                 <div className="relative z-10">
                                     {/* Label */}
-                                    <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.3em] text-[#c06080] font-bold mb-4">
+                                    <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.3em] text-resonant-pink font-bold mb-4">
                                         SEASONAL TRANSITION · GRISHMA
                                     </div>
 
                                     {/* Heading */}
-                                    <h2 className="text-3xl md:text-4xl font-normal font-cormorant text-[#FAF6F0] leading-tight mb-3">
-                                        Panchakarma <em className="italic text-[#c06080]">Cleanse</em> Season
+                                    <h2 className="text-3xl md:text-4xl font-normal font-headline-md text-[#FAF6F0] leading-tight mb-3">
+                                        Panchakarma <em className="italic text-resonant-pink">Cleanse</em> Season
                                     </h2>
 
                                     {/* Subtitle */}
-                                    <p className="text-sm text-stone-400 leading-relaxed max-w-xl mb-7">
+                                    <p className="text-sm text-on-surface-variant leading-relaxed max-w-xl mb-7">
                                         Your {dominantDosha} constitution enters its quarterly reset. A 7–21 day guided cleanse aligned with the summer transition.
                                     </p>
 
@@ -856,7 +857,7 @@ export default function RitualsPage() {
                                                 className={`px-3.5 py-1 rounded-full text-[9px] font-mono font-bold uppercase tracking-widest border transition-colors duration-300 ${
                                                     s === CURRENT_SEASON
                                                         ? 'bg-[#FAF6F0] text-[#1C1C1A] border-[#FAF6F0]'
-                                                        : 'bg-transparent text-stone-500 border-stone-700'
+                                                        : 'bg-transparent text-on-surface-variant border-stone-700'
                                                 }`}
                                             >
                                                 {s}
@@ -868,11 +869,11 @@ export default function RitualsPage() {
                                     <div className="flex flex-wrap gap-3">
                                         <button
                                             onClick={() => setCleanseActive(!cleanseActive)}
-                                            className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[#FAF6F0] text-[#1C1C1A] hover:bg-[#c06080] hover:text-white transition-all duration-300 active:scale-[0.98] cursor-pointer"
+                                            className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[#FAF6F0] text-[#1C1C1A] hover:bg-resonant-pink hover:text-white transition-all duration-300 active:scale-[0.98] cursor-pointer"
                                         >
                                             {cleanseActive ? 'END CLEANSE' : 'BEGIN CLEANSE'}
                                         </button>
-                                        <button className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-transparent border border-stone-600 text-stone-300 hover:border-[#c06080] hover:text-[#c06080] transition-all duration-300 active:scale-[0.98] cursor-pointer">
+                                        <button className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-transparent border border-stone-600 text-stone-300 hover:border-resonant-pink hover:text-resonant-pink transition-all duration-300 active:scale-[0.98] cursor-pointer">
                                             LEARN MORE
                                         </button>
                                     </div>
@@ -882,7 +883,7 @@ export default function RitualsPage() {
 
                         {/* ── Cleanse Programme Selection ────────────────────────── */}
                         <div className="animate-fade-rise-delay">
-                            <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.25em] text-stone-400 font-semibold mb-5">
+                            <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.25em] text-on-surface-variant font-semibold mb-5">
                                 SELECT CLEANSE LENGTH
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -895,11 +896,11 @@ export default function RitualsPage() {
                                             className={`text-left rounded-3xl p-6 border transition-all duration-500 cursor-pointer active:scale-[0.98] ${
                                                 isSelected
                                                     ? 'bg-[#1C1C1A] dark:bg-[#111110] border-[#1C1C1A] text-[#FAF6F0] shadow-lg'
-                                                    : 'bg-white/50 dark:bg-stone-900/60 border-stone-300/40 dark:border-stone-700/40 text-stone-900 dark:text-stone-100 hover:border-[#c06080]/40'
+                                                    : 'bg-surface-container-lowest/50 dark:bg-forest-ink/60 border-stone-300/40 dark:border-stone-700/40 text-primary dark:text-inverse-on-surface hover:border-resonant-pink/40'
                                             }`}
                                         >
                                             <div className="flex items-center justify-between mb-2">
-                                                <span className={`text-[9px] font-mono font-bold uppercase tracking-widest ${isSelected ? 'text-[#c06080]' : 'text-[#c06080]'}`}>
+                                                <span className={`text-[9px] font-mono font-bold uppercase tracking-widest ${isSelected ? 'text-resonant-pink' : 'text-resonant-pink'}`}>
                                                     {prog.title}
                                                 </span>
                                                 {prog.tier === 'premium' && (
@@ -912,10 +913,10 @@ export default function RitualsPage() {
                                                     </span>
                                                 )}
                                             </div>
-                                            <div className={`text-xl font-cormorant italic font-semibold mb-2 ${isSelected ? 'text-[#FAF6F0]' : 'text-stone-800 dark:text-stone-100'}`}>
+                                            <div className={`text-xl font-headline-md italic font-semibold mb-2 ${isSelected ? 'text-[#FAF6F0]' : 'text-on-surface dark:text-inverse-on-surface'}`}>
                                                 {prog.subtitle}
                                             </div>
-                                            <p className={`text-xs leading-relaxed ${isSelected ? 'text-stone-400' : 'text-stone-500 dark:text-stone-400'}`}>
+                                            <p className={`text-xs leading-relaxed ${isSelected ? 'text-on-surface-variant' : 'text-on-surface-variant dark:text-on-surface-variant'}`}>
                                                 {prog.description}
                                             </p>
                                         </button>
@@ -924,41 +925,41 @@ export default function RitualsPage() {
                             </div>
                         </div>
 
-                        <hr className="border-stone-200/40 dark:border-stone-800 my-10 md:my-14" />
+                        <hr className="border-outline-variant/40 dark:border-outline-variant/30 my-10 md:my-14" />
                             </>
                         )}
 
                         {/* User Profile Metrics Bar */}
-                        <div className="bg-stone-100/60 dark:bg-stone-900/40 rounded-2xl p-4 grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-rise-delay">
+                        <div className="bg-stone-100/60 dark:bg-forest-ink/40 rounded-2xl p-4 grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-rise-delay">
                             <div className="flex flex-col justify-center items-center text-center">
-                                <span className="text-[9px] font-mono uppercase tracking-widest text-stone-400 mb-1">Dominant Constitution</span>
-                                <span className="text-lg font-serif italic text-stone-800 dark:text-stone-100 font-semibold">{dominantDosha}</span>
-                                <span className="text-[9px] font-mono text-stone-400 mt-0.5 uppercase">Prakriti Profile</span>
+                                <span className="text-[9px] font-mono uppercase tracking-widest text-on-surface-variant mb-1">Dominant Constitution</span>
+                                <span className="text-lg font-serif italic text-on-surface dark:text-inverse-on-surface font-semibold">{dominantDosha}</span>
+                                <span className="text-[9px] font-mono text-on-surface-variant mt-0.5 uppercase">Prakriti Profile</span>
                             </div>
 
                             {user?.gender !== 'male' ? (
                                 <div className="flex flex-col justify-center items-center text-center">
-                                    <span className="text-[9px] font-mono uppercase tracking-widest text-stone-400 mb-1">Cycle Phase Synchronization</span>
-                                    <span className="text-lg font-serif italic text-[#c06080] font-semibold">{cycle ? cyclePhase : 'Unsynced'}</span>
-                                    <span className="text-[9px] font-mono text-stone-400 mt-0.5 uppercase">
+                                    <span className="text-[9px] font-mono uppercase tracking-widest text-on-surface-variant mb-1">Cycle Phase Synchronization</span>
+                                    <span className="text-lg font-serif italic text-resonant-pink font-semibold">{cycle ? cyclePhase : 'Unsynced'}</span>
+                                    <span className="text-[9px] font-mono text-on-surface-variant mt-0.5 uppercase">
                                         {cycle ? `Day ${cycleDay} of ${cycle.cycleLengthDays} days` : 'Visit Cycle tab to sync'}
                                     </span>
                                 </div>
                             ) : (
                                 <div className="flex flex-col justify-center items-center text-center">
-                                    <span className="text-[9px] font-mono uppercase tracking-widest text-stone-400 mb-1">Ayurvedic Daily Rhythm</span>
-                                    <span className="text-lg font-serif italic text-stone-800 dark:text-stone-100 font-semibold">Dinacharya</span>
-                                    <span className="text-[9px] font-mono text-stone-400 mt-0.5 uppercase">Dominant Dosha Centered</span>
+                                    <span className="text-[9px] font-mono uppercase tracking-widest text-on-surface-variant mb-1">Ayurvedic Daily Rhythm</span>
+                                    <span className="text-lg font-serif italic text-on-surface dark:text-inverse-on-surface font-semibold">Dinacharya</span>
+                                    <span className="text-[9px] font-mono text-on-surface-variant mt-0.5 uppercase">Dominant Dosha Centered</span>
                                 </div>
                             )}
 
                             <div className="flex flex-col justify-center items-center text-center">
-                                <span className="text-[9px] font-mono uppercase tracking-widest text-stone-400 mb-1">Active Recommendations</span>
-                                <span className="text-lg font-serif italic text-stone-800 dark:text-stone-100 font-semibold">
+                                <span className="text-[9px] font-mono uppercase tracking-widest text-on-surface-variant mb-1">Active Recommendations</span>
+                                <span className="text-lg font-serif italic text-on-surface dark:text-inverse-on-surface font-semibold">
                                     {cleanseActive ? activeCleansePractices.length : rituals.length} Practices
                                 </span>
 
-                                <span className="text-[9px] font-mono text-stone-400 mt-0.5 uppercase">
+                                <span className="text-[9px] font-mono text-on-surface-variant mt-0.5 uppercase">
                                     {cleanseActive ? 'Cleanse Mode' : 'Dynamic schedule'}
                                 </span>
                             </div>
@@ -968,27 +969,27 @@ export default function RitualsPage() {
                             <>
                         {/* Interactive Phase Toggle Banner (women only, hidden in cleanse mode) */}
                         {user?.gender !== 'male' && !cleanseActive && (
-                            <div className="bg-stone-50 dark:bg-stone-900/60 border border-stone-300/20 dark:border-stone-800 rounded-3xl p-4 md:p-5 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm animate-fade-rise-delay-2">
+                            <div className="bg-surface-cream dark:bg-forest-ink/60 border border-stone-300/20 dark:border-outline-variant/30 rounded-3xl p-4 md:p-5 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm animate-fade-rise-delay-2">
                                 <div className="space-y-1 max-w-lg text-center md:text-left">
-                                    <h3 className="text-base font-serif italic text-stone-900 dark:text-stone-100 font-normal">
+                                    <h3 className="text-base font-serif italic text-primary dark:text-inverse-on-surface font-normal">
                                         Menstrual Phase Adaptability
                                     </h3>
-                                    <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
+                                    <p className="text-xs text-on-surface-variant dark:text-on-surface-variant leading-relaxed">
                                         When enabled, your daily routines adapt to the energetic, nutritional, and physical requirements of your current phase ({cyclePhase}).
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <span className="text-[10px] font-mono uppercase tracking-widest text-stone-500">
+                                    <span className="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant">
                                         {showPhaseMod ? 'Sync Active' : 'Offline'}
                                     </span>
                                     <button
                                         onClick={() => setShowPhaseMod(!showPhaseMod)}
                                         className={`w-14 h-8 rounded-full p-1 transition-colors duration-500 ease-in-out cursor-pointer ${
-                                            showPhaseMod ? 'bg-[#c06080]' : 'bg-stone-300 dark:bg-stone-800'
+                                            showPhaseMod ? 'bg-resonant-pink' : 'bg-stone-300 dark:bg-stone-800'
                                         }`}
                                         aria-label="Toggle phase-specific modifications"
                                     >
-                                        <div className={`w-6 h-6 rounded-full bg-white dark:bg-stone-900 shadow-md transform transition-transform duration-500 ease-in-out ${showPhaseMod ? 'translate-x-6' : 'translate-x-0'}`} />
+                                        <div className={`w-6 h-6 rounded-full bg-surface-container-lowest dark:bg-forest-ink shadow-md transform transition-transform duration-500 ease-in-out ${showPhaseMod ? 'translate-x-6' : 'translate-x-0'}`} />
                                     </button>
                                 </div>
                             </div>
@@ -1002,18 +1003,18 @@ export default function RitualsPage() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
                                 transition={{ duration: 0.4 }}
-                                className="bg-stone-50 dark:bg-stone-900/50 border border-orange-100/50 dark:border-stone-800 rounded-[32px] p-6 md:p-8"
+                                className="bg-surface-cream dark:bg-forest-ink/50 border border-orange-100/50 dark:border-outline-variant/30 rounded-[32px] p-6 md:p-8"
                             >
                                 <div className="flex justify-between items-center mb-4">
-                                    <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold">
+                                    <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-resonant-pink font-semibold">
                                         PANCHAKARMA · DAY {ACTIVE_CLEANSE_DAY} OF {ACTIVE_CLEANSE_TOTAL} · <span className="animate-pulse">● LIVE SYNC</span>
                                     </div>
-                                    <span className="text-[9px] font-mono text-stone-400 uppercase tracking-wider">{cleanseProgress}%</span>
+                                    <span className="text-[9px] font-mono text-on-surface-variant uppercase tracking-wider">{cleanseProgress}%</span>
                                 </div>
                                 {/* Progress bar */}
                                 <div className="h-1 bg-stone-200/50 dark:bg-stone-800 rounded-full overflow-hidden">
                                     <div
-                                        className="h-full bg-[#c06080] rounded-full transition-all duration-1000"
+                                        className="h-full bg-resonant-pink rounded-full transition-all duration-1000"
                                         style={{ width: `${cleanseProgress}%` }}
                                     />
                                 </div>
@@ -1021,15 +1022,15 @@ export default function RitualsPage() {
                         )}
 
                         {/* Dynamic Phase Switcher */}
-                        <div className="grid grid-cols-4 gap-2 p-1 bg-stone-100 dark:bg-stone-900/60 rounded-xl mb-8">
+                        <div className="grid grid-cols-4 gap-2 p-1 bg-stone-100 dark:bg-forest-ink/60 rounded-xl mb-8">
                           {(['morning', 'afternoon', 'evening', 'night'] as RitualPhase[]).map((phase) => (
                             <button
                               key={phase}
                               onClick={() => setActivePhase(phase)}
                               className={`py-3 text-[10px] font-mono uppercase tracking-wider rounded-lg transition-all duration-300 cursor-pointer select-none ${
                                 activePhase === phase
-                                  ? 'bg-[#c06080] text-white font-bold shadow-lg shadow-[#c06080]/20'
-                                  : 'text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white hover:bg-white/5'
+                                  ? 'bg-resonant-pink text-white font-bold shadow-lg shadow-[#c06080]/20'
+                                  : 'text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-white hover:bg-surface-container-lowest/5'
                               }`}
                             >
                               {t(`phase.${phase}`)}
@@ -1075,17 +1076,17 @@ export default function RitualsPage() {
                         {/* ─── SECTION 1: PRANAYAMA TIMER ───────────────────────────── */}
                         {(intentionMode === 'pranayama' || intentionMode === 'all') && (
                             <>
-                        <hr className="border-stone-200/40 dark:border-stone-800 my-10 md:my-14" />
+                        <hr className="border-outline-variant/40 dark:border-outline-variant/30 my-10 md:my-14" />
                         
                         <section id="pranayama-sanctuary" className="space-y-8 animate-fade-rise">
                           <div>
-                            <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-bold block mb-3">
+                            <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-resonant-pink font-bold block mb-3">
                               BREATH SANCTUARY · PRANAYAMA
                             </span>
-                            <h2 className="text-3xl md:text-4xl font-normal font-cormorant text-stone-900 dark:text-stone-100 leading-tight">
-                              Guided Breath <span className="font-cormorant italic text-[#c06080]">Practice</span>
+                            <h2 className="text-3xl md:text-4xl font-normal font-headline-md text-primary dark:text-inverse-on-surface leading-tight">
+                              Guided Breath <span className="font-headline-md italic text-resonant-pink">Practice</span>
                             </h2>
-                            <p className="text-sm text-stone-500 dark:text-stone-400 max-w-xl leading-relaxed mt-2">
+                            <p className="text-sm text-on-surface-variant dark:text-on-surface-variant max-w-xl leading-relaxed mt-2">
                               Breathing patterns calibrated for your Vata constitution to settle the nervous system and anchor your energy.
                             </p>
                           </div>
@@ -1101,19 +1102,19 @@ export default function RitualsPage() {
                                   className={`text-left rounded-3xl p-5 border transition-all duration-500 cursor-pointer active:scale-[0.98] ${
                                     isActive
                                       ? 'bg-[#1C1C1A] dark:bg-[#111110] border-[#1C1C1A] text-[#FAF6F0] shadow-lg'
-                                      : 'bg-white dark:bg-stone-900 border-stone-300/40 dark:border-stone-700/40 text-stone-900 dark:text-stone-100 hover:border-[#c06080]/40'
+                                      : 'bg-surface-container-lowest dark:bg-forest-ink border-stone-300/40 dark:border-stone-700/40 text-primary dark:text-inverse-on-surface hover:border-resonant-pink/40'
                                   }`}
                                 >
                                   <div className="flex items-center justify-between mb-2">
-                                    <span className="font-cormorant italic text-lg font-semibold">{tech.name}</span>
-                                    <span className="text-[9px] font-mono text-stone-400">Ratio: {tech.ratio}</span>
+                                    <span className="font-headline-md italic text-lg font-semibold">{tech.name}</span>
+                                    <span className="text-[9px] font-mono text-on-surface-variant">Ratio: {tech.ratio}</span>
                                   </div>
                                   <div className="flex flex-wrap gap-1 mb-3">
                                     {tech.doshas.map(d => {
                                       const dClean = d.replace(/[+\s]/g, '').toLowerCase();
-                                      let pillColor = 'bg-stone-105 dark:bg-stone-800 text-stone-400';
+                                      let pillColor = 'bg-stone-105 dark:bg-stone-800 text-on-surface-variant';
                                       if (dClean === 'vata') pillColor = 'bg-blue-500/10 text-blue-500 border border-blue-500/10';
-                                      else if (dClean === 'pitta') pillColor = 'bg-[#c06080]/10 text-[#c06080] border border-[#c06080]/10';
+                                      else if (dClean === 'pitta') pillColor = 'bg-resonant-pink/10 text-resonant-pink border border-resonant-pink/10';
                                       else if (dClean === 'kapha') pillColor = 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/10';
                                       return (
                                         <span key={d} className={`px-2 py-0.5 text-[8px] font-mono font-bold tracking-wider rounded ${pillColor}`}>
@@ -1122,7 +1123,7 @@ export default function RitualsPage() {
                                       );
                                     })}
                                   </div>
-                                  <p className={`text-[11px] leading-normal ${isActive ? 'text-stone-400' : 'text-stone-500 dark:text-stone-400'}`}>
+                                  <p className={`text-[11px] leading-normal ${isActive ? 'text-on-surface-variant' : 'text-on-surface-variant dark:text-on-surface-variant'}`}>
                                     {tech.tagline} · {tech.effect}
                                   </p>
                                 </button>
@@ -1132,7 +1133,7 @@ export default function RitualsPage() {
 
                           {/* Session Length selector */}
                           <div className="flex flex-wrap items-center gap-3">
-                            <span className="text-[9px] font-mono uppercase tracking-widest text-stone-400 font-semibold mr-2">Session length:</span>
+                            <span className="text-[9px] font-mono uppercase tracking-widest text-on-surface-variant font-semibold mr-2">Session length:</span>
                             {[5, 10, 15, 20, 30].map(mins => (
                               <button
                                 key={mins}
@@ -1142,8 +1143,8 @@ export default function RitualsPage() {
                                 }}
                                 className={`px-4.5 py-2 rounded-full border text-[9px] font-mono font-bold tracking-wider transition-all duration-300 cursor-pointer ${
                                   pranayamaMinutes === mins
-                                    ? 'bg-[#c06080] text-white border-[#c06080]'
-                                    : 'bg-white/50 dark:bg-stone-900/40 border-stone-300/40 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:border-[#c06080]/40 hover:text-[#c06080]'
+                                    ? 'bg-resonant-pink text-white border-resonant-pink'
+                                    : 'bg-surface-container-lowest/50 dark:bg-forest-ink/40 border-stone-300/40 dark:border-outline-variant/30 text-on-surface-variant dark:text-on-surface-variant hover:border-resonant-pink/40 hover:text-resonant-pink'
                                 }`}
                               >
                                 {mins} MIN
@@ -1161,10 +1162,10 @@ export default function RitualsPage() {
                                   // Post session card
                                   <div className="text-center space-y-6 max-w-md w-full animate-fade-rise">
                                     <span className="text-4xl block">✨</span>
-                                    <h3 className="text-2xl font-serif italic text-stone-900 dark:text-stone-100 font-normal">
+                                    <h3 className="text-2xl font-serif italic text-primary dark:text-inverse-on-surface font-normal">
                                       Practice complete.
                                     </h3>
-                                    <div className="bg-amber-50/30 dark:bg-stone-950/20 border border-stone-200/50 dark:border-stone-800/80 rounded-2xl p-5 text-left space-y-2.5">
+                                    <div className="bg-amber-50/30 dark:bg-[#002110]/20 border border-outline-variant/50 dark:border-outline-variant/30/80 rounded-2xl p-5 text-left space-y-2.5">
                                       <div className="text-xs text-stone-700 dark:text-stone-300 flex justify-between font-mono">
                                         <span>Technique</span>
                                         <span className="font-semibold">{pranayamaTimer.name}</span>
@@ -1177,7 +1178,7 @@ export default function RitualsPage() {
                                         <span>Rounds completed</span>
                                         <span className="font-semibold">{pranayamaRounds - 1}</span>
                                       </div>
-                                      <div className="border-t border-stone-200/40 dark:border-stone-800/40 pt-3 text-[11px] text-[#c06080] leading-relaxed italic">
+                                      <div className="border-t border-outline-variant/40 dark:border-outline-variant/30/40 pt-3 text-[11px] text-resonant-pink leading-relaxed italic">
                                         {pranayamaTimer.id === 'nadi_shodhana' && "Nadi Shodhana calmed your Vata nervous system. Ideal before focused work or sleep."}
                                         {pranayamaTimer.id === 'bhramari' && "Bhramari hummed away Vata restlessness. Your mind is quiet and centered."}
                                         {pranayamaTimer.id === 'sheetali' && "Sheetali cooled Pitta heat. Ideal to reduce acidity, anger, or irritability."}
@@ -1190,13 +1191,13 @@ export default function RitualsPage() {
                                     <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
                                       <button
                                         onClick={handleLogPranayama}
-                                        className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1C1A] text-white hover:bg-[#c06080] transition duration-300 cursor-pointer active:scale-95 w-full sm:w-auto"
+                                        className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1C1A] text-white hover:bg-resonant-pink transition duration-300 cursor-pointer active:scale-95 w-full sm:w-auto"
                                       >
                                         LOG TO RITUALS
                                       </button>
                                       <button
                                         onClick={handleResetPranayama}
-                                        className="text-[10px] font-mono uppercase tracking-wider text-[#c06080] border-b border-[#c06080]/30 hover:text-stone-900 dark:hover:text-white transition cursor-pointer"
+                                        className="text-[10px] font-mono uppercase tracking-wider text-resonant-pink border-b border-resonant-pink/30 hover:text-primary dark:hover:text-white transition cursor-pointer"
                                       >
                                         PRACTICE AGAIN
                                       </button>
@@ -1227,10 +1228,10 @@ export default function RitualsPage() {
                                       
                                       {/* Inner text container */}
                                       <div className="z-10 text-center space-y-1">
-                                        <div className="font-cormorant text-2xl italic font-normal text-stone-850 dark:text-stone-100">
+                                        <div className="font-headline-md text-2xl italic font-normal text-stone-850 dark:text-inverse-on-surface">
                                           {pranayamaState === 'idle' ? 'Ready' : pranayamaPhase}
                                         </div>
-                                        <div className="font-cormorant text-4xl font-semibold text-stone-900 dark:text-stone-100">
+                                        <div className="font-headline-md text-4xl font-semibold text-primary dark:text-inverse-on-surface">
                                           {pranayamaState === 'idle' ? `${pranayamaTimer.inhale}s` : `${pranayamaSecondsLeft}s`}
                                         </div>
                                       </div>
@@ -1238,7 +1239,7 @@ export default function RitualsPage() {
 
                                     {/* Stats & Controls */}
                                     <div className="text-center space-y-4 w-full">
-                                      <div className="flex justify-center gap-6 text-[10px] font-mono uppercase tracking-widest text-stone-400 font-semibold">
+                                      <div className="flex justify-center gap-6 text-[10px] font-mono uppercase tracking-widest text-on-surface-variant font-semibold">
                                         <span>ROUND {pranayamaRounds} OF {maxRounds}</span>
                                         <span>·</span>
                                         <span>
@@ -1252,7 +1253,7 @@ export default function RitualsPage() {
                                         <button
                                           onClick={handlePrevRound}
                                           disabled={pranayamaState === 'idle'}
-                                          className="px-5 py-2.5 rounded-full border border-stone-300 dark:border-stone-700 text-[9px] font-mono font-bold uppercase tracking-wider text-stone-500 hover:border-[#c06080] hover:text-[#c06080] transition active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                                          className="px-5 py-2.5 rounded-full border border-stone-300 dark:border-stone-700 text-[9px] font-mono font-bold uppercase tracking-wider text-on-surface-variant hover:border-resonant-pink hover:text-resonant-pink transition active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                                         >
                                           ← PREV ROUND
                                         </button>
@@ -1266,7 +1267,7 @@ export default function RitualsPage() {
                                               handleTogglePlay();
                                             }
                                           }}
-                                          className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1C1A] text-[#FAF6F0] hover:bg-[#c06080] hover:text-white transition active:scale-95 cursor-pointer"
+                                          className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1C1A] text-[#FAF6F0] hover:bg-resonant-pink hover:text-white transition active:scale-95 cursor-pointer"
                                         >
                                           {pranayamaState === 'idle' ? 'START' : pranayamaState === 'breathing' ? 'PAUSE' : 'RESUME'}
                                         </button>
@@ -1274,18 +1275,18 @@ export default function RitualsPage() {
                                         <button
                                           onClick={handleNextRound}
                                           disabled={pranayamaState === 'idle'}
-                                          className="px-5 py-2.5 rounded-full border border-stone-300 dark:border-stone-700 text-[9px] font-mono font-bold uppercase tracking-wider text-stone-500 hover:border-[#c06080] hover:text-[#c06080] transition active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                                          className="px-5 py-2.5 rounded-full border border-stone-300 dark:border-stone-700 text-[9px] font-mono font-bold uppercase tracking-wider text-on-surface-variant hover:border-resonant-pink hover:text-resonant-pink transition active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                                         >
                                           NEXT ROUND →
                                         </button>
                                       </div>
 
                                       <div className="flex justify-center gap-4 text-[9px] font-mono uppercase tracking-wider">
-                                        <button onClick={handleResetPranayama} className="text-[#c06080] border-b border-[#c06080]/20 hover:text-stone-900 dark:hover:text-white cursor-pointer select-none">
+                                        <button onClick={handleResetPranayama} className="text-resonant-pink border-b border-resonant-pink/20 hover:text-primary dark:hover:text-white cursor-pointer select-none">
                                           CHANGE TECHNIQUE
                                         </button>
                                         <span className="text-stone-300">|</span>
-                                        <button onClick={handleResetPranayama} className="text-[#c06080] border-b border-[#c06080]/20 hover:text-stone-900 dark:hover:text-white cursor-pointer select-none">
+                                        <button onClick={handleResetPranayama} className="text-resonant-pink border-b border-resonant-pink/20 hover:text-primary dark:hover:text-white cursor-pointer select-none">
                                           CHANGE DURATION
                                         </button>
                                       </div>
@@ -1299,32 +1300,32 @@ export default function RitualsPage() {
                             <div className="md:col-span-4">
                               <Card className="h-full flex flex-col justify-between p-6 min-h-[220px]">
                                 <div className="space-y-4">
-                                  <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-bold">
+                                  <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-resonant-pink font-bold">
                                     FREQUENCY PAIRING · ACTIVE
                                   </div>
-                                  <h4 className="font-cormorant italic text-2xl text-stone-900 dark:text-stone-100 leading-tight">
+                                  <h4 className="font-headline-md italic text-2xl text-primary dark:text-inverse-on-surface leading-tight">
                                     {pranayamaTimer.trackName}
                                   </h4>
-                                  <p className="text-xs text-stone-500 dark:text-stone-400 leading-normal">
+                                  <p className="text-xs text-on-surface-variant dark:text-on-surface-variant leading-normal">
                                     {pranayamaTimer.trackArtist} · {pranayamaTimer.trackFrequency}
                                   </p>
                                   
                                   {/* Status Indicator */}
-                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[8px] font-mono font-bold tracking-wider uppercase bg-[#c06080]/10 text-[#c06080] border border-[#c06080]/20 animate-pulse">
+                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[8px] font-mono font-bold tracking-wider uppercase bg-resonant-pink/10 text-resonant-pink border border-resonant-pink/20 animate-pulse">
                                     ● ACTIVE SYNC
                                   </span>
                                 </div>
 
-                                <div className="pt-6 border-t border-stone-200/20 dark:border-stone-800 space-y-4">
+                                <div className="pt-6 border-t border-outline-variant/50 dark:border-outline-variant/30 space-y-4">
                                   {/* Audio toggle */}
-                                  <div className="flex justify-between items-center text-[10px] font-mono uppercase text-stone-400 font-semibold">
+                                  <div className="flex justify-between items-center text-[10px] font-mono uppercase text-on-surface-variant font-semibold">
                                     <span>Audio Sync Status</span>
                                     <button
                                       onClick={() => setPranayamaAudio(!pranayamaAudio)}
                                       className={`px-3 py-1 rounded-full border transition cursor-pointer ${
                                         pranayamaAudio
-                                          ? 'bg-[#c06080]/10 border-[#c06080]/20 text-[#c06080]'
-                                          : 'border-stone-300 dark:border-stone-850 text-stone-500'
+                                          ? 'bg-resonant-pink/10 border-resonant-pink/20 text-resonant-pink'
+                                          : 'border-stone-300 dark:border-stone-850 text-on-surface-variant'
                                       }`}
                                     >
                                       AUDIO {pranayamaAudio ? 'ON' : 'OFF'}
@@ -1333,7 +1334,7 @@ export default function RitualsPage() {
 
                                   <Link
                                     href="/music"
-                                    className="text-[9px] font-mono uppercase tracking-wider text-[#c06080] border-b border-[#c06080]/30 hover:text-stone-900 dark:hover:text-white transition block w-fit"
+                                    className="text-[9px] font-mono uppercase tracking-wider text-resonant-pink border-b border-resonant-pink/30 hover:text-primary dark:hover:text-white transition block w-fit"
                                   >
                                     CHANGE FREQUENCY →
                                   </Link>
@@ -1348,17 +1349,17 @@ export default function RitualsPage() {
                         {/* ─── SECTION 2: YOGA ASANA PRACTICE ─────────────────────────────── */}
                         {(intentionMode === 'yoga' || intentionMode === 'all') && (
                             <>
-                        <hr className="border-stone-200/40 dark:border-stone-800 my-10 md:my-14" />
+                        <hr className="border-outline-variant/40 dark:border-outline-variant/30 my-10 md:my-14" />
                         
                         <section id="asana-sanctuary" className="space-y-8 animate-fade-rise">
                           <div>
-                            <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-bold block mb-3">
+                            <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-resonant-pink font-bold block mb-3">
                               ASANA SANCTUARY · DOSHA YOGA
                             </span>
-                            <h2 className="text-3xl md:text-4xl font-normal font-cormorant text-stone-900 dark:text-stone-100 leading-tight">
-                              Your Yoga <span className="font-cormorant italic text-[#c06080]">Practice</span>
+                            <h2 className="text-3xl md:text-4xl font-normal font-headline-md text-primary dark:text-inverse-on-surface leading-tight">
+                              Your Yoga <span className="font-headline-md italic text-resonant-pink">Practice</span>
                             </h2>
-                            <p className="text-sm text-stone-500 dark:text-stone-400 max-w-xl leading-relaxed mt-2">
+                            <p className="text-sm text-on-surface-variant dark:text-on-surface-variant max-w-xl leading-relaxed mt-2">
                               Asanas selected and sequenced specifically for your Vata constitution to restore balance, ground scattered energy, and build strength without depletion.
                             </p>
                           </div>
@@ -1379,7 +1380,7 @@ export default function RitualsPage() {
                                   className={`px-5 py-2.5 rounded-full border text-[9px] font-mono font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer ${
                                     isActive
                                       ? 'bg-[#1C1917] text-[#FAF6F0] border-[#1C1917] dark:bg-[#FAF6F0] dark:text-[#12100E] dark:border-[#FAF6F0] shadow-sm'
-                                      : 'bg-transparent border-stone-300 dark:border-stone-700 text-stone-500 hover:border-[#c06080] hover:text-[#c06080]'
+                                      : 'bg-transparent border-stone-300 dark:border-stone-700 text-on-surface-variant hover:border-resonant-pink hover:text-resonant-pink'
                                   }`}
                                 >
                                   {labelMap[tab]}
@@ -1391,15 +1392,15 @@ export default function RitualsPage() {
                           {/* Active posture HUD (shown when sequence is in progress) */}
                           {activePoseIndex !== null && (
                             <Card className="bg-[#1C1C1A] text-white p-6 rounded-3xl mb-8 flex flex-col md:flex-row justify-between items-center gap-4 animate-fade-rise border-none relative overflow-hidden">
-                              <div className="absolute top-0 right-0 w-64 h-64 bg-[#c06080]/10 rounded-full blur-2xl pointer-events-none" />
+                              <div className="absolute top-0 right-0 w-64 h-64 bg-resonant-pink/10 rounded-full blur-2xl pointer-events-none" />
                               <div className="relative z-10 text-center md:text-left space-y-1">
-                                <span className="text-[9px] font-mono text-[#c06080] uppercase tracking-widest block font-bold">
+                                <span className="text-[9px] font-mono text-resonant-pink uppercase tracking-widest block font-bold">
                                   ACTIVE YOGA PRACTICE FLOW
                                 </span>
                                 <span className="text-xl font-serif italic text-stone-200 dark:text-stone-200 block">
                                   {activePoseIndex + 1}. {YOGA_SEQUENCES[activeYogaTab][activePoseIndex].name}
                                 </span>
-                                <span className="text-[10px] font-mono text-stone-400 block uppercase">
+                                <span className="text-[10px] font-mono text-on-surface-variant block uppercase">
                                   Duration: {YOGA_SEQUENCES[activeYogaTab][activePoseIndex].durationMin} Mins · {YOGA_SEQUENCES[activeYogaTab][activePoseIndex].sanskritName}
                                 </span>
                               </div>
@@ -1424,7 +1425,7 @@ export default function RitualsPage() {
                                       setActivePoseIndex(null); // sequence finished!
                                     }
                                   }}
-                                  className="px-6 py-2.5 bg-[#c06080] rounded-full text-[9px] font-mono font-bold uppercase tracking-wider text-white hover:bg-[#C4603A] transition cursor-pointer shadow-md"
+                                  className="px-6 py-2.5 bg-resonant-pink rounded-full text-[9px] font-mono font-bold uppercase tracking-wider text-white hover:bg-[#C4603A] transition cursor-pointer shadow-md"
                                 >
                                   {activePoseIndex === 9 ? '✓ FINISH' : 'NEXT POSE →'}
                                 </button>
@@ -1442,9 +1443,9 @@ export default function RitualsPage() {
                                   key={asana.id}
                                   className={`w-full border transition-all duration-300 ${
                                     done 
-                                      ? 'opacity-60 border-stone-200/40' 
+                                      ? 'opacity-60 border-outline-variant/40' 
                                       : isActive 
-                                        ? 'border-[#c06080] shadow-[0_4px_25px_-5px_rgba(194,122,93,0.1)]' 
+                                        ? 'border-resonant-pink shadow-[0_4px_25px_-5px_rgba(194,122,93,0.1)]' 
                                         : 'border-stone-300/40 dark:border-stone-700/40'
                                   }`}
                                 >
@@ -1455,8 +1456,8 @@ export default function RitualsPage() {
                                         onClick={() => toggleAsana(asana.id)}
                                         className={`flex-shrink-0 mt-1 w-6 h-6 rounded-full border-2 transition-all duration-300 cursor-pointer flex items-center justify-center ${
                                           done
-                                            ? 'bg-[#c06080] border-[#c06080]'
-                                            : 'border-stone-300 dark:border-stone-600 hover:border-[#c06080]'
+                                            ? 'bg-resonant-pink border-resonant-pink'
+                                            : 'border-stone-300 dark:border-stone-600 hover:border-resonant-pink'
                                         }`}
                                         aria-label={`Mark ${asana.name} ${done ? 'incomplete' : 'complete'}`}
                                       >
@@ -1470,17 +1471,17 @@ export default function RitualsPage() {
                                       {/* Content */}
                                       <div className="space-y-3">
                                         <div className="flex flex-wrap items-center gap-3">
-                                          <span className="px-3.5 py-1 text-[9px] font-mono font-bold tracking-widest uppercase bg-[#c06080]/10 text-[#c06080] rounded-full">
+                                          <span className="px-3.5 py-1 text-[9px] font-mono font-bold tracking-widest uppercase bg-resonant-pink/10 text-resonant-pink rounded-full">
                                             {asana.durationMin.toString().padStart(2, '0')} MIN
                                           </span>
-                                          <span className="text-[10px] font-mono text-stone-400 uppercase tracking-widest">
+                                          <span className="text-[10px] font-mono text-on-surface-variant uppercase tracking-widest">
                                             {asana.sanskritName}
                                           </span>
                                         </div>
-                                        <h3 className={`text-xl sm:text-2xl font-serif italic font-normal ${done ? 'line-through text-stone-450' : 'text-stone-900 dark:text-stone-100'}`}>
+                                        <h3 className={`text-xl sm:text-2xl font-serif italic font-normal ${done ? 'line-through text-stone-450' : 'text-primary dark:text-inverse-on-surface'}`}>
                                           {asana.name}
                                         </h3>
-                                        <p className="text-stone-500 dark:text-stone-400 text-sm leading-relaxed max-w-2xl">
+                                        <p className="text-on-surface-variant dark:text-on-surface-variant text-sm leading-relaxed max-w-2xl">
                                           {asana.description}
                                         </p>
                                         <div className="flex flex-wrap gap-2 pt-1">
@@ -1494,13 +1495,13 @@ export default function RitualsPage() {
                                     </div>
 
                                     {/* Right side: Line art SVG and Begin Pose trigger */}
-                                    <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start w-full sm:w-auto gap-4 self-stretch sm:self-auto pt-4 sm:pt-0 border-t sm:border-t-0 border-stone-200/40 dark:border-stone-850">
-                                      <div className="bg-stone-100/40 dark:bg-stone-800/40 border border-stone-300/20 dark:border-stone-800 rounded-2xl p-2.5">
+                                    <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start w-full sm:w-auto gap-4 self-stretch sm:self-auto pt-4 sm:pt-0 border-t sm:border-t-0 border-outline-variant/40 dark:border-stone-850">
+                                      <div className="bg-stone-100/40 dark:bg-stone-800/40 border border-stone-300/20 dark:border-outline-variant/30 rounded-2xl p-2.5">
                                         <PoseIcon id={asana.id} />
                                       </div>
                                       <button
                                         onClick={() => setActivePoseIndex(idx)}
-                                        className="text-[9px] font-mono uppercase tracking-wider text-[#c06080] border-b border-[#c06080]/30 hover:text-stone-900 dark:hover:text-white transition w-fit cursor-pointer select-none"
+                                        className="text-[9px] font-mono uppercase tracking-wider text-resonant-pink border-b border-resonant-pink/30 hover:text-primary dark:hover:text-white transition w-fit cursor-pointer select-none"
                                       >
                                         BEGIN POSE →
                                       </button>
@@ -1514,21 +1515,21 @@ export default function RitualsPage() {
                           {/* Full Practice flow card */}
                           <div className="pt-6">
                             <Card className="p-6 md:p-8">
-                              <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] mb-4 font-bold">
+                              <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-resonant-pink mb-4 font-bold">
                                 TODAY&apos;S FULL PRACTICE · {activeYogaTab} SEQUENCE
                               </div>
                               
                               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
                                 <div>
-                                  <h3 className="font-cormorant italic text-3xl text-stone-900 dark:text-stone-100 font-normal">
+                                  <h3 className="font-headline-md italic text-3xl text-primary dark:text-inverse-on-surface font-normal">
                                     Complete Vata Sequence Flow
                                   </h3>
-                                  <p className="text-xs text-stone-500 dark:text-stone-400 leading-normal mt-1.5 max-w-md">
+                                  <p className="text-xs text-on-surface-variant dark:text-on-surface-variant leading-normal mt-1.5 max-w-md">
                                     Follow all 10 asanas chronologically to reset apana vayu, ground instability, and center the mind.
                                   </p>
                                 </div>
                                 {/* Total Duration pill */}
-                                <div className="px-5 py-2.5 rounded-full border border-stone-300 dark:border-stone-700 text-[10px] font-mono font-bold uppercase tracking-widest text-[#c06080] bg-amber-50/30 dark:bg-stone-950/20">
+                                <div className="px-5 py-2.5 rounded-full border border-stone-300 dark:border-stone-700 text-[10px] font-mono font-bold uppercase tracking-widest text-resonant-pink bg-amber-50/30 dark:bg-[#002110]/20">
                                   Total duration: {YOGA_SEQUENCES[activeYogaTab].reduce((acc, curr) => acc + curr.durationMin, 0)} MINS
                                 </div>
                               </div>
@@ -1548,10 +1549,10 @@ export default function RitualsPage() {
                                         onClick={() => setActivePoseIndex(idx)}
                                         className={`w-3.5 h-3.5 rounded-full border-2 transition-all duration-300 cursor-pointer ${
                                           isCurrent
-                                            ? 'bg-[#c06080] border-[#c06080] scale-125'
+                                            ? 'bg-resonant-pink border-resonant-pink scale-125'
                                             : isDone
                                               ? 'bg-emerald-500 border-emerald-500'
-                                              : 'bg-white dark:bg-stone-900 border-stone-300 dark:border-stone-700 hover:border-[#c06080]'
+                                              : 'bg-surface-container-lowest dark:bg-forest-ink border-stone-300 dark:border-stone-700 hover:border-resonant-pink'
                                         }`}
                                         title={asana.name}
                                       />
@@ -1565,10 +1566,10 @@ export default function RitualsPage() {
                               </div>
 
                               {/* Action buttons */}
-                              <div className="flex flex-wrap gap-3 pt-6 border-t border-stone-200/20 dark:border-stone-850">
+                              <div className="flex flex-wrap gap-3 pt-6 border-t border-outline-variant/50 dark:border-stone-850">
                                 <button
                                   onClick={() => setActivePoseIndex(0)}
-                                  className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1C1A] text-white hover:bg-[#c06080] transition-all duration-300 active:scale-[0.98] cursor-pointer"
+                                  className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1C1A] text-white hover:bg-resonant-pink transition-all duration-300 active:scale-[0.98] cursor-pointer"
                                 >
                                   BEGIN FULL PRACTICE
                                 </button>
@@ -1576,7 +1577,7 @@ export default function RitualsPage() {
                                   onClick={() => {
                                     setCompletedAsanas(new Set(YOGA_SEQUENCES[activeYogaTab].map(a => a.id)));
                                   }}
-                                  className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-transparent border border-stone-400 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:border-[#c06080] hover:text-[#c06080] transition-all duration-300 active:scale-[0.98] cursor-pointer"
+                                  className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-transparent border border-stone-400 dark:border-outline-variant/30 text-on-surface-variant dark:text-stone-300 hover:border-resonant-pink hover:text-resonant-pink transition-all duration-300 active:scale-[0.98] cursor-pointer"
                                 >
                                   CUSTOM SEQUENCE
                                 </button>
@@ -1589,7 +1590,7 @@ export default function RitualsPage() {
 
                        {/* ── Cleanse Dietary Lock & Agni Check-in (only when cleanse active) ─────── */}
                         {cleanseActive && (intentionMode === 'cleanse' || intentionMode === 'all') && (
-                            <div className="bg-amber-50/40 dark:bg-stone-900/30 border border-amber-100/50 rounded-3xl p-6 space-y-6">
+                            <div className="bg-amber-50/40 dark:bg-forest-ink/30 border border-amber-100/50 rounded-3xl p-6 space-y-6">
                                 <div className="text-[10px] font-mono uppercase tracking-[0.25em] text-amber-700 dark:text-amber-500 font-bold">
                                     ✦ Cleanse Mode Content
                                 </div>
@@ -1602,23 +1603,23 @@ export default function RitualsPage() {
                                         transition={{ duration: 0.4 }}
                                     >
                                         <Card>
-                                            <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#c06080] mb-1 font-semibold">
+                                            <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-resonant-pink mb-1 font-semibold">
                                                 AAHAR · CLEANSE MODE
                                             </div>
-                                            <h3 className="font-cormorant italic text-2xl text-stone-900 dark:text-stone-100 font-normal mb-6">
+                                            <h3 className="font-headline-md italic text-2xl text-primary dark:text-inverse-on-surface font-normal mb-6">
                                                 Cleanse Diet Protocol
                                             </h3>
 
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                                 {/* Favour column */}
                                                 <div>
-                                                    <div className="text-[9px] font-mono uppercase tracking-widest text-stone-400 mb-3 font-semibold">
+                                                    <div className="text-[9px] font-mono uppercase tracking-widest text-on-surface-variant mb-3 font-semibold">
                                                         ✓ FAVOUR
                                                     </div>
                                                     <ul className="space-y-2">
                                                         {FAVOUR_FOODS.map(f => (
                                                             <li key={f} className="flex items-center gap-2 text-sm text-stone-700 dark:text-stone-300">
-                                                                <span className="w-1.5 h-1.5 rounded-full bg-[#c06080] flex-shrink-0" />
+                                                                <span className="w-1.5 h-1.5 rounded-full bg-resonant-pink flex-shrink-0" />
                                                                 {f}
                                                             </li>
                                                         ))}
@@ -1627,7 +1628,7 @@ export default function RitualsPage() {
 
                                                 {/* Avoid column */}
                                                 <div>
-                                                    <div className="text-[9px] font-mono uppercase tracking-widest text-stone-400 mb-3 font-semibold">
+                                                    <div className="text-[9px] font-mono uppercase tracking-widest text-on-surface-variant mb-3 font-semibold">
                                                         ✗ AVOID
                                                     </div>
                                                     <div className="flex flex-wrap gap-2">
@@ -1640,10 +1641,10 @@ export default function RitualsPage() {
                                                 </div>
                                             </div>
 
-                                            <div className="mt-8 pt-4 border-t border-stone-200/20 dark:border-stone-800">
+                                            <div className="mt-8 pt-4 border-t border-outline-variant/50 dark:border-outline-variant/30">
                                                 <Link
                                                     href="/aahar"
-                                                    className="text-[10px] font-mono uppercase tracking-wider text-[#c06080] border-b border-[#c06080]/30 hover:text-stone-900 dark:hover:text-white transition-colors"
+                                                    className="text-[10px] font-mono uppercase tracking-wider text-resonant-pink border-b border-resonant-pink/30 hover:text-primary dark:hover:text-white transition-colors"
                                                 >
                                                     OPEN FULL CLEANSE DIET GUIDE →
                                                 </Link>
@@ -1659,10 +1660,10 @@ export default function RitualsPage() {
                                         transition={{ duration: 0.4, delay: 0.1 }}
                                     >
                                         <Card>
-                                            <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#c06080] mb-1 font-semibold">
+                                            <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-resonant-pink mb-1 font-semibold">
                                                 AGNI CHECK-IN · TODAY
                                             </div>
-                                            <h3 className="font-cormorant italic text-2xl text-stone-900 dark:text-stone-100 font-normal mb-6">
+                                            <h3 className="font-headline-md italic text-2xl text-primary dark:text-inverse-on-surface font-normal mb-6">
                                                 How is your digestion today?
                                             </h3>
 
@@ -1677,8 +1678,8 @@ export default function RitualsPage() {
                                                         onClick={() => setAgni(agni === opt.id ? null : opt.id)}
                                                         className={`flex items-center gap-2 px-5 py-3 rounded-full border text-xs font-mono font-semibold tracking-wider transition-all duration-300 cursor-pointer ${
                                                             agni === opt.id
-                                                                ? 'bg-[#1C1917] text-[#F4EFEA] border-[#1C1917] dark:bg-[#c06080] dark:border-[#c06080]'
-                                                                : 'bg-white/50 dark:bg-stone-900/40 border-stone-300/60 dark:border-stone-700 text-stone-600 dark:text-stone-400 hover:border-[#c06080]/60 hover:text-[#c06080]'
+                                                                ? 'bg-[#1C1917] text-[#F4EFEA] border-[#1C1917] dark:bg-resonant-pink dark:border-resonant-pink'
+                                                                : 'bg-surface-container-lowest/50 dark:bg-forest-ink/40 border-stone-300/60 dark:border-stone-700 text-on-surface-variant dark:text-on-surface-variant hover:border-resonant-pink/60 hover:text-resonant-pink'
                                                         }`}
                                                     >
                                                         {opt.icon} {opt.label}
@@ -1693,8 +1694,8 @@ export default function RitualsPage() {
                                             )}
 
                                             {/* Affirmation */}
-                                            <div className="border-l border-[#c06080]/30 pl-5 py-1">
-                                                <p className="font-cormorant italic text-xl text-stone-700 dark:text-stone-300 leading-relaxed">
+                                            <div className="border-l border-resonant-pink/30 pl-5 py-1">
+                                                <p className="font-headline-md italic text-xl text-stone-700 dark:text-stone-300 leading-relaxed">
                                                     &ldquo;Purification is not deprivation — it is returning to your original self.&rdquo;
                                                 </p>
                                             </div>
@@ -1709,7 +1710,7 @@ export default function RitualsPage() {
                 </div>
 
                 {/* Footer */}
-                <footer className="w-full max-w-5xl mx-auto px-6 pb-6 pt-10 border-t border-[#1C1917]/5 dark:border-stone-800 flex items-center justify-between text-[9px] md:text-[10px] font-mono text-stone-500 tracking-wider">
+                <footer className="w-full max-w-5xl mx-auto px-6 pb-6 pt-10 border-t border-[#1C1917]/5 dark:border-outline-variant/30 flex items-center justify-between text-[9px] md:text-[10px] font-mono text-on-surface-variant tracking-wider">
                     <div>DOMINANT DOSHA / {dominantDosha.toUpperCase()}{cleanseActive ? ' · PANCHAKARMA ACTIVE' : ''}</div>
                     <div>© OJAS RITUAL MMXXVI</div>
                 </footer>

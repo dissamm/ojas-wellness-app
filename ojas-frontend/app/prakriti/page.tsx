@@ -20,8 +20,8 @@ export default function PrakritiPage() {
   
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [scores, setScores] = useState({ Vata: 0, Pitta: 0, Kapha: 0 });
-  const [history, setHistory] = useState<Array<'Vata' | 'Pitta' | 'Kapha'>>([]);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [answers, setAnswers] = useState<Array<'v' | 'p' | 'k' | null>>([]);
+  const [selectedOption, setSelectedOption] = useState<number | 'skip' | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
   // Tab & Context States for Results page
@@ -89,45 +89,65 @@ export default function PrakritiPage() {
   }, [submitted]);
 
 
-  const handleSelectOption = (index: number) => {
+  const handleSelectOption = (index: number | 'skip') => {
     setSelectedOption(index);
   };
 
   const handleNext = () => {
     if (selectedOption === null) return;
     
-    const dosha = question.opts[selectedOption].d as 'Vata' | 'Pitta' | 'Kapha';
+    let answerValue: 'v' | 'p' | 'k' | null = null;
+    if (selectedOption !== 'skip') {
+      const dosha = question.opts[selectedOption].d as 'Vata' | 'Pitta' | 'Kapha';
+      answerValue = dosha.charAt(0).toLowerCase() as 'v' | 'p' | 'k';
+    }
 
-    const newScores = {
-      ...scores,
-      [dosha]: scores[dosha] + 1,
-    };
-    setScores(newScores);
-    setHistory([...history, dosha]);
-
+    const newAnswers = [...answers, answerValue];
+    setAnswers(newAnswers);
     setSelectedOption(null);
 
     if (currentQuestion < PRAKRITI_QUESTIONS.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      handleSubmit(newScores);
+      const score = { v: 0, p: 0, k: 0 };
+      let total = 0;
+      newAnswers.forEach(answer => {
+        if (answer !== null) {
+          score[answer] += 1;
+          total += 1;
+        }
+      });
+
+      if (total === 0) {
+        alert("Please answer at least a few questions to get your Prakriti result.");
+        setAnswers(answers);
+        return;
+      }
+
+      const result = {
+        v: total > 0 ? score.v / total : 0,
+        p: total > 0 ? score.p / total : 0,
+        k: total > 0 ? score.k / total : 0,
+      };
+
+      const finalScores = {
+        Vata: Math.round(result.v * 18),
+        Pitta: Math.round(result.p * 18),
+        Kapha: Math.round(result.k * 18),
+      };
+
+      setScores(finalScores);
+      handleSubmit(finalScores);
     }
   };
 
   const handleBack = () => {
     if (currentQuestion === 0) return;
     
-    const newHistory = [...history];
-    const lastDosha = newHistory.pop();
+    const newAnswers = [...answers];
+    newAnswers.pop();
     
-    if (lastDosha) {
-      setScores({
-        ...scores,
-        [lastDosha]: Math.max(0, scores[lastDosha] - 1),
-      });
-    }
-
-    setHistory(newHistory);
+    setAnswers(newAnswers);
     setSelectedOption(null);
     setCurrentQuestion(currentQuestion - 1);
   };
@@ -153,6 +173,8 @@ export default function PrakritiPage() {
         setSelectedOption(1);
       } else if (key === 'c') {
         setSelectedOption(2);
+      } else if (key === 's') {
+        setSelectedOption('skip');
       } else if (e.key === 'ArrowRight') {
         if (selectedOption !== null) {
           handleNext();
@@ -184,7 +206,7 @@ export default function PrakritiPage() {
     if (!confirmRetake) return;
 
     setScores({ Vata: 0, Pitta: 0, Kapha: 0 });
-    setHistory([]);
+    setAnswers([]);
     setCurrentQuestion(0);
     setSelectedOption(null);
     setSubmitted(false);
@@ -342,12 +364,12 @@ export default function PrakritiPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-[#c06080]/10 transition-colors duration-500">
+      <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/10 transition-colors duration-500">
         <div>
           <Header />
 
           {/* Sticky Pane Selector Sub-tabs */}
-          <div className="sticky top-[73px] z-30 bg-[#F4EFEA]/95 dark:bg-[#1C1917]/95 backdrop-blur-md border-b border-stone-200/50 dark:border-stone-800/80 py-3 mb-8 animate-fade-rise">
+          <div className="sticky top-[73px] z-30 bg-[#F4EFEA]/95 dark:bg-primary/95 backdrop-blur-md border-b border-stone-200/50 dark:border-stone-800/80 py-3 mb-8 animate-fade-rise">
             <div className="max-w-2xl mx-auto px-4 flex justify-between gap-1 overflow-x-auto scrollbar-none">
               {([
                 { id: 'overview', label: 'Overview' },
@@ -362,7 +384,7 @@ export default function PrakritiPage() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`px-4 py-2 rounded-full text-xs font-mono font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer whitespace-nowrap ${
                     activeTab === tab.id
-                      ? 'bg-[#1C1917] dark:bg-[#FAF6F0] text-white dark:text-[#1C1917] shadow-sm'
+                      ? 'bg-primary dark:bg-[#FAF6F0] text-white dark:text-primary shadow-sm'
                       : 'text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white bg-stone-200/30 dark:bg-stone-800/40 hover:bg-stone-200/60 dark:hover:bg-stone-800/80'
                   }`}
                 >
@@ -375,7 +397,7 @@ export default function PrakritiPage() {
           {/* Dual Dosha Focus Toggle Banner (if dual-dosha) */}
           {isDual && activeTab !== 'overview' && (
             <div className="max-w-2xl mx-auto px-6 mb-6 animate-fade-rise">
-              <div className="bg-[#FDF6EC] dark:bg-stone-900/60 border border-orange-200/30 dark:border-stone-800 p-2 rounded-2xl flex justify-between gap-2 shadow-sm">
+              <div className="bg-surface-container-low dark:bg-stone-900/60 border border-orange-200/30 dark:border-stone-800 p-2 rounded-2xl flex justify-between gap-2 shadow-sm">
                 <button
                   onClick={() => setDualCtx('pri')}
                   className={`flex-1 py-3 px-4 rounded-xl text-center transition-all duration-300 cursor-pointer ${
@@ -384,7 +406,7 @@ export default function PrakritiPage() {
                       : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
                   }`}
                 >
-                  <span className="block text-[9px] font-mono uppercase tracking-wider text-[#c06080] mb-0.5">PRIMARY</span>
+                  <span className="block text-[9px] font-mono uppercase tracking-wider text-secondary mb-0.5">PRIMARY</span>
                   <span className="font-serif italic text-base">{d.name} · {domPct}%</span>
                 </button>
                 <button
@@ -395,7 +417,7 @@ export default function PrakritiPage() {
                       : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
                   }`}
                 >
-                  <span className="block text-[9px] font-mono uppercase tracking-wider text-[#c06080] mb-0.5">SECONDARY</span>
+                  <span className="block text-[9px] font-mono uppercase tracking-wider text-secondary mb-0.5">SECONDARY</span>
                   <span className="font-serif italic text-base">{s.name} · {secPct}%</span>
                 </button>
               </div>
@@ -409,7 +431,7 @@ export default function PrakritiPage() {
               <div className="space-y-8 animate-fade-rise">
                 {/* Hero Card */}
                 <div className="w-full bg-white/40 dark:bg-stone-900/60 border border-stone-200/50 dark:border-stone-800 rounded-3xl p-8 md:p-10 backdrop-blur-md shadow-[0_4px_20px_-4px_rgba(28,25,22,0.03)] text-center flex flex-col items-center">
-                  <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-semibold mb-4 block">
+                  <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-secondary font-semibold mb-4 block">
                     NAMASTE, {user?.name?.toUpperCase() || 'BEAUTIFUL SOUL'} 🙏
                   </span>
 
@@ -426,13 +448,13 @@ export default function PrakritiPage() {
                         </span>
                       </div>
 
-                      <h1 className="text-4xl font-normal font-instrument-serif text-[#1C1917] dark:text-[#FAF6F0] leading-tight mb-4">
+                      <h1 className="text-4xl font-normal font-headline-md text-primary dark:text-[#FAF6F0] leading-tight mb-4">
                         <span style={{ color: d.color }}>{d.name}</span>
                         <span className="text-stone-300 font-light font-sans mx-2">–</span>
                         <span style={{ color: s.color }}>{s.name}</span>
                       </h1>
                       
-                      <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-bold mb-4 block">
+                      <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary font-bold mb-4 block">
                         Dual Dosha Prakriti
                       </span>
 
@@ -448,7 +470,7 @@ export default function PrakritiPage() {
                         {DOSHA_ICONS[domKey]}
                       </div>
 
-                      <h1 className="text-4xl sm:text-5xl font-normal font-instrument-serif text-[#1C1917] dark:text-[#FAF6F0] leading-tight mb-2">
+                      <h1 className="text-4xl sm:text-5xl font-normal font-headline-md text-primary dark:text-[#FAF6F0] leading-tight mb-2">
                         <span style={{ color: d.color }}>{d.name} Predominance</span>
                       </h1>
 
@@ -460,7 +482,7 @@ export default function PrakritiPage() {
                         Your constitution shows strong single-dosha predominance ({domPct}% {d.name}). Classical texts note this is relatively rare and denotes clear energy alignment.
                       </p>
 
-                      <p className="text-stone-700 dark:text-stone-300 font-serif italic text-base leading-relaxed max-w-xl p-5 bg-[#FDF6EC] dark:bg-stone-900/60 border border-orange-100/50 dark:border-stone-850 rounded-2xl mb-6">
+                      <p className="text-stone-700 dark:text-stone-300 font-serif italic text-base leading-relaxed max-w-xl p-5 bg-surface-container-low dark:bg-stone-900/60 border border-orange-100/50 dark:border-stone-850 rounded-2xl mb-6">
                         &ldquo;{d.desc}&rdquo;
                       </p>
                     </>
@@ -488,7 +510,7 @@ export default function PrakritiPage() {
                         <span className="text-2xl">{DOSHA_ICONS[domKey]}</span>
                         <div>
                           <h4 className="font-serif italic text-lg text-stone-900 dark:text-[#FAF6F0] font-normal">Primary · {d.name}</h4>
-                          <span className="text-[9px] font-mono text-[#c06080] uppercase tracking-wider">{domPct}% Predominance</span>
+                          <span className="text-[9px] font-mono text-secondary uppercase tracking-wider">{domPct}% Predominance</span>
                         </div>
                       </div>
                       <p className="text-stone-500 dark:text-stone-400 text-xs leading-relaxed mb-3 font-inter">
@@ -502,7 +524,7 @@ export default function PrakritiPage() {
                         <span className="text-2xl">{DOSHA_ICONS[secKey]}</span>
                         <div>
                           <h4 className="font-serif italic text-lg text-stone-900 dark:text-[#FAF6F0] font-normal">Secondary · {s.name}</h4>
-                          <span className="text-[9px] font-mono text-[#c06080] uppercase tracking-wider">{secPct}% Predominance</span>
+                          <span className="text-[9px] font-mono text-secondary uppercase tracking-wider">{secPct}% Predominance</span>
                         </div>
                       </div>
                       <p className="text-stone-500 dark:text-stone-400 text-xs leading-relaxed mb-3 font-inter">
@@ -514,8 +536,8 @@ export default function PrakritiPage() {
                 )}
 
                 {/* Classical Reference Card */}
-                <div className="p-6 bg-[#FDF6EC] dark:bg-stone-950/60 border border-orange-100/50 dark:border-stone-850 rounded-3xl text-xs md:text-sm text-[#8A5A44] dark:text-stone-350 font-inter leading-relaxed italic shadow-[inset_0_1px_3px_rgba(28,25,22,0.01)]">
-                  <p className="font-mono text-[10px] uppercase tracking-wider font-semibold mb-3 not-italic text-[#c06080]">
+                <div className="p-6 bg-surface-container-low dark:bg-stone-950/60 border border-orange-100/50 dark:border-stone-850 rounded-3xl text-xs md:text-sm text-[#8A5A44] dark:text-stone-350 font-inter leading-relaxed italic shadow-[inset_0_1px_3px_rgba(28,25,22,0.01)]">
+                  <p className="font-mono text-[10px] uppercase tracking-wider font-semibold mb-3 not-italic text-secondary">
                     📜 CLASSICAL SAMHITA REFERENCE
                   </p>
                   <div>
@@ -530,7 +552,7 @@ export default function PrakritiPage() {
 
                 {/* Doughnut Chart & Breakdown card */}
                 <div className="w-full bg-white/40 dark:bg-stone-900/60 border border-stone-200/50 dark:border-stone-800 rounded-3xl p-8 backdrop-blur-md shadow-[0_4px_20px_-4px_rgba(28,25,22,0.03)] flex flex-col items-center">
-                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold mb-6 block self-start">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary font-semibold mb-6 block self-start">
                     📊 DOSHA SCORE BREAKDOWN
                   </span>
 
@@ -665,7 +687,7 @@ export default function PrakritiPage() {
                           placeholder="e.g. 70"
                           value={weightKg}
                           onChange={(e) => setWeightKg(e.target.value)}
-                          className="w-full px-4 py-3 bg-[#F4EFEA]/50 border border-stone-300/60 rounded-2xl text-stone-900 focus:outline-none focus:border-[#c06080] transition-all duration-300 text-sm"
+                          className="w-full px-4 py-3 bg-[#F4EFEA]/50 border border-stone-300/60 rounded-2xl text-stone-900 focus:outline-none focus:border-secondary transition-all duration-300 text-sm"
                         />
                       </div>
                       <div>
@@ -675,7 +697,7 @@ export default function PrakritiPage() {
                           placeholder="e.g. 175"
                           value={heightCm}
                           onChange={(e) => setHeightCm(e.target.value)}
-                          className="w-full px-4 py-3 bg-[#F4EFEA]/50 border border-stone-300/60 rounded-2xl text-stone-900 focus:outline-none focus:border-[#c06080] transition-all duration-300 text-sm"
+                          className="w-full px-4 py-3 bg-[#F4EFEA]/50 border border-stone-300/60 rounded-2xl text-stone-900 focus:outline-none focus:border-secondary transition-all duration-300 text-sm"
                         />
                       </div>
                     </div>
@@ -688,7 +710,7 @@ export default function PrakritiPage() {
                           placeholder="e.g. 150"
                           value={weightLbs}
                           onChange={(e) => setWeightLbs(e.target.value)}
-                          className="w-full px-4 py-3 bg-[#F4EFEA]/50 border border-stone-300/60 rounded-2xl text-stone-900 focus:outline-none focus:border-[#c06080] transition-all duration-300 text-sm"
+                          className="w-full px-4 py-3 bg-[#F4EFEA]/50 border border-stone-300/60 rounded-2xl text-stone-900 focus:outline-none focus:border-secondary transition-all duration-300 text-sm"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-4">
@@ -699,7 +721,7 @@ export default function PrakritiPage() {
                             placeholder="e.g. 5"
                             value={heightFt}
                             onChange={(e) => setHeightFt(e.target.value)}
-                            className="w-full px-4 py-3 bg-[#F4EFEA]/50 border border-stone-300/60 rounded-2xl text-stone-900 focus:outline-none focus:border-[#c06080] transition-all duration-300 text-sm"
+                            className="w-full px-4 py-3 bg-[#F4EFEA]/50 border border-stone-300/60 rounded-2xl text-stone-900 focus:outline-none focus:border-secondary transition-all duration-300 text-sm"
                           />
                         </div>
                         <div>
@@ -709,7 +731,7 @@ export default function PrakritiPage() {
                             placeholder="e.g. 9"
                             value={heightIn}
                             onChange={(e) => setHeightIn(e.target.value)}
-                            className="w-full px-4 py-3 bg-[#F4EFEA]/50 border border-stone-300/60 rounded-2xl text-stone-900 focus:outline-none focus:border-[#c06080] transition-all duration-300 text-sm"
+                            className="w-full px-4 py-3 bg-[#F4EFEA]/50 border border-stone-300/60 rounded-2xl text-stone-900 focus:outline-none focus:border-secondary transition-all duration-300 text-sm"
                           />
                         </div>
                       </div>
@@ -718,7 +740,7 @@ export default function PrakritiPage() {
 
                   <button
                     onClick={handleCalculateBmi}
-                    className="w-full py-3.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-[#1C1917] hover:bg-[#c06080] text-white transition-all duration-300 shadow-sm cursor-pointer"
+                    className="w-full py-3.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-primary hover:bg-secondary text-white transition-all duration-300 shadow-sm cursor-pointer"
                   >
                     CALCULATE ADJUSTED BMI
                   </button>
@@ -767,7 +789,7 @@ export default function PrakritiPage() {
                                 className="absolute top-1/2 -translate-y-1/2 w-1.5 h-6 rounded-full shadow-md bg-stone-950 border border-white transition-all duration-700"
                                 style={{ left: `${pctFill}%` }}
                               >
-                                <span className="absolute -top-6 left-1/2 -translate-x-1/2 bg-[#c06080] text-white px-2 py-0.5 rounded text-[8px] font-mono uppercase tracking-wider font-bold">YOU</span>
+                                <span className="absolute -top-6 left-1/2 -translate-x-1/2 bg-secondary text-white px-2 py-0.5 rounded text-[8px] font-mono uppercase tracking-wider font-bold">YOU</span>
                               </div>
                             </div>
                             
@@ -781,8 +803,8 @@ export default function PrakritiPage() {
                       })()}
 
                       {/* Insight Advice Block */}
-                      <div className="p-4 bg-[#FDF6EC] border border-orange-100/50 rounded-2xl text-xs sm:text-sm text-[#8A5A44] leading-relaxed">
-                        <strong className="block text-[#c06080] font-mono text-[9px] uppercase tracking-wider font-bold mb-1">AYURVEDIC INSIGHT</strong>
+                      <div className="p-4 bg-surface-container-low border border-orange-100/50 rounded-2xl text-xs sm:text-sm text-[#8A5A44] leading-relaxed">
+                        <strong className="block text-secondary font-mono text-[9px] uppercase tracking-wider font-bold mb-1">AYURVEDIC INSIGHT</strong>
                         {getBmiAssessment(calculatedBmi).advice}
                       </div>
                     </div>
@@ -790,7 +812,7 @@ export default function PrakritiPage() {
                 </div>
 
                 {/* Shareable Result URL card */}
-                <div className="w-full bg-[#FDF6EC] border border-orange-200/30 p-6 rounded-3xl flex flex-col sm:flex-row items-center gap-4 justify-between shadow-sm">
+                <div className="w-full bg-surface-container-low border border-orange-200/30 p-6 rounded-3xl flex flex-col sm:flex-row items-center gap-4 justify-between shadow-sm">
                   <div className="flex items-center gap-3">
                     <span className="text-lg">🔗</span>
                     <div>
@@ -800,7 +822,7 @@ export default function PrakritiPage() {
                   </div>
                   <button
                     onClick={handleCopyLink}
-                    className="w-full sm:w-auto px-6 py-3 rounded-full text-xs font-mono font-bold uppercase tracking-widest bg-stone-900 hover:bg-[#c06080] text-white transition-all duration-300 cursor-pointer text-center"
+                    className="w-full sm:w-auto px-6 py-3 rounded-full text-xs font-mono font-bold uppercase tracking-widest bg-stone-900 hover:bg-secondary text-white transition-all duration-300 cursor-pointer text-center"
                   >
                     {copied ? '✅ COPIED!' : 'COPY LINK'}
                   </button>
@@ -813,7 +835,7 @@ export default function PrakritiPage() {
               <div className="space-y-8 animate-fade-rise">
                 {/* Traits Card */}
                 <div className="w-full bg-white/40 border border-stone-200/50 rounded-3xl p-8 backdrop-blur-md shadow-[0_4px_20px_-4px_rgba(28,25,22,0.03)]">
-                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold mb-4 block">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary font-semibold mb-4 block">
                     ✨ PERSONALITY TRAITS
                   </span>
                   <div className="flex flex-wrap gap-2">
@@ -827,7 +849,7 @@ export default function PrakritiPage() {
 
                 {/* Why Card */}
                 <div className="w-full bg-white/40 border border-stone-200/50 rounded-3xl p-8 backdrop-blur-md shadow-[0_4px_20px_-4px_rgba(28,25,22,0.03)]">
-                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold mb-4 block">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary font-semibold mb-4 block">
                     🔍 WHY THIS IS YOUR PRAKRITI
                   </span>
                   <p className="text-stone-700 font-serif italic text-base leading-relaxed">
@@ -837,7 +859,7 @@ export default function PrakritiPage() {
 
                 {/* Imbalance Card */}
                 <div className="w-full bg-white/40 border border-stone-200/50 rounded-3xl p-8 backdrop-blur-md shadow-[0_4px_20px_-4px_rgba(28,25,22,0.03)]">
-                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold mb-3 block">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary font-semibold mb-3 block">
                     ⚠️ EARLY WARNING SIGNS OF IMBALANCE
                   </span>
                   <p className="text-stone-500 font-inter text-xs leading-relaxed mb-6">
@@ -846,7 +868,7 @@ export default function PrakritiPage() {
                   
                   <div className="grid gap-3 sm:grid-cols-2">
                     {activeDosha.imbalance.map((item, idx) => (
-                      <div key={idx} className="p-3 bg-stone-50 border border-stone-200/30 rounded-2xl text-stone-700 font-inter text-xs hover:border-[#c06080]/30 transition-all duration-300 flex items-center gap-3">
+                      <div key={idx} className="p-3 bg-stone-50 border border-stone-200/30 rounded-2xl text-stone-700 font-inter text-xs hover:border-secondary/30 transition-all duration-300 flex items-center gap-3">
                         <span className="text-orange-300">✦</span>
                         <span>{item}</span>
                       </div>
@@ -861,7 +883,7 @@ export default function PrakritiPage() {
               <div className="space-y-8 animate-fade-rise">
                 {/* Diet Card */}
                 <div className="w-full bg-white/40 border border-stone-200/50 rounded-3xl p-8 backdrop-blur-md shadow-[0_4px_20px_-4px_rgba(28,25,22,0.03)]">
-                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold mb-3 block">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary font-semibold mb-3 block">
                     🍽️ DIET — ĀHĀRA GUIDE
                   </span>
                   <p className="text-stone-500 font-inter text-xs leading-relaxed mb-6">
@@ -903,7 +925,7 @@ export default function PrakritiPage() {
 
                 {/* Herb Dravyaguna Panel */}
                 <div className="w-full bg-white/40 border border-stone-200/50 rounded-3xl p-8 backdrop-blur-md shadow-[0_4px_20px_-4px_rgba(28,25,22,0.03)]">
-                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold mb-3 block">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary font-semibold mb-3 block">
                     🌿 CLASSICAL HERBS — DRAVYAGUNA
                   </span>
                   <p className="text-stone-500 font-inter text-xs leading-relaxed mb-6">
@@ -912,7 +934,7 @@ export default function PrakritiPage() {
 
                   <div className="space-y-4">
                     {activeDosha.herbs.map((herb, idx) => (
-                      <div key={idx} className="p-4 bg-white/60 border border-stone-200/40 rounded-2xl flex items-start gap-4 hover:border-[#c06080]/30 transition-all duration-300">
+                      <div key={idx} className="p-4 bg-white/60 border border-stone-200/40 rounded-2xl flex items-start gap-4 hover:border-secondary/30 transition-all duration-300">
                         <span className="text-3xl p-2 bg-stone-50 border border-stone-200/30 rounded-xl">{herb.icon}</span>
                         <div className="flex-1">
                           <div className="flex justify-between items-baseline mb-1">
@@ -935,7 +957,7 @@ export default function PrakritiPage() {
               <div className="space-y-8 animate-fade-rise">
                 {/* Lifestyle Card */}
                 <div className="w-full bg-white/40 border border-stone-200/50 rounded-3xl p-8 backdrop-blur-md shadow-[0_4px_20px_-4px_rgba(28,25,22,0.03)]">
-                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold mb-3 block">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary font-semibold mb-3 block">
                     🌅 LIFESTYLE — VIHĀRA
                   </span>
                   <p className="text-stone-500 font-inter text-xs leading-relaxed mb-6">
@@ -975,7 +997,7 @@ export default function PrakritiPage() {
 
                 {/* Seasons Panel */}
                 <div className="w-full bg-white/40 border border-stone-200/50 rounded-3xl p-8 backdrop-blur-md shadow-[0_4px_20px_-4px_rgba(28,25,22,0.03)]">
-                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold mb-3 block">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary font-semibold mb-3 block">
                     🍂 SEASONAL GUIDANCE — RITUCHARYA
                   </span>
                   <p className="text-stone-500 font-inter text-xs leading-relaxed mb-6">
@@ -988,7 +1010,7 @@ export default function PrakritiPage() {
                         key={idx}
                         className={`p-5 rounded-3xl border transition-all duration-500 ${
                           season.active
-                            ? 'bg-[#FDF6EC] border-orange-300 shadow-sm'
+                            ? 'bg-surface-container-low border-orange-300 shadow-sm'
                             : 'bg-white/50 border-stone-200/40'
                         }`}
                       >
@@ -996,7 +1018,7 @@ export default function PrakritiPage() {
                           <span className="text-2xl">{season.icon}</span>
                           <span className="font-serif italic font-bold text-stone-900 text-base">{season.name}</span>
                           {season.active && (
-                            <span className="px-2 py-0.5 bg-[#c06080] text-white text-[8px] font-mono font-bold uppercase rounded-full tracking-widest ml-auto">PEAK</span>
+                            <span className="px-2 py-0.5 bg-secondary text-white text-[8px] font-mono font-bold uppercase rounded-full tracking-widest ml-auto">PEAK</span>
                           )}
                         </div>
                         <p className="text-xs text-stone-500 leading-relaxed font-inter">
@@ -1014,7 +1036,7 @@ export default function PrakritiPage() {
               <div className="space-y-8 animate-fade-rise">
                 {/* Exercise Card */}
                 <div className="w-full bg-white/40 border border-stone-200/50 rounded-3xl p-8 backdrop-blur-md shadow-[0_4px_20px_-4px_rgba(28,25,22,0.03)]">
-                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold mb-3 block">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary font-semibold mb-3 block">
                     🏃 EXERCISE — VYĀYĀMA
                   </span>
                   <p className="text-stone-500 font-inter text-xs leading-relaxed mb-6">
@@ -1054,7 +1076,7 @@ export default function PrakritiPage() {
 
                 {/* Dinacharya Rhythm Panel Checklists */}
                 <div className="w-full bg-white/40 border border-stone-200/50 rounded-3xl p-8 backdrop-blur-md shadow-[0_4px_20px_-4px_rgba(28,25,22,0.03)]">
-                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold mb-3 block">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary font-semibold mb-3 block">
                     ⏰ DAILY RHYTHM — DINACHARYA
                   </span>
                   <p className="text-stone-500 font-inter text-xs leading-relaxed mb-6">
@@ -1071,13 +1093,13 @@ export default function PrakritiPage() {
                           onClick={() => handleToggleChecklist(chkId)}
                           className={`p-4 rounded-2xl border transition-all duration-300 flex items-center justify-between cursor-pointer ${
                             isChecked
-                              ? 'bg-[#FDF6EC] border-[#c06080] text-stone-900'
-                              : 'bg-white/60 border-stone-200/40 text-stone-700 hover:border-[#c06080]/30'
+                              ? 'bg-surface-container-low border-secondary text-stone-900'
+                              : 'bg-white/60 border-stone-200/40 text-stone-700 hover:border-secondary/30'
                           }`}
                         >
                           <div className="flex items-center gap-4 flex-1">
                             <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${
-                              isChecked ? 'bg-[#c06080] border-[#c06080] text-white' : 'border-stone-300 bg-stone-50'
+                              isChecked ? 'bg-secondary border-secondary text-white' : 'border-stone-300 bg-stone-50'
                             }`}>
                               {isChecked && <span className="text-[10px] font-bold">✓</span>}
                             </div>
@@ -1099,7 +1121,7 @@ export default function PrakritiPage() {
               <div className="space-y-8 animate-fade-rise">
                 {/* Birth Chart Overview Card */}
                 <div className="w-full bg-[#1C1C1A] border border-stone-850 rounded-3xl p-8 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.3)] text-[#FAF6F0]">
-                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-bold mb-3 block">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-tertiary font-bold mb-3 block">
                     JANMA KUNDALI · BIRTH CHART SUMMARY
                   </span>
                   
@@ -1132,7 +1154,7 @@ export default function PrakritiPage() {
 
                 {/* Prakriti & Jyotish Overlap Card */}
                 <div className="w-full bg-white/40 border border-stone-200/50 rounded-3xl p-8 backdrop-blur-md shadow-[0_4px_20px_-4px_rgba(28,25,22,0.03)]">
-                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-bold mb-3 block">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-tertiary font-bold mb-3 block">
                     GRAHA-DOSHA SYNERGY · ELEMENTAL OVERLAP
                   </span>
                   
@@ -1155,7 +1177,7 @@ export default function PrakritiPage() {
                       <p className="text-xs text-stone-600 leading-relaxed font-inter">
                         Mercury governs raw intellect and nervous flow (Vata), while Venus directs sensory refinement. 
                         {jyotish.sunSign.english === 'Gemini' || jyotish.moonSign.english === 'Gemini' ? (
-                          <span className="text-[#C27A5D] font-medium ml-1">Your Gemini placement heightens Mercury&apos;s mental stimulation, correlating with your Vata scores.</span>
+                          <span className="text-tertiary font-medium ml-1">Your Gemini placement heightens Mercury&apos;s mental stimulation, correlating with your Vata scores.</span>
                         ) : (
                           <span className="text-stone-505 ml-1">Your birth placements show steady Vata mental resonance.</span>
                         )}
@@ -1163,20 +1185,20 @@ export default function PrakritiPage() {
                     </div>
 
                     {/* Pitta Row */}
-                    <div className="p-5 bg-[#C27A5D]/5 border border-[#C27A5D]/10 rounded-2xl">
+                    <div className="p-5 bg-tertiary/5 border border-[#C27A5D]/10 rounded-2xl">
                       <div className="flex justify-between items-start mb-2">
                         <div>
-                          <span className="text-[10px] font-mono font-bold tracking-wider text-[#C27A5D] block">PITTA · FIRE</span>
+                          <span className="text-[10px] font-mono font-bold tracking-wider text-tertiary block">PITTA · FIRE</span>
                           <span className="text-xs font-mono text-stone-400">Governed by ☉ Sun + ♂ Mars</span>
                         </div>
-                        <span className="px-3 py-1 bg-[#C27A5D]/10 text-[#C27A5D] rounded-full font-mono text-xs font-bold">
+                        <span className="px-3 py-1 bg-tertiary/10 text-tertiary rounded-full font-mono text-xs font-bold">
                           Prakriti: {scores.Pitta} pts
                         </span>
                       </div>
                       <p className="text-xs text-stone-600 leading-relaxed font-inter">
                         Sun represents raw metabolic fire (Agni), and Mars controls directional drive and transformation (Pitta).
                         {jyotish.sunSign.english === 'Aries' || jyotish.sunSign.english === 'Leo' ? (
-                          <span className="text-[#C27A5D] font-medium ml-1">Your fiery solar placement fuels Agni directly, complementing your Pitta scores.</span>
+                          <span className="text-tertiary font-medium ml-1">Your fiery solar placement fuels Agni directly, complementing your Pitta scores.</span>
                         ) : (
                           <span className="text-stone-505 ml-1">Your birth planets suggest a balanced metabolic fire.</span>
                         )}
@@ -1197,7 +1219,7 @@ export default function PrakritiPage() {
                       <p className="text-xs text-stone-600 leading-relaxed font-inter">
                         Moon governs bodily fluids and emotional attachment (Kapha), while Jupiter expands wisdom and physical tissue.
                         {jyotish.moonSign.english === 'Scorpio' || jyotish.lagna.english === 'Cancer' ? (
-                          <span className="text-[#C27A5D] font-medium ml-1">Your Lagna/Moon water elements add intuitive depth that grounds physical tissues.</span>
+                          <span className="text-tertiary font-medium ml-1">Your Lagna/Moon water elements add intuitive depth that grounds physical tissues.</span>
                         ) : (
                           <span className="text-stone-505 ml-1">Your planetary matrix supports stable Kapha expansion.</span>
                         )}
@@ -1223,7 +1245,7 @@ export default function PrakritiPage() {
               </button>
               <button
                 onClick={() => router.push(getNextStepRouteAndLabel().route)}
-                className="flex-1 py-4 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1917] hover:bg-[#c06080] text-white transition-all duration-300 cursor-pointer shadow-md text-center"
+                className="flex-1 py-4 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] bg-primary hover:bg-secondary text-white transition-all duration-300 cursor-pointer shadow-md text-center"
               >
                 {getNextStepRouteAndLabel().label}
               </button>
@@ -1241,105 +1263,155 @@ export default function PrakritiPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-[#c06080]/10 transition-colors duration-500">
+    <div className="min-h-screen bg-primary text-foreground flex flex-col justify-between selection:bg-secondary-fixed/20 transition-colors duration-500">
       <div>
         <Header />
 
-        <main className="max-w-2xl mx-auto px-6 py-10 md:py-16 w-full">
-          {/* Progress Bar Header */}
-          <div className="mb-10 md:mb-12 animate-fade-rise">
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-[10px] md:text-xs font-mono uppercase tracking-[0.25em] text-[#c06080] font-semibold">
-                KNOW YOUR PRAKRITI
+        <main className="max-w-3xl mx-auto px-6 py-10 md:py-16 w-full animate-fade-rise">
+          {/* Header Row: Eyebrow + Q Counter + Category */}
+          <div className="flex flex-col mb-8 relative">
+            <span className="text-[10px] md:text-[11px] font-mono uppercase tracking-[0.25em] text-white/40 mb-3 block">
+              PRAKRITI ASSESSMENT
+            </span>
+            <div className="flex justify-between items-end">
+              <h2 className="text-4xl md:text-[50px] font-serif text-secondary-fixed leading-none">
+                Q {String(currentQuestion + 1).padStart(2, '0')} / {PRAKRITI_QUESTIONS.length}
               </h2>
-              <span className="text-[10px] md:text-xs font-mono text-stone-400 uppercase tracking-wider">
-                Question {currentQuestion + 1} of {PRAKRITI_QUESTIONS.length}
-              </span>
-            </div>
-            <div className="w-full bg-stone-200/50 rounded-full h-1">
-              <div
-                className="bg-[#c06080] h-1 rounded-full transition-all duration-700"
-                style={{ width: `${progress}%` }}
-              ></div>
+              <div className="border border-white/20 rounded-full px-4 py-1.5 text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-white/50">
+                {question.cat}
+              </div>
             </div>
           </div>
 
-          {/* Question Card */}
-          <div className="w-full bg-white/40 border border-stone-200/50 rounded-3xl p-8 md:p-10 backdrop-blur-md shadow-[0_4px_20px_-4px_rgba(28,25,22,0.03)] mb-8 animate-fade-rise">
-            {/* Category Tag */}
-            <span className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-semibold mb-4 block">
-              {question.cat.toUpperCase()}
-            </span>
+          {/* Dotted Progress Bar */}
+          <div className="w-full relative h-4 flex items-center mb-14">
+            {/* Background track line */}
+            <div className="absolute left-0 right-0 h-[2px] bg-white/10 z-0 rounded-full"></div>
             
-            <h3 className="text-2xl md:text-3xl font-serif italic text-stone-900 mb-8 font-normal leading-snug">
-              {question.text}
-            </h3>
+            {/* Fill track line */}
+            <div 
+              className="absolute left-0 h-[2px] bg-secondary-fixed z-10 transition-all duration-700 rounded-full"
+              style={{ width: `${(currentQuestion / (PRAKRITI_QUESTIONS.length - 1)) * 100}%` }}
+            ></div>
 
-            {/* Answer Options */}
-            <div className="space-y-4">
-              {question.opts.map((option, index) => {
-                const letter = ['A', 'B', 'C'][index];
-                const isSelected = selectedOption === index;
+            {/* Dots overlay */}
+            <div className="absolute inset-0 flex justify-between items-center z-20">
+              {PRAKRITI_QUESTIONS.map((_, idx) => {
+                const isPassed = idx <= currentQuestion;
+                const isCurrent = idx === currentQuestion;
                 return (
-                  <button
-                    key={index}
-                    onClick={() => handleSelectOption(index)}
-                    className={`w-full p-5 text-left border rounded-2xl transition-all duration-300 font-inter text-sm md:text-base cursor-pointer flex items-center justify-between ${
-                      isSelected
-                        ? 'bg-[#FDF6EC] border-[#c06080] text-[#c06080] font-semibold scale-[1.01]'
-                        : 'bg-white/70 border-stone-200/60 text-stone-800 hover:border-[#c06080] hover:bg-[#FDF6EC] hover:text-stone-900 font-medium'
+                  <div 
+                    key={idx}
+                    className={`rounded-full transition-all duration-500 ${
+                      isCurrent 
+                        ? 'w-4 h-4 bg-secondary-fixed shadow-[0_0_12px_rgba(255,182,203,0.6)]' 
+                        : isPassed 
+                          ? 'w-2 h-2 bg-secondary-fixed' 
+                          : 'w-1.5 h-1.5 bg-white/20'
                     }`}
-                  >
-                    <span className="flex items-center gap-4">
-                      <span className={`w-6 h-6 rounded-full font-mono text-xs flex items-center justify-center border font-bold transition-colors ${
-                        isSelected 
-                          ? 'bg-[#c06080] border-[#c06080] text-white' 
-                          : 'bg-stone-50 border-stone-200 text-stone-400'
-                      }`}>
-                        {letter}
-                      </span>
-                      <span>{option.t}</span>
-                    </span>
-                  </button>
+                  ></div>
                 );
               })}
             </div>
-
-            {/* Ancient Vedic Fact Box - Smoothly slide in when an option is selected */}
-            {selectedOption !== null && (
-              <div className="mt-8 p-5 bg-[#FDF6EC] border border-orange-100/50 rounded-2xl animate-fade-rise text-xs md:text-sm text-[#8A5A44] font-inter leading-relaxed italic shadow-[inset_0_1px_3px_rgba(28,25,22,0.01)]">
-                {question.fact}
-              </div>
-            )}
           </div>
 
-          {/* Footer Nav Controls */}
-          <div className="flex justify-between items-center animate-fade-rise mt-6">
+          {/* Question Text */}
+          <h3 className="text-[28px] md:text-[34px] font-quote italic text-secondary-fixed mb-10 font-normal leading-snug max-w-2xl">
+            {question.text}
+          </h3>
+
+          {/* Answer Options */}
+          <div className="space-y-4 mb-6">
+            {question.opts.map((option, index) => {
+              const isSelected = selectedOption === index;
+              return (
+                <button
+                  key={index}
+                  onClick={() => handleSelectOption(index)}
+                  className={`w-full px-6 py-5 text-left border rounded-[14px] transition-all duration-300 font-inter text-sm md:text-[15px] cursor-pointer flex items-center gap-4 ${
+                    isSelected
+                      ? 'bg-white/5 border-secondary-fixed/60 text-white font-medium shadow-[0_0_20px_rgba(255,182,203,0.05)]'
+                      : 'bg-transparent border-white/10 text-white/70 hover:border-white/30 hover:bg-white/[0.02]'
+                  }`}
+                >
+                  <div className={`w-3.5 h-3.5 rounded-full border flex-shrink-0 transition-colors duration-300 ${
+                    isSelected ? 'bg-secondary-fixed border-secondary-fixed' : 'border-white/40'
+                  }`} />
+                  <span className="leading-relaxed">{option.t}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Skip Button (Pill style) */}
+          <div className="flex justify-center mb-8">
             <button
-              onClick={handleBack}
-              disabled={currentQuestion === 0}
-              className={`px-6 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] border transition-all duration-300 ${
-                currentQuestion === 0
-                  ? 'border-stone-200 text-stone-300 cursor-not-allowed opacity-50'
-                  : 'border-stone-300 hover:border-stone-500 hover:scale-[1.03] active:scale-[0.98] bg-white/40 text-stone-600 hover:text-stone-900 cursor-pointer'
+              onClick={() => handleSelectOption('skip')}
+              className={`px-8 py-3.5 rounded-full border transition-all duration-300 font-mono text-[10px] uppercase tracking-[0.2em] flex items-center gap-2 cursor-pointer ${
+                selectedOption === 'skip'
+                  ? 'border-secondary-fixed text-secondary-fixed bg-secondary-fixed/5 font-bold'
+                  : 'border-white/20 text-white/70 hover:border-white/40'
               }`}
             >
-              Previous
+              I CAN'T RELATE TO ANY OF THESE →
             </button>
+          </div>
 
-            {selectedOption !== null && (
+          {/* Skip Warning */}
+          {(() => {
+            const currentSkips = answers.filter(a => a === null).length + (selectedOption === 'skip' ? 1 : 0);
+            if (currentSkips === 5) {
+              return (
+                <div className="mb-8 p-5 bg-white/5 border border-white/10 text-white/60 text-sm md:text-[15px] text-center rounded-[14px] font-quote italic animate-fade-rise">
+                  Answer based on your natural tendency before stress or lifestyle changes — the more you answer, the more accurate your result.
+                </div>
+              );
+            }
+            return null;
+          })()}
+
+          {/* Footer Area: Fact Box + Controls */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-t border-white/10 pt-8 mt-4 min-h-[80px]">
+            {/* Fact Text on the left */}
+            <div className="max-w-[60%]">
+              {selectedOption !== null && (
+                <p className="font-mono text-[9px] text-white/40 tracking-widest leading-[1.8] animate-fade-rise">
+                  {question.fact}
+                </p>
+              )}
+            </div>
+
+            {/* Navigation Buttons on the right */}
+            <div className="flex items-center gap-4 flex-shrink-0 self-end">
+              <button
+                onClick={handleBack}
+                disabled={currentQuestion === 0}
+                className={`text-[9px] font-mono uppercase tracking-[0.2em] transition-all duration-300 ${
+                  currentQuestion === 0
+                    ? 'text-white/20 cursor-not-allowed opacity-0 pointer-events-none'
+                    : 'text-white/40 hover:text-white cursor-pointer'
+                }`}
+              >
+                ← Previous
+              </button>
+
               <button
                 onClick={handleNext}
-                className="px-8 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.25em] bg-[#1C1917] text-white hover:bg-[#c06080] hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 shadow-md cursor-pointer"
+                disabled={selectedOption === null}
+                className={`px-8 py-3.5 rounded-[12px] border transition-all duration-300 font-mono text-[10px] uppercase tracking-[0.2em] flex items-center gap-2 ${
+                  selectedOption !== null
+                    ? 'border-ojas-green text-ojas-green-dark bg-ojas-green-light hover:bg-ojas-cream cursor-pointer font-bold'
+                    : 'border-white/10 text-white/20 cursor-not-allowed'
+                }`}
               >
-                {currentQuestion === PRAKRITI_QUESTIONS.length - 1 ? 'FINISH assessment' : 'CONTINUE →'}
+                {currentQuestion === PRAKRITI_QUESTIONS.length - 1 ? 'FINISH' : 'NEXT'} →
               </button>
-            )}
+            </div>
           </div>
         </main>
       </div>
 
-      <footer className="w-full max-w-7xl mx-auto px-8 pb-6 pt-6 border-t border-stone-200/20 flex items-center justify-between text-[9px] md:text-[10px] font-mono text-stone-400 tracking-wider">
+      <footer className="w-full max-w-7xl mx-auto px-8 pb-6 pt-6 flex items-center justify-between text-[9px] md:text-[10px] font-mono text-white/20 tracking-wider">
         <div>PHASE / ASSESSMENT</div>
         <div>© OJAS RITUAL MMXXVI</div>
       </footer>

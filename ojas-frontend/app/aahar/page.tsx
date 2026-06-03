@@ -125,7 +125,7 @@ export default function Aahar() {
   ];
 
   return (
-    <div className="relative min-h-screen w-full bg-[#F0EBE3] dark:bg-[#12100E] text-[#1C1917] dark:text-[#FAF6F0] transition-colors duration-300">
+    <div className="relative min-h-screen w-full bg-background text-foreground transition-colors duration-300">
       <Header />
 
       <main className="max-w-7xl mx-auto px-6 md:px-12 py-14 md:py-20">
@@ -134,13 +134,13 @@ export default function Aahar() {
         <section className="mb-14 animate-fade-rise">
 
           {/* Small label */}
-          <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#C27A5D] font-bold mb-5">
+          <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-secondary font-bold mb-5">
             NOURISHMENT MATRIX
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-normal font-cormorant text-[#1C1917] dark:text-[#FAF6F0] leading-[1.07] tracking-tight mb-5">
-            Daily <em className="italic text-[#C27A5D]">Aahar</em> Sanctuary
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-normal font-quote text-primary dark:text-on-primary leading-[1.07] tracking-tight mb-5">
+            Daily <em className="italic text-secondary">Aahar</em> Sanctuary
           </h1>
 
           {/* Subtitle */}
@@ -158,7 +158,7 @@ export default function Aahar() {
                 <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500 mb-1.5 font-semibold">
                   {s.label}
                 </div>
-                <div className="font-cormorant italic text-2xl text-[#C27A5D] font-semibold">
+                <div className="font-quote italic text-2xl text-secondary font-semibold">
                   {s.value}
                 </div>
               </div>
@@ -174,7 +174,7 @@ export default function Aahar() {
 
             {/* Daily Food Log */}
             <Card>
-              <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] mb-6 font-semibold">
+              <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-secondary mb-6 font-semibold">
                 🥗 DAILY FOOD LOG — TODAY
               </div>
 
@@ -186,7 +186,7 @@ export default function Aahar() {
                     <div key={meal.label} className="relative flex gap-5">
                       {/* Timeline line */}
                       <div className="flex flex-col items-center">
-                        <div className="w-2.5 h-2.5 rounded-full bg-[#C27A5D] mt-1 flex-shrink-0 z-10" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-secondary mt-1 flex-shrink-0 z-10" />
                         {idx < MEALS.length - 1 && (
                           <div className="w-px flex-1 bg-stone-200/60 dark:bg-stone-800 my-1" />
                         )}
@@ -196,7 +196,7 @@ export default function Aahar() {
                       <div className={`pb-6 flex-1 ${idx === MEALS.length - 1 ? 'pb-0' : ''}`}>
                         <div className="flex items-center justify-between gap-2 mb-1">
                           <div className="flex items-center gap-2">
-                            <span className="text-[9px] font-mono font-bold tracking-wider bg-[#C27A5D]/10 text-[#C27A5D] px-2 py-0.5 rounded">
+                            <span className="text-[9px] font-mono font-bold tracking-wider bg-secondary/10 text-secondary px-2 py-0.5 rounded">
                               {meal.time}
                             </span>
                             <span className="text-xs font-mono text-stone-600 dark:text-stone-300 font-semibold">
@@ -232,11 +232,11 @@ export default function Aahar() {
 
               <div className="flex justify-between text-xs font-mono mb-2 text-stone-600 dark:text-stone-400">
                 <span>Today&rsquo;s Alignment</span>
-                <span className="font-semibold text-[#C27A5D]">{ALIGNMENT_SCORE}%</span>
+                <span className="font-semibold text-secondary">{ALIGNMENT_SCORE}%</span>
               </div>
               <div className="h-1.5 bg-stone-200/50 dark:bg-stone-800 rounded-full overflow-hidden mb-6">
                 <div
-                  className="h-full bg-[#C27A5D] rounded-full transition-all duration-1000"
+                  className="h-full bg-secondary rounded-full transition-all duration-1000"
                   style={{ width: `${ALIGNMENT_SCORE}%` }}
                 />
               </div>
@@ -252,10 +252,10 @@ export default function Aahar() {
 
             {/* Seasonal Foods */}
             <Card>
-              <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] mb-1 font-semibold">
+              <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-secondary mb-1 font-semibold">
                 RITUCHARYA · GRISHMA
               </div>
-              <h2 className="font-cormorant italic text-2xl text-stone-900 dark:text-[#FAF6F0] font-normal mb-6">
+              <h2 className="font-quote italic text-2xl text-stone-900 dark:text-on-primary font-normal mb-6">
                 Seasonal Foods
               </h2>
 
@@ -284,7 +284,7 @@ export default function Aahar() {
               <div className="pt-4 border-t border-stone-200/20 dark:border-stone-800">
                 <Link
                   href="/rituals"
-                  className="text-[10px] font-mono uppercase tracking-wider text-[#C27A5D] border-b border-[#C27A5D]/30 hover:text-stone-900 dark:hover:text-white transition-colors"
+                  className="text-[10px] font-mono uppercase tracking-wider text-secondary border-b border-secondary/30 hover:text-stone-900 dark:hover:text-white transition-colors"
                 >
                   VIEW FULL SEASONAL GUIDE →
                 </Link>
@@ -293,10 +293,10 @@ export default function Aahar() {
 
             {/* Agni Check-in */}
             <Card>
-              <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] mb-1 font-semibold">
+              <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-secondary mb-1 font-semibold">
                 AGNI CHECK-IN
               </div>
-              <h2 className="font-cormorant italic text-2xl text-stone-900 dark:text-[#FAF6F0] font-normal mb-6">
+              <h2 className="font-quote italic text-2xl text-stone-900 dark:text-on-primary font-normal mb-6">
                 How is your digestion today?
               </h2>
 
@@ -308,8 +308,8 @@ export default function Aahar() {
                     onClick={() => setAgni(opt.id)}
                     className={`flex items-center gap-2 px-5 py-3 rounded-full border text-xs font-mono font-semibold tracking-wider transition-all duration-300 cursor-pointer ${
                       agni === opt.id
-                        ? 'bg-[#1C1917] text-[#F4EFEA] border-[#1C1917] dark:bg-[#C27A5D] dark:border-[#C27A5D]'
-                        : 'bg-white/50 dark:bg-stone-900/40 border-stone-300/60 dark:border-stone-700 text-stone-600 dark:text-stone-400 hover:border-[#C27A5D]/60 hover:text-[#C27A5D]'
+                        ? 'bg-primary text-[#F4EFEA] border-primary dark:bg-secondary dark:border-secondary'
+                        : 'bg-white/50 dark:bg-stone-900/40 border-stone-300/60 dark:border-stone-700 text-stone-600 dark:text-stone-400 hover:border-secondary/60 hover:text-secondary'
                     }`}
                   >
                     <span>{opt.icon}</span>
@@ -325,8 +325,8 @@ export default function Aahar() {
               )}
 
               {/* Affirmation quote */}
-              <div className="border-l border-[#C27A5D]/30 pl-5 py-1">
-                <p className="font-cormorant italic text-xl text-stone-700 dark:text-stone-300 leading-relaxed">
+              <div className="border-l border-secondary/30 pl-5 py-1">
+                <p className="font-quote italic text-xl text-stone-700 dark:text-stone-300 leading-relaxed">
                   &ldquo;A calm Agni is the root of all wellness.&rdquo;
                 </p>
               </div>
@@ -340,17 +340,17 @@ export default function Aahar() {
 
         <section className="animate-fade-rise">
           {/* Section label */}
-          <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#C27A5D] font-bold mb-5">
+          <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-secondary font-bold mb-5">
             AUSHADHI · HERB & SUPPLEMENT GUIDE
           </div>
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div>
-              <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] mb-1 font-semibold">
+              <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary mb-1 font-semibold">
                 AUSHADHI SANCTUARY
               </div>
-              <h2 className="text-4xl md:text-5xl font-normal font-cormorant text-[#1C1917] dark:text-[#FAF6F0] leading-tight">
-                Your Herb <span className="font-cormorant italic text-[#C27A5D]">Stack</span>
+              <h2 className="text-4xl md:text-5xl font-normal font-quote text-primary dark:text-on-primary leading-tight">
+                Your Herb <span className="font-quote italic text-secondary">Stack</span>
               </h2>
               <p className="text-sm text-stone-500 dark:text-stone-400 max-w-xl leading-relaxed mt-2">
                 Ayurvedic herbs and supplements curated for your Vata constitution and current Agni state.
@@ -369,19 +369,19 @@ export default function Aahar() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search herbs, e.g. Ashwagandha, Brahmi..."
-                className="w-full pl-11 pr-5 py-3 rounded-full border border-stone-300/60 dark:border-stone-700 bg-white/50 dark:bg-stone-900/40 text-stone-800 dark:text-stone-250 placeholder-stone-400 text-xs font-mono focus:outline-none focus:border-[#C27A5D] focus:ring-1 focus:ring-[#C27A5D] transition-all duration-300"
+                className="w-full pl-11 pr-5 py-3 rounded-full border border-stone-300/60 dark:border-stone-700 bg-white/50 dark:bg-stone-900/40 text-stone-800 dark:text-stone-250 placeholder-stone-400 text-xs font-mono focus:outline-none focus:border-secondary focus:ring-1 focus:ring-[#C27A5D] transition-all duration-300"
               />
             </div>
           </div>
 
           {/* ─── Personalized Stack Recommendation Card (Dark #1C1C1A) ─────── */}
-          <div className="bg-[#1C1C1A] dark:bg-[#111110] rounded-[32px] p-8 text-[#FAF6F0] mb-10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-72 h-72 bg-[#C27A5D]/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="bg-[#1C1C1A] dark:bg-[#111110] rounded-[32px] p-8 text-on-primary mb-10 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-72 h-72 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
             <div className="relative z-10">
-              <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.3em] text-[#C27A5D] font-bold mb-4">
+              <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.3em] text-secondary font-bold mb-4">
                 YOUR PRAKRITI STACK · VATA OPTIMISED
               </div>
-              <h3 className="text-2xl md:text-3xl font-normal font-cormorant text-[#FAF6F0] leading-tight mb-6">
+              <h3 className="text-2xl md:text-3xl font-normal font-quote text-on-primary leading-tight mb-6">
                 Recommended for you today
               </h3>
 
@@ -395,7 +395,7 @@ export default function Aahar() {
                   const inStack = myStack.some(s => s.name === rec.name);
                   return (
                     <div key={rec.name} className="flex flex-col gap-2.5">
-                      <div className="bg-white/5 border border-white/10 rounded-2xl px-5 py-4 flex flex-col justify-between h-full hover:border-[#C27A5D]/40 transition duration-300">
+                      <div className="bg-white/5 border border-white/10 rounded-2xl px-5 py-4 flex flex-col justify-between h-full hover:border-secondary/40 transition duration-300">
                         <div className="text-sm font-semibold text-white flex items-center gap-2 mb-1.5">
                           <span className="text-lg">{rec.emoji}</span>
                           {rec.name}
@@ -411,7 +411,7 @@ export default function Aahar() {
                         onClick={() => handleAddHerb(rec)}
                         disabled={inStack}
                         className={`text-[9px] font-mono uppercase tracking-wider text-left pl-1 transition-colors ${
-                          inStack ? 'text-emerald-500' : 'text-[#C27A5D] hover:text-white'
+                          inStack ? 'text-emerald-500' : 'text-secondary hover:text-white'
                         }`}
                       >
                         {inStack ? '✓ ADDED TO STACK' : '+ ADD TO ROUTINE'}
@@ -437,8 +437,8 @@ export default function Aahar() {
                   onClick={() => setActiveFilter(pill)}
                   className={`px-4.5 py-2 rounded-full border text-[9px] font-mono font-bold tracking-wider transition-all duration-300 cursor-pointer ${
                     isActive
-                      ? 'bg-[#C27A5D] text-white border-[#C27A5D]'
-                      : 'bg-white/50 dark:bg-stone-900/40 border-stone-300/40 dark:border-stone-850 text-stone-600 dark:text-stone-400 hover:border-[#C27A5D]/40 hover:text-[#C27A5D]'
+                      ? 'bg-secondary text-white border-secondary'
+                      : 'bg-white/50 dark:bg-stone-900/40 border-stone-300/40 dark:border-stone-850 text-stone-600 dark:text-stone-400 hover:border-secondary/40 hover:text-secondary'
                   }`}
                 >
                   {pill}
@@ -471,7 +471,7 @@ export default function Aahar() {
                           {/* Top Info */}
                           <div className="flex items-center gap-2.5 mb-3">
                             <span className="text-2xl">{herb.emoji}</span>
-                            <h4 className="font-cormorant text-xl font-semibold text-stone-900 dark:text-stone-100">
+                            <h4 className="font-quote text-xl font-semibold text-stone-900 dark:text-stone-100">
                               {herb.name}
                             </h4>
                           </div>
@@ -483,7 +483,7 @@ export default function Aahar() {
                               let colorClass = '';
                               if (status === 'beneficial') {
                                 if (dKey === 'Vata') colorClass = 'bg-blue-500/10 text-blue-500 dark:text-blue-400 border-blue-500/20';
-                                else if (dKey === 'Pitta') colorClass = 'bg-[#C27A5D]/10 text-[#C27A5D] border-[#C27A5D]/20';
+                                else if (dKey === 'Pitta') colorClass = 'bg-secondary/10 text-secondary border-secondary/20';
                                 else colorClass = 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20';
                               } else if (status === 'neutral') {
                                 colorClass = 'border-stone-200/60 dark:border-stone-800 text-stone-400 dark:text-stone-600 bg-transparent';
@@ -545,7 +545,7 @@ export default function Aahar() {
                           className={`mt-6 text-center w-full px-4 py-2 border rounded-full text-[10px] font-mono font-bold uppercase tracking-wider block transition-all duration-300 cursor-pointer ${
                             inStack
                               ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-                              : 'border-[#C27A5D]/30 text-[#C27A5D] hover:bg-[#C27A5D] hover:text-white'
+                              : 'border-secondary/30 text-secondary hover:bg-secondary hover:text-white'
                           }`}
                         >
                           {inStack ? '✓ IN YOUR STACK' : '+ ADD TO MY STACK'}
@@ -560,7 +560,7 @@ export default function Aahar() {
             {/* Right Column: Persistent Saved Stack panel */}
             <div className="lg:col-span-4 sticky top-24">
               <div className="bg-white dark:bg-stone-900 border border-stone-300/40 dark:border-stone-800/80 rounded-[32px] p-6 shadow-[0_4px_25px_-5px_rgba(28,25,22,0.03)]">
-                <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] mb-4 font-semibold">
+                <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary mb-4 font-semibold">
                   MY AUSHADHI STACK
                 </div>
                 
@@ -576,7 +576,7 @@ export default function Aahar() {
                     {myStack.map((item) => (
                       <div
                         key={item.name}
-                        className="flex items-center justify-between p-3 border border-stone-200/50 dark:border-stone-800/60 rounded-xl bg-[#FDF6EC]/30 dark:bg-stone-950/20"
+                        className="flex items-center justify-between p-3 border border-stone-200/50 dark:border-stone-800/60 rounded-xl bg-on-primary/30 dark:bg-stone-950/20"
                       >
                         <div className="flex items-center gap-2">
                           <span className="text-lg">{item.emoji}</span>
@@ -605,7 +605,7 @@ export default function Aahar() {
                 <button
                   onClick={handleSync}
                   disabled={myStack.length === 0 || syncing}
-                  className="w-full mt-6 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1C1A] text-[#FAF6F0] hover:bg-[#C27A5D] hover:text-white transition-all duration-300 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[#1C1C1A] disabled:hover:text-[#FAF6F0] cursor-pointer"
+                  className="w-full mt-6 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1C1A] text-on-primary hover:bg-secondary hover:text-white transition-all duration-300 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[#1C1C1A] disabled:hover:text-on-primary cursor-pointer"
                 >
                   {syncing ? 'SYNCING...' : syncedToRituals ? '✓ SYNCED' : 'SYNC TO MORNING RITUALS'}
                 </button>

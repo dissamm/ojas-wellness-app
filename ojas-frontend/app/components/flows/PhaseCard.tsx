@@ -75,7 +75,7 @@ const phaseConfig = {
       'I am open to new beginnings and fresh directions.'
     ],
     buttonText: 'Show Me The Music',
-    buttonClass: 'bg-gradient-to-br from-ojas-follicular to-[#c06080]/80 text-[#F5F1ED] hover:shadow-[0_0_20px_rgba(194,122,93,0.4)]',
+    buttonClass: 'bg-gradient-to-br from-ojas-follicular to-[#c06080]/80 text-on-primary hover:shadow-[0_0_20px_rgba(194,122,93,0.4)]',
     doshaTitle: 'Vata Energy (Rising)',
     doshaPractices: [
       'Increase light morning workouts',
@@ -212,7 +212,7 @@ export const PhaseCard: React.FC<PhaseCardProps> = ({
         </h1>
 
         {/* Divider */}
-        <div className={`h-px ${config.textColor === 'text-ojas-bg-primary' ? 'bg-[#0F0F0F]/20' : 'bg-white/20'} mb-6`}></div>
+        <div className={`h-px ${config.textColor === 'text-ojas-bg-primary' ? 'bg-background/20' : 'bg-white/20'} mb-6`}></div>
 
         {/* Vibe Copy */}
         <p className="text-lg font-medium leading-relaxed mb-6 font-serif italic">
@@ -280,7 +280,7 @@ export const PhaseCard: React.FC<PhaseCardProps> = ({
         </div>
 
         {/* Divider */}
-        <div className={`h-px ${config.textColor === 'text-ojas-bg-primary' ? 'bg-[#0F0F0F]/20' : 'bg-white/20'} mb-6`}></div>
+        <div className={`h-px ${config.textColor === 'text-ojas-bg-primary' ? 'bg-background/20' : 'bg-white/20'} mb-6`}></div>
 
         {/* Details Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

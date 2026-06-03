@@ -1,39 +1,50 @@
 'use client';
 
-import React from 'react';
-import { Header } from './components/Header';
-import { useUserStore } from './store/userStore';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import WellnessFlow from './WellnessFlow';
-import { Disclaimer } from './components/Disclaimer';
+import Link from 'next/link';
+import { useUserStore } from './store/userStore';
+import { Header } from './components/Header';
 import { hasCompletedPrakriti } from './lib/dominantDosha';
-
-// Large Hero Blooming Lotus (Golden SVG — same as dashboard greeting icon)
-const LargeHeroLotus = () => (
-  <div className="mb-12 flex justify-center pointer-events-auto select-none">
-    <div className="relative flex items-center justify-center">
-      {/* Layer 1: Outer Pulse/Glow Backdrop */}
-      <span className="absolute inline-flex w-40 h-40 md:w-48 md:h-48 rounded-full bg-[#c06080]/10 blur-2xl animate-pulse"></span>
-      
-      {/* Layer 2: Main Outer Pinging Ring */}
-      <span className="absolute inline-flex w-32 h-32 md:w-36 md:h-36 rounded-full border border-[#c06080]/20 animate-[ping_3.5s_cubic-bezier(0,0,0.2,1)_infinite]"></span>
-      
-      {/* Layer 3: Secondary Delayed Inner Pinging Ring */}
-      <span className="absolute inline-flex w-24 h-24 md:w-28 md:h-28 rounded-full border border-[#c06080]/30 animate-[ping_3.5s_cubic-bezier(0,0,0.2,1)_infinite] [animation-delay:1s]"></span>
-      
-      {/* Layer 4: Interactive Floating Lotus Image */}
-      <img src="/lotus.png" 
-           alt="Ojas blooming lotus mark" 
-           width="140" 
-           height="140" 
-           className="relative w-28 h-28 md:w-32 md:h-32 object-contain drop-shadow-[0_10px_30px_rgba(194,122,93,0.35)] animate-[float_6s_ease-in-out_infinite]" />
-    </div>
-  </div>
-);
+import WellnessFlow from './WellnessFlow';
 
 export default function Home() {
   const router = useRouter();
   const { currentStep, isAuthenticated, user } = useUserStore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    const els = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { 
+          e.target.classList.add('active');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    els.forEach((el, index) => { 
+      if (!(el as HTMLElement).style.transitionDelay) {
+        (el as HTMLElement).style.transitionDelay = `${(index % 10) * 0.1}s`;
+      }
+      obs.observe(el); 
+    });
+
+    return () => {
+      els.forEach((el) => { obs.unobserve(el); });
+    };
+  }, [mounted]);
+
+  if (!mounted) {
+    return null; // Prevent hydration mismatch
+  }
 
   if (currentStep !== 'name') {
     return <WellnessFlow />;
@@ -48,207 +59,210 @@ export default function Home() {
     }
   };
 
-  const scrollToFeatures = (e: React.MouseEvent) => {
-    e.preventDefault();
-    document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden bg-background text-foreground flex flex-col justify-between selection:bg-[#c06080]/10 transition-colors duration-500">
-
-      <div>
+    <>
+      <div className="relative min-h-screen w-full overflow-x-hidden bg-background text-on-background flex flex-col selection:bg-secondary-container selection:text-on-secondary-container">
+        {/* We use the unified Header component instead of the HTML header to keep state intact */}
         <Header />
-        <Disclaimer className="mb-8" />
 
-        {/* Hero Section */}
-        <main className="relative z-10 flex flex-col items-center justify-center text-center px-6 w-full max-w-7xl mx-auto">
-          <section className="pt-16 pb-24 md:pt-24 md:pb-36 flex flex-col items-center">
-            
-            {/* Small uppercase copper tag */}
-            <span className="text-[10px] md:text-xs font-mono uppercase tracking-[0.3em] text-[#c06080] font-bold mb-6 animate-fade-rise select-none">
-              ALIGN WITH THE UNSEEN
-            </span>
+        {/* ── HERO ── */}
+        <section className="relative min-h-screen flex flex-col items-center justify-center pt-24 overflow-hidden bg-[radial-gradient(circle_at_center,#004d2c_0%,#00341c_100%)] text-on-primary">
+          <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none reveal">
+            <svg
+              className="animate-[spin_60s_linear_infinite]"
+              fill="none" height="600" viewBox="0 0 200 200" width="600"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path className="animate-dash" style={{ strokeDasharray: 1000, strokeDashoffset: 1000 }} d="M100 20C100 20 80 60 40 60C40 60 80 70 100 110C100 110 120 70 160 60C160 60 120 60 100 20Z" stroke="#FFB6CB" strokeWidth="0.5"/>
+              <path className="animate-dash" style={{ strokeDasharray: 1000, strokeDashoffset: 1000 }} d="M100 180C100 180 80 140 40 140C40 140 80 130 100 90C100 90 120 130 160 140C160 140 120 140 100 180Z" stroke="#FFB6CB" strokeWidth="0.5"/>
+              <circle className="animate-lotus-pulse" cx="100" cy="100" r="10" stroke="#FFB6CB" strokeWidth="0.5"/>
+              <path className="animate-dash" style={{ strokeDasharray: 1000, strokeDashoffset: 1000 }} d="M20 100C20 100 60 80 60 40C60 40 70 80 110 100C110 100 70 120 60 160C60 160 60 120 20 100Z" stroke="#FFB6CB" strokeWidth="0.5"/>
+              <path className="animate-dash" style={{ strokeDasharray: 1000, strokeDashoffset: 1000 }} d="M180 100C180 100 140 80 140 40C140 40 130 80 90 100C90 100 130 120 140 160C140 160 140 120 180 100Z" stroke="#FFB6CB" strokeWidth="0.5"/>
+            </svg>
+          </div>
 
-            {/* Centered Large Blooming Lotus graphic */}
-            <LargeHeroLotus />
-
-            {/* Headline with editorial copper accents */}
-            <h1 className="text-5xl sm:text-7xl md:text-8xl font-normal font-cormorant text-[#1C1917] max-w-5xl leading-[1.05] tracking-tight animate-fade-rise text-balance">
-              Sync your <span className="italic text-[#c06080]">rhythm</span> with the cosmic pulse.
+          <div className="z-10 text-center px-margin-mobile reveal">
+            <h1 className="font-display-lg text-[80px] md:text-[140px] tracking-[10px] md:tracking-[24px] mb-stack-sm animate-float text-[#FFB6CB]">
+              OJAS
             </h1>
-
-            {/* Description */}
-            <p className="text-sm md:text-base max-w-2xl mt-8 leading-relaxed text-stone-500 font-inter animate-fade-rise-delay text-balance px-4">
-              Unlock a deeper understanding of your constitution through Prakriti analysis, lunar cycle tracking, and frequency-based soundscapes designed for your mood.
+            <p className="font-quote text-quote italic mb-stack-lg text-secondary-fixed">
+              Sync your rhythm with the cosmic pulse
             </p>
 
-            {/* Hero CTA Buttons */}
-            <div className="animate-fade-rise-delay-2 mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-wrap justify-center gap-stack-md">
               <button
                 onClick={handleBeginJourney}
-                className="rounded-full px-10 py-4 text-[10px] font-mono font-bold uppercase tracking-[0.25em] bg-[#1C1917] text-[#F4EFEA] hover:bg-[#c06080] active:scale-[0.98] transition-all duration-300 shadow-sm cursor-pointer select-none"
+                className="px-stack-lg py-stack-md bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps tracking-widest hover:bg-tertiary-fixed transition-all border border-transparent hover:border-secondary-fixed-dim"
               >
-                Begin Discovery
+                Begin Journey
               </button>
               <button
-                onClick={scrollToFeatures}
-                className="rounded-full px-10 py-4 text-[10px] font-mono font-bold uppercase tracking-[0.25em] border border-[#1C1917]/20 text-[#1C1917] hover:border-[#1C1917] active:scale-[0.98] transition-all duration-300 cursor-pointer select-none bg-transparent"
+                className="px-stack-lg py-stack-md bg-transparent text-secondary-fixed font-label-caps text-label-caps tracking-widest border border-secondary-fixed/40 transition-all hover:border-secondary-fixed"
               >
-                Explore Features
+                Prakriti · Lunar · Frequency
               </button>
             </div>
-          </section>
+          </div>
 
-          {/* Features Grid Section */}
-          <section id="features" className="w-full pt-12 pb-24 md:pb-36 border-t border-[#1C1917]/5">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+          <div className="absolute bottom-stack-lg animate-bounce cursor-pointer reveal">
+            <span className="material-symbols-outlined text-secondary-fixed-dim text-[32px]">
+              expand_more
+            </span>
+          </div>
+        </section>
 
-              {/* CARD 1: Prakriti Genesis */}
-              <div className="bg-[#FAF6F0] dark:bg-stone-900/60 rounded-[32px] p-8 border border-[#1C1917]/5 dark:border-stone-850 shadow-[0_4px_30px_rgba(28,25,22,0.02)] flex flex-col justify-between group/card hover:border-[#c06080]/20 transition-all duration-500 h-[500px] text-[#1C1917] dark:text-[#FAF6F0]">
-                <div>
-                  <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-bold mb-4 block">
-                    ANALYSIS
-                  </span>
-                  <h3 className="font-cormorant italic text-3xl text-[#1C1917] dark:text-[#FAF6F0] font-normal mb-3">
-                    Prakriti Genesis
-                  </h3>
-                  <p className="text-xs md:text-sm text-stone-500 leading-relaxed font-inter">
-                    Identify your unique bio-energy signature—Vata, Pitta, or Kapha—to personalize your entire wellness journey.
+        {/* ── ABOUT ── */}
+        <section className="py-stack-xl px-margin-desktop max-w-container-max mx-auto grid md:grid-cols-2 gap-stack-xl items-center bg-background">
+          <div className="space-y-stack-md reveal">
+            <h2 className="font-headline-md text-headline-md text-primary leading-tight">
+              Ancient Wisdom,<br />Modern Rhythm <span className="text-[#FFB6CB]">❧</span>
+            </h2>
+            <div className="w-24 h-1 bg-[#FFB6CB]" />
+          </div>
+          <div className="space-y-stack-md reveal">
+            <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed italic">
+              OJAS is the bridge between the timeless science of Ayurveda and the digital heartbeat of today. We believe wellness is not a static goal, but a fluid dance with the environment, the stars, and your internal biological clock.
+            </p>
+            <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              By synthesizing ancient dosha analysis with real-time lunar tracking and bio-rhythm synchronization, we offer a path to vitality that respects both tradition and the pace of the modern world.
+            </p>
+            <Link
+              href="#"
+              className="inline-block font-label-caps text-label-caps text-primary border-b border-primary pb-1 hover:text-tertiary hover:border-tertiary transition-all"
+            >
+              LEARN OUR PHILOSOPHY
+            </Link>
+          </div>
+        </section>
+
+        {/* ── GALLERY (Bento) ── */}
+        <section className="py-stack-xl px-margin-desktop bg-surface-container-low">
+          <div className="max-w-container-max mx-auto reveal">
+            <div className="grid md:grid-cols-3 gap-gutter">
+              {/* Prakriti */}
+              <div
+                onClick={() => router.push('/prakriti')}
+                className="group relative bg-surface p-stack-lg h-[400px] flex flex-col justify-end transition-all duration-500 hover:-translate-y-4 hover:shadow-xl rounded-lg overflow-hidden cursor-pointer"
+              >
+                <div className="absolute top-0 right-0 p-stack-md text-[#FFB6CB] opacity-20 group-hover:opacity-100 transition-opacity">
+                  <span className="material-symbols-outlined text-[64px]" style={{ fontVariationSettings: "'FILL' 1" }}>eco</span>
+                </div>
+                <div className="relative z-10">
+                  <span className="font-label-caps text-label-caps text-secondary font-bold block mb-stack-sm">CONSTITUTION</span>
+                  <h3 className="font-headline-sm text-headline-sm text-primary mb-stack-md">Prakriti</h3>
+                  <p className="font-body-md text-body-md text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    Discover your unique elemental composition and unlock personalized nutritional paths.
                   </p>
                 </div>
-
-                {/* Exquisite Meditation SVG illustration */}
-                <div className="my-6 flex justify-center items-center h-40">
-                  <svg className="w-full h-full text-stone-400/30 group-hover/card:text-[#c06080]/40 transition-colors duration-500" viewBox="0 0 100 100" fill="none">
-                    {/* Outline of aura/stars */}
-                    <circle cx="50" cy="50" r="38" stroke="currentColor" strokeWidth="0.75" strokeDasharray="2 3" />
-                    <circle cx="50" cy="50" r="28" stroke="currentColor" strokeWidth="0.5" />
-                    {/* Meditating body line art */}
-                    <path d="M50,22 C53,22 55,25 55,28 C55,31 53,34 50,34 C47,34 45,31 45,28 C45,25 47,22 50,22 Z" stroke="currentColor" strokeWidth="1" fill="none" />
-                    <path d="M50,34 L50,60 M50,38 L30,48 L20,68 C20,68 35,72 50,72 C65,72 80,68 80,68 L70,48 L50,38 Z" stroke="currentColor" strokeWidth="1" fill="none" />
-                    <path d="M30,48 L50,56 L70,48" stroke="currentColor" strokeWidth="1" fill="none" />
-                    {/* Core energy spots */}
-                    <circle cx="50" cy="28" r="1.5" fill="#c06080" />
-                    <circle cx="50" cy="42" r="1.5" fill="#c06080" />
-                    <circle cx="50" cy="54" r="1.5" fill="#c06080" />
-                    <circle cx="50" cy="66" r="1.5" fill="#c06080" />
-                  </svg>
-                </div>
-
-                <button
-                  onClick={() => router.push('/prakriti')}
-                  className="w-full py-4 rounded-full text-[9px] font-mono font-bold uppercase tracking-[0.25em] bg-[#1C1917] text-[#FAF6F0] hover:bg-[#c06080] transition-all duration-300 shadow-sm cursor-pointer select-none"
-                >
-                  Begin Analysis
-                </button>
+                <div className="absolute inset-0 bg-primary-container/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
               </div>
 
-              {/* CARD 2: Lunar Synchronization */}
-              <div className="bg-[#1C1917] rounded-[32px] p-8 border border-[#1C1917] shadow-[0_4px_30px_rgba(28,25,22,0.02)] flex flex-col justify-between group/card hover:bg-stone-900 transition-all duration-500 h-[500px] text-[#F4EFEA]">
-                <div>
-                  <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-bold mb-4 block">
-                    HARMONY
-                  </span>
-                  <h3 className="font-cormorant italic text-3xl font-normal mb-3 text-[#FAF6F0]">
-                    Lunar Synchronization
-                  </h3>
-                  <p className="text-xs md:text-sm text-stone-400 leading-relaxed font-inter">
-                    Mapping your menstrual flow alongside the Waxing and Waning moon to predict hormonal and emotional shifts.
+              {/* Lunar Sync */}
+              <div
+                onClick={() => router.push('/cycle')}
+                className="group relative bg-primary-container p-stack-lg h-[400px] flex flex-col justify-end transition-all duration-500 hover:-translate-y-4 hover:shadow-xl rounded-lg overflow-hidden cursor-pointer text-on-primary-container"
+              >
+                <div className="absolute top-0 right-0 p-stack-md text-tertiary-fixed-dim opacity-40 group-hover:opacity-100 transition-opacity">
+                  <span className="material-symbols-outlined text-[64px]" style={{ fontVariationSettings: "'FILL' 1" }}>brightness_4</span>
+                </div>
+                <div className="relative z-10">
+                  <span className="font-label-caps text-label-caps text-secondary-fixed-dim font-bold block mb-stack-sm">COSMIC ALIGNMENT</span>
+                  <h3 className="font-headline-sm text-headline-sm text-on-primary mb-stack-md">Lunar Sync</h3>
+                  <p className="font-body-md text-body-md text-on-primary-container opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    Align your deep work and rest cycles with the waxing and waning moon phases.
                   </p>
                 </div>
-
-                {/* Moon Phase SVG illustration */}
-                <div className="my-6 flex flex-col justify-center items-center h-40">
-                  <svg className="w-24 h-24 text-stone-600" viewBox="0 0 100 100" fill="none">
-                    {/* Ambient light ring */}
-                    <circle cx="50" cy="50" r="32" stroke="#c06080" strokeOpacity="0.2" strokeWidth="3" />
-                    {/* Solid glowing center moon (Waning Gibbous) */}
-                    <circle cx="50" cy="50" r="30" fill="url(#moonGlow)" />
-                    {/* Shadow overlay creating the phase */}
-                    <path d="M50,20 A30,30 0 0,0 50,80 A15,30 0 0,1 50,20 Z" fill="#1C1917" />
-                    <defs>
-                      <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
-                        <stop offset="0%" stopColor="#FFF" stopOpacity="0.9" />
-                        <stop offset="80%" stopColor="#FAF6F0" stopOpacity="0.75" />
-                        <stop offset="100%" stopColor="#c06080" stopOpacity="0.4" />
-                      </radialGradient>
-                    </defs>
-                  </svg>
-                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#c06080] font-bold mt-4 select-none">
-                    Waning Gibbous • Day 14
-                  </span>
-                </div>
-
-                <button
-                  onClick={() => router.push('/cycle')}
-                  className="w-full py-4 rounded-full text-[9px] font-mono font-bold uppercase tracking-[0.25em] bg-[#F4EFEA] text-[#1C1917] hover:bg-[#c06080] hover:text-[#F4EFEA] transition-all duration-300 shadow-sm cursor-pointer select-none"
-                >
-                  Sync Moon
-                </button>
               </div>
 
-              {/* CARD 3: Responsive Audio */}
-              <div className="bg-[#FFFFFF] dark:bg-stone-900/60 rounded-[32px] p-8 border border-[#1C1917]/5 dark:border-stone-850 shadow-[0_10px_40px_rgba(28,25,22,0.03)] flex flex-col justify-between group/card hover:border-[#c06080]/20 transition-all duration-500 h-[500px] text-[#1C1917] dark:text-[#FAF6F0]">
-                <div>
-                  <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-bold mb-4 block">
-                    FREQUENCY
-                  </span>
-                  <h3 className="font-cormorant italic text-3xl text-[#1C1917] dark:text-[#FAF6F0] font-normal mb-3">
-                    Responsive Audio
-                  </h3>
-                  <p className="text-xs md:text-sm text-stone-500 dark:text-stone-400 leading-relaxed font-inter">
-                    Predictive mood mapping that curates 528Hz and 432Hz soundscapes tailored to your current cosmic alignment.
+              {/* Audio */}
+              <div
+                onClick={() => router.push('/music')}
+                className="group relative bg-surface p-stack-lg h-[400px] flex flex-col justify-end transition-all duration-500 hover:-translate-y-4 hover:shadow-xl rounded-lg overflow-hidden cursor-pointer"
+              >
+                <div className="absolute top-0 right-0 p-stack-md text-[#FFB6CB] opacity-20 group-hover:opacity-100 transition-opacity">
+                  <span className="material-symbols-outlined text-[64px]" style={{ fontVariationSettings: "'FILL' 1" }}>graphic_eq</span>
+                </div>
+                <div className="relative z-10">
+                  <span className="font-label-caps text-label-caps text-secondary font-bold block mb-stack-sm">SONIC HEALING</span>
+                  <h3 className="font-headline-sm text-headline-sm text-primary mb-stack-md">Frequencies</h3>
+                  <p className="font-body-md text-body-md text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    Binaural beats layered with traditional mantras to recalibrate your nervous system.
                   </p>
                 </div>
-
-                {/* Mock Audio Playlist with playing bar visualizer */}
-                <div className="my-6 space-y-3 w-full">
-                  <div className="flex items-center justify-between p-3 bg-[#FAF6F0] dark:bg-stone-950/60 rounded-2xl border border-[#1C1917]/5 dark:border-stone-850">
-                    <div className="flex-1">
-                      <p className="text-xs font-semibold text-stone-900 dark:text-stone-200 font-inter">DEEP SOLFEGGIO</p>
-                      <p className="text-[9px] text-stone-400 font-mono tracking-wider mt-0.5">Meditation • 432Hz</p>
-                    </div>
-                    {/* Animated soundwaves */}
-                    <div className="flex items-end gap-[2px] h-3 pr-1">
-                      <div className="w-[2px] bg-[#c06080] rounded-full animate-[pulse_0.8s_infinite] h-full" />
-                      <div className="w-[2px] bg-[#c06080] rounded-full animate-[pulse_1.2s_infinite] h-1/2" style={{ animationDelay: '0.2s' }} />
-                      <div className="w-[2px] bg-[#c06080] rounded-full animate-[pulse_1s_infinite] h-3/4" style={{ animationDelay: '0.4s' }} />
-                      <div className="w-[2px] bg-[#c06080] rounded-full animate-[pulse_0.7s_infinite] h-2/3" style={{ animationDelay: '0.1s' }} />
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-white dark:bg-stone-950/40 rounded-2xl border border-stone-100 dark:border-stone-850 opacity-60">
-                    <div className="flex-1">
-                      <p className="text-xs font-semibold text-stone-850 dark:text-stone-300 font-inter">LUNAR TIDES</p>
-                      <p className="text-[9px] text-stone-400 font-mono tracking-wider mt-0.5">Ambient • 528Hz</p>
-                    </div>
-                    <span className="text-[9px] font-mono text-stone-400 select-none">⏸</span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => router.push('/music')}
-                  className="w-full py-4 rounded-full text-[9px] font-mono font-bold uppercase tracking-[0.25em] bg-[#1C1917] text-[#FFFFFF] hover:bg-[#c06080] transition-all duration-300 shadow-sm cursor-pointer select-none"
-                >
-                  Launch Player
-                </button>
+                <div className="absolute inset-0 bg-tertiary-container/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
               </div>
-
             </div>
-          </section>
-        </main>
+          </div>
+        </section>
+
+        {/* ── JOURNEY ── */}
+        <section className="py-stack-xl px-margin-desktop bg-background overflow-hidden">
+          <div className="max-w-4xl mx-auto reveal">
+            <h2 className="font-headline-md text-headline-md text-center text-primary mb-stack-xl">
+              The Path to Radiance
+            </h2>
+
+            <div className="relative space-y-stack-xl">
+              {/* Vertical Line */}
+              <div className="absolute left-1/2 top-0 bottom-0 w-[1px] -translate-x-1/2 hidden md:block bg-[#FFB6CB]/20" />
+
+              {[
+                { stage: '01', title: 'Genesis',         desc: 'Intake and elemental analysis of your current state of being.' },
+                { stage: '02', title: 'Synchronization', desc: 'Mapping your bio-data against the current lunar and solar cycles.' },
+                { stage: '03', title: 'Healing',         desc: 'Targeted herbal, audio, and physical practices to restore OJAS.' },
+                { stage: '04', title: 'Rituals',         desc: 'Daily micro-habits that maintain your peak vibrational state.' },
+              ].map((item, i) => (
+                <div key={item.stage} className="relative flex flex-col md:flex-row items-center justify-between gap-stack-lg">
+                  {i % 2 === 0 ? (
+                    <>
+                      <div className="md:w-5/12 text-center md:text-right">
+                        <h4 className="font-headline-sm text-headline-sm text-primary">{item.title}</h4>
+                        <p className="font-body-md text-body-md text-on-surface-variant">{item.desc}</p>
+                      </div>
+                      <div className="relative z-10 w-4 h-4 rounded-full border-4 border-background bg-[#FFB6CB] animate-dot-pulse" />
+                      <div className="md:w-5/12 hidden md:block font-label-caps text-label-caps font-bold text-[#FFB6CB]">
+                        STAGE {item.stage}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="md:w-5/12 hidden md:block font-label-caps text-label-caps font-bold text-[#FFB6CB] text-right">
+                        STAGE {item.stage}
+                      </div>
+                      <div className="relative z-10 w-4 h-4 rounded-full border-4 border-background bg-[#FFB6CB] animate-dot-pulse" />
+                      <div className="md:w-5/12 text-center md:text-left">
+                        <h4 className="font-headline-sm text-headline-sm text-primary">{item.title}</h4>
+                        <p className="font-body-md text-body-md text-on-surface-variant">{item.desc}</p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── FOOTER ── */}
+        <footer className="w-full bg-surface-container-lowest">
+          <div className="flex flex-col md:flex-row justify-between items-center px-margin-desktop py-stack-lg gap-gutter max-w-container-max mx-auto">
+            <div className="font-display-lg text-headline-md text-[#FFB6CB]">OJAS</div>
+            <div className="flex flex-wrap justify-center gap-stack-md font-body-md text-label-md font-label-caps text-label-caps">
+              {['Privacy Policy', 'Terms of Service', 'Contact', 'Instagram', 'Journal'].map(link => (
+                <Link
+                  key={link}
+                  href="#"
+                  className="text-on-surface-variant hover:text-tertiary transition-all font-bold"
+                >
+                  {link}
+                </Link>
+              ))}
+            </div>
+            <p className="font-body-md text-label-caps text-secondary text-center md:text-right font-bold">
+              © 2026 OJAS Wellness. Ancient Wisdom, Modern Rhythm.
+            </p>
+          </div>
+        </footer>
       </div>
-
-      {/* Brand Footer */}
-      <footer className="relative z-10 w-full max-w-7xl mx-auto px-8 pb-8 pt-8 border-t border-[#1C1917]/5 flex flex-col md:flex-row items-center justify-between gap-4 text-[10px] font-mono text-stone-400 tracking-widest uppercase">
-        <div className="font-cormorant italic text-lg text-stone-600 font-semibold lowercase select-none">ojas.</div>
-        <div className="flex gap-6">
-          <a href="#" className="hover:text-[#c06080] transition-colors">Privacy</a>
-          <a href="#" className="hover:text-[#c06080] transition-colors">Terms</a>
-          <a href="#" className="hover:text-[#c06080] transition-colors">Archive</a>
-        </div>
-        <div className="select-none">© 2026 OJAS</div>
-      </footer>
-
-    </div>
+    </>
   );
 }

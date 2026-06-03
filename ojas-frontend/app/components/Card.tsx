@@ -17,7 +17,7 @@ export const Card = ({ children, className = '', variant = 'light', ...props }: 
             {...props}
         >
             {/* Ambient rose light glow on hover */}
-            <div className={`absolute inset-0 bg-gradient-to-br from-[#c06080]/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none`} />
+            <div className={`absolute inset-0 bg-gradient-to-br from-secondary/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none`} />
             <div className="relative z-10 p-7 md:p-8">
                 {children}
             </div>

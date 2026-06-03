@@ -1,78 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,600&family=Inter:wght@300;400;500&display=swap');
 @import "./styles/fonts.css";
 @import "./styles/theme.css";
+@import "./styles/dashboard.css";
+@import "./styles/rituals.css";
+@import "./styles/prakriti.css";
+@import "./styles/cycle.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #f7f3f8;
-  --foreground: #1a0a2e;
-  --accent: #c06080;
-  --card-light: #ffffff;
-  --card-dark: #120d22;
-  --border-color: rgba(26, 10, 46, 0.08);
-
-  /* Co-Star accent color custom properties */
-  --color-ojas-menstrual: #1a0a2e;
-  --color-ojas-follicular: #c06080;
-  --color-ojas-ovulation: #FF6B9D;
-  --color-ojas-luteal: #B8A8D8;
-
-  /* Shadows from design system */
-  --shadow-sm: 0 4px 16px rgba(26, 10, 46, 0.05);
-  --shadow-md: 0 8px 32px rgba(26, 10, 46, 0.08);
-  --shadow-lg: 0 12px 48px rgba(26, 10, 46, 0.12);
 }
 
 :root.dark, html.dark {
-  --background: #f7f3f8;
-  --foreground: #1a0a2e;
-  --accent: #c06080;
-  --card-light: #ffffff;
-  --card-dark: #120d22;
-  --border-color: rgba(26, 10, 46, 0.08);
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  @apply bg-background text-on-background;
   font-family: 'Inter', system-ui, sans-serif;
   transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Typography override for headings */
-h1, h2, h3, h4, h5, h6 {
+h1, h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
+}
+h3, h4, h5, h6 {
   font-family: 'Cormorant Garamond', serif;
-  font-weight: 700;
 }
 
-/* Scrollbar styling (dark mode) */
+/* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
 }
-
 ::-webkit-scrollbar-track {
-  background: #0F0F0F;
+  @apply bg-background;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #2D2D2D;
-  border-radius: 4px;
+  @apply bg-primary rounded;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: #3D3D3D;
-}
-
-/* Smooth animations for reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+  @apply bg-primary-container;
 }
 
 @layer utilities {
@@ -81,17 +51,112 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
+/* Cursor Trail Orbs - Desktop Only */
+@media (pointer: fine) {
+  .cursor-orb {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .cursor-orb-1 {
+    width: 72px; height: 72px;
+    background: radial-gradient(circle, rgba(255,182,203,0.35) 0%, transparent 70%);
+    border: 1px solid rgba(255,182,203,0.25);
+  }
+  .cursor-orb-2 {
+    width: 44px; height: 44px;
+    background: radial-gradient(circle, rgba(255,182,203,0.2) 0%, transparent 70%);
+    border: 1px solid rgba(255,182,203,0.15);
   }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* Touch devices hide custom cursor */
+@media (pointer: coarse) {
+  .cursor-orb {
+    display: none !important;
+  }
+}
+
+/* ── CUSTOM SVG & LAYOUT ANIMATIONS FROM DESIGN SYSTEM ── */
+@keyframes lotus-float {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-10px) scale(1.03); }
+}
+@keyframes ping-custom {
+  0%   { transform: scale(1); opacity: 0.6; }
+  75%  { transform: scale(1.6); opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes glow-pulse {
+  0%,100% { opacity: 0.35; transform: scale(1); }
+  50%      { opacity: 0.75; transform: scale(1.12); }
+}
+@keyframes bloom-center-petal {
+  from { transform: scaleY(0.1) translateY(20px); opacity: 0; }
+  to   { transform: scaleY(1) translateY(0); opacity: 1; }
+}
+@keyframes bloom-mid-left {
+  from { transform: rotate(25deg) scaleY(0.2); opacity: 0; }
+  to   { transform: rotate(0deg) scaleY(1); opacity: 1; }
+}
+@keyframes bloom-mid-right {
+  from { transform: rotate(-25deg) scaleY(0.2); opacity: 0; }
+  to   { transform: rotate(0deg) scaleY(1); opacity: 1; }
+}
+@keyframes bloom-side-left {
+  from { transform: rotate(45deg) scale(0.2); opacity: 0; }
+  to   { transform: rotate(0deg) scale(1); opacity: 1; }
+}
+@keyframes bloom-side-right {
+  from { transform: rotate(-45deg) scale(0.2); opacity: 0; }
+  to   { transform: rotate(0deg) scale(1); opacity: 1; }
+}
+@keyframes bloom-back-left {
+  from { transform: rotate(60deg) scale(0.1); opacity: 0; }
+  to   { transform: rotate(0deg) scale(1); opacity: 1; }
+}
+@keyframes bloom-back-right {
+  from { transform: rotate(-60deg) scale(0.1); opacity: 0; }
+  to   { transform: rotate(0deg) scale(1); opacity: 1; }
+}
+@keyframes leaf-grow-left {
+  from { transform: rotate(-30deg) scaleX(0.1); opacity: 0; }
+  to   { transform: rotate(0deg) scaleX(1); opacity: 1; }
+}
+@keyframes leaf-grow-right {
+  from { transform: rotate(30deg) scaleX(0.1); opacity: 0; }
+  to   { transform: rotate(0deg) scaleX(1); opacity: 1; }
+}
+@keyframes stamen-rise {
+  from { transform: scaleY(0); opacity: 0; }
+  to   { transform: scaleY(1); opacity: 1; }
+}
+@keyframes stamen-glow {
+  0%,100% { opacity: 0.9; } 50% { opacity: 0.4; }
+}
+@keyframes water-ripple {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
+@keyframes orb-drift {
+  0%,100% { transform: translate(0,0); opacity: 0.5; }
+  33%      { transform: translate(10px,-14px); opacity: 0.85; }
+  66%      { transform: translate(-8px,8px); opacity: 0.6; }
+}
+@keyframes divider-grow {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
+@keyframes dot-pulse {
+  0%,100% { transform: scale(1); opacity: 0.5; }
+  50%      { transform: scale(1.6); opacity: 1; }
+}
+@keyframes soundbar {
+  from { transform: scaleY(0.3); } to { transform: scaleY(1); }
+}
+@keyframes card-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

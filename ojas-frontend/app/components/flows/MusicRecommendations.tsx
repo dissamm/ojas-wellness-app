@@ -95,27 +95,27 @@ export const MusicRecommendations = ({
     }
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-[#F4EFEA] text-[#1C1917] selection:bg-[#c06080]/10">
+        <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-background text-primary selection:bg-secondary/10">
             <div className="max-w-4xl w-full">
                 {/* Header Section */}
                 <div className="text-center mb-10 animate-fade-rise">
-                    <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-bold mb-2 block">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-secondary font-bold mb-2 block">
                         SOUND SANCTUARY
                     </span>
-                    <h1 className="text-4xl md:text-5xl font-serif font-normal text-[#1C1917] leading-tight">
-                        Underrated <span className="italic text-[#c06080]">Indie Pop</span> Gems
+                    <h1 className="text-4xl md:text-5xl font-serif font-normal text-primary leading-tight">
+                        Underrated <span className="italic text-secondary">Indie Pop</span> Gems
                     </h1>
                     {predictedMood !== null && (
                         <div className="mt-4 flex items-center justify-center gap-3 flex-wrap">
-                            <span className="text-[10px] font-mono uppercase tracking-wider text-stone-600 bg-white/50 px-3 py-1 rounded-full border border-[#c06080]/20">
-                                Predicted Mood: <span className="font-bold text-[#c06080]">{predictedMood.toFixed(1)}/10</span>
+                            <span className="text-[10px] font-mono uppercase tracking-wider text-stone-600 bg-white/50 px-3 py-1 rounded-full border border-secondary/20">
+                                Predicted Mood: <span className="font-bold text-secondary">{predictedMood.toFixed(1)}/10</span>
                             </span>
-                            <span className="text-[10px] font-mono uppercase tracking-wider text-stone-600 bg-white/50 px-3 py-1 rounded-full border border-[#c06080]/20">
-                                Cycle Phase: <span className="font-bold text-[#c06080]">{cyclePhase}</span>
+                            <span className="text-[10px] font-mono uppercase tracking-wider text-stone-600 bg-white/50 px-3 py-1 rounded-full border border-secondary/20">
+                                Cycle Phase: <span className="font-bold text-secondary">{cyclePhase}</span>
                             </span>
                             {moodType && (
-                                <span className="text-[10px] font-mono uppercase tracking-wider text-stone-600 bg-white/50 px-3 py-1 rounded-full border border-[#c06080]/20">
-                                    Resonance: <span className="font-bold text-[#c06080]">{moodType}</span>
+                                <span className="text-[10px] font-mono uppercase tracking-wider text-stone-600 bg-white/50 px-3 py-1 rounded-full border border-secondary/20">
+                                    Resonance: <span className="font-bold text-secondary">{moodType}</span>
                                 </span>
                             )}
                         </div>
@@ -134,7 +134,7 @@ export const MusicRecommendations = ({
                                 key={artist.id}
                                 className={`bg-white/90 rounded-3xl p-6 shadow-md border transition-all duration-300 flex flex-col justify-between hover:shadow-lg ${
                                     isSelected 
-                                        ? 'border-[#c06080] bg-[#FAF6F0] shadow-[0_0_20px_rgba(194,122,93,0.05)]' 
+                                        ? 'border-secondary bg-on-primary shadow-[0_0_20px_rgba(194,122,93,0.05)]' 
                                         : 'border-stone-200/50'
                                 }`}
                             >
@@ -147,7 +147,7 @@ export const MusicRecommendations = ({
                                                 <h3 className="font-serif italic font-semibold text-lg text-stone-900 leading-tight">
                                                     {artist.name}
                                                 </h3>
-                                                <span className="text-[9px] font-mono uppercase tracking-widest text-[#c06080]">
+                                                <span className="text-[9px] font-mono uppercase tracking-widest text-secondary">
                                                     {artist.song}
                                                 </span>
                                             </div>
@@ -179,7 +179,7 @@ export const MusicRecommendations = ({
                                             href={artist.youtubeUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex-1 py-2 px-1 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider bg-[#c06080]/10 hover:bg-[#c06080]/20 text-[#c06080] text-center transition-all flex items-center justify-center gap-1 border border-[#c06080]/20"
+                                            className="flex-1 py-2 px-1 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider bg-secondary/10 hover:bg-secondary/20 text-secondary text-center transition-all flex items-center justify-center gap-1 border border-secondary/20"
                                         >
                                             🔴 YouTube
                                         </a>
@@ -198,7 +198,7 @@ export const MusicRecommendations = ({
                                         onClick={() => toggleSelection(artist.id)}
                                         className={`w-full py-2 rounded-full text-[9px] font-mono font-bold uppercase tracking-[0.25em] transition-all duration-300 border cursor-pointer ${
                                             isSelected
-                                                ? 'bg-[#1C1917] text-white border-[#1C1917]'
+                                                ? 'bg-primary text-white border-primary'
                                                 : 'border-stone-300 text-stone-600 hover:border-stone-500 hover:bg-stone-50'
                                         }`}
                                     >
@@ -213,7 +213,7 @@ export const MusicRecommendations = ({
                 {/* Continue Action */}
                 <button
                     onClick={handleContinue}
-                    className="w-full py-4.5 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1917] text-white hover:bg-[#c06080] active:scale-[0.98] transition-all duration-300 shadow-md animate-fade-rise-delay-2 cursor-pointer"
+                    className="w-full py-4.5 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] bg-primary text-white hover:bg-secondary active:scale-[0.98] transition-all duration-300 shadow-md animate-fade-rise-delay-2 cursor-pointer"
                 >
                     Continue to Daily Companion →
                 </button>

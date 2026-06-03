@@ -65,33 +65,33 @@ export const Header = () => {
 
   return (
     <>
-      <header className="w-full backdrop-blur-md px-6 py-4 md:px-12 md:py-5 border-b border-white/10 bg-[#120d22] sticky top-0 z-50 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Left Metadata (Sleek and Monospaced) */}
-        <div className="text-[10px] md:text-xs font-mono uppercase tracking-[0.25em] font-medium text-[#f7f3f8]/40 select-none">
-          REF. 882 / 2026
+      <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md px-margin-mobile md:px-margin-desktop py-4 border-b border-outline-variant transition-colors duration-300">
+      <div className="max-w-container-max mx-auto flex items-center justify-between">
+        {/* Left Metadata */}
+        <div className="font-label-caps text-label-caps text-secondary/70 hidden md:block">
+          OJAS WELLNESS
         </div>
 
         {/* Center Brand */}
         <Link href="/" className="group flex items-center">
-          <span className="font-cormorant italic text-3xl font-medium tracking-normal text-[#c06080] group-hover:text-[#f7f3f8] transition-colors duration-500">
-            Ojas<sup className="text-[9px] font-sans align-super left-0.5">®</sup>
+          <span className="font-display-lg text-[24px] md:text-[32px] text-primary group-hover:text-secondary transition-colors duration-500">
+            OJAS
           </span>
         </Link>
 
         {/* Right: Nav + Controls */}
-        <div className="flex items-center gap-4 md:gap-6">
-          <nav className="hidden sm:flex items-center gap-6">
+        <div className="flex items-center gap-stack-md">
+          <nav className="hidden sm:flex items-center gap-gutter font-label-caps text-label-caps">
             {links.map((link) => {
               const isActive = pathname === link.path;
               return (
                 <Link
                   key={link.key}
                   href={link.path}
-                  className={`text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] transition-colors duration-300 pb-0.5 border-b ${
+                  className={`transition-colors duration-300 pb-1 border-b ${
                     isActive 
-                      ? 'text-[#c06080] font-bold border-[#c06080]/60' 
-                      : 'text-[#f7f3f8]/70 hover:text-[#f7f3f8] border-transparent'
+                      ? 'text-primary font-bold border-primary' 
+                      : 'text-secondary border-transparent hover:text-primary hover:border-primary/30'
                   }`}
                 >
                   {t(link.key)}
@@ -103,7 +103,7 @@ export const Header = () => {
           {/* Hamburger — mobile only */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="sm:hidden w-8 h-8 rounded-full flex items-center justify-center text-xs border border-white/15 text-[#f7f3f8] bg-white/5 hover:border-[#c06080] hover:text-[#c06080] transition-colors duration-300 cursor-pointer select-none"
+            className="sm:hidden w-8 h-8 rounded-full flex items-center justify-center border border-outline-variant text-secondary hover:border-secondary transition-colors duration-300 cursor-pointer"
             aria-label="Toggle menu"
           >
             {isMenuOpen ? '✕' : '☰'}
@@ -112,7 +112,7 @@ export const Header = () => {
           {/* Dark Mode Toggle */}
           <button
             onClick={toggleDarkMode}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-xs border border-white/15 text-[#f7f3f8] bg-white/5 hover:border-[#c06080] hover:text-[#c06080] transition-colors duration-300 cursor-pointer select-none"
+            className="hidden md:flex w-8 h-8 rounded-full items-center justify-center border border-outline-variant text-secondary hover:border-secondary transition-colors duration-300 cursor-pointer"
             aria-label="Toggle theme"
           >
             {isDark ? '☀️' : '🌙'}
@@ -120,10 +120,10 @@ export const Header = () => {
 
           {/* Profile Initials / Log In Action */}
           {isMounted && isAuthenticated ? (
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-stack-sm">
               <button
                 onClick={() => setIsProfileOpen(true)}
-                className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center text-[10px] font-mono border border-white/15 text-[#f7f3f8] bg-white/5 shadow-[0_1px_3px_rgba(0,0,0,0.2)] select-none cursor-pointer hover:border-[#c06080] transition-all duration-300"
+                className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center font-label-caps text-label-caps font-bold border border-outline-variant text-secondary bg-surface-container hover:border-secondary transition-all duration-300 cursor-pointer"
                 aria-label="Open profile settings"
               >
                 {user?.profilePicture ? (
@@ -134,7 +134,7 @@ export const Header = () => {
               </button>
               <button
                 onClick={() => logout()}
-                className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#f7f3f8]/70 hover:text-[#c06080] transition-colors duration-300 cursor-pointer select-none"
+                className="font-label-caps text-label-caps text-secondary/70 hover:text-primary transition-colors duration-300 cursor-pointer hidden md:block"
               >
                 {t('logout')}
               </button>
@@ -142,7 +142,7 @@ export const Header = () => {
           ) : isMounted ? (
             <Link
               href="/login"
-              className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#f7f3f8]/70 hover:text-[#c06080] transition-colors duration-300"
+              className="font-label-caps text-label-caps text-primary border border-primary/30 rounded-full px-4 py-2 transition-colors hover:bg-primary/5"
             >
               {t('signIn')}
             </Link>
@@ -150,20 +150,19 @@ export const Header = () => {
         </div>
       </div>
 
-
       {/* Mobile Nav Dropdown */}
       {isMenuOpen && (
-        <div className="sm:hidden w-full border-t border-white/10 bg-[#120d22] px-6 py-4 flex flex-col gap-1">
+        <div className="sm:hidden w-full border-t border-outline-variant bg-background mt-4 px-margin-mobile py-4 flex flex-col gap-2">
           {links.map((link) => {
             const isActive = pathname === link.path;
             return (
               <Link
                 key={link.key}
                 href={link.path}
-                className={`text-[10px] font-mono uppercase tracking-[0.2em] py-3 border-b border-white/5 transition-colors duration-300 ${
+                className={`font-label-caps text-label-caps py-2 border-b border-outline-variant/30 transition-colors duration-300 ${
                   isActive
-                    ? 'text-[#c06080] font-bold'
-                    : 'text-[#f7f3f8]/70 hover:text-[#f7f3f8]'
+                    ? 'text-primary font-bold'
+                    : 'text-secondary hover:text-primary'
                 }`}
               >
                 {t(link.key)}
@@ -171,11 +170,18 @@ export const Header = () => {
             );
           })}
 
+          <button
+            onClick={toggleDarkMode}
+            className="text-left font-label-caps text-label-caps py-2 text-secondary hover:text-primary transition-colors duration-300"
+          >
+            {isDark ? 'Light Mode ☀️' : 'Dark Mode 🌙'}
+          </button>
+
           {/* Mobile logout row */}
           {isMounted && isAuthenticated && (
             <button
               onClick={() => { logout(); setIsMenuOpen(false); }}
-              className="text-left text-[10px] font-mono uppercase tracking-[0.2em] py-3 text-[#f7f3f8]/50 hover:text-[#c06080] transition-colors duration-300 cursor-pointer"
+              className="text-left font-label-caps text-label-caps py-2 text-secondary hover:text-primary transition-colors duration-300 cursor-pointer"
             >
               {t('logout')}
             </button>
@@ -183,6 +189,9 @@ export const Header = () => {
         </div>
       )}
       </header>
+      
+      {/* Spacer to prevent content from hiding behind fixed header */}
+      <div className="h-[73px]"></div>
 
       {/* Profile Sidebar Panel */}
       <ProfileDrawer isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
