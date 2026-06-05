@@ -695,7 +695,7 @@ export default function RitualsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-resonant-pink/10 relative overflow-hidden transition-colors duration-500">
+        <div className="min-h-screen bg-background dark:bg-[#111110] text-foreground dark:text-[#FAF6F0] flex flex-col justify-between selection:bg-resonant-pink/10 relative overflow-hidden transition-colors duration-500">
             {/* Sparkle Twinkle Background */}
             <div className="absolute inset-0 pointer-events-none opacity-30 z-0">
                 <div className="absolute w-1 h-1 bg-resonant-pink/40 rounded-full top-20 left-10 animate-ping" />
@@ -721,7 +721,7 @@ export default function RitualsPage() {
                         <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-on-surface-variant">
                           {dominantDosha} · {cycle ? cyclePhase : 'No cycle synced'} · Grishma
                         </p>
-                        <h1 className="text-4xl md:text-5xl font-headline-md font-normal text-primary dark:text-inverse-on-surface leading-tight">
+                        <h1 className="text-4xl md:text-5xl font-serif font-normal text-primary dark:text-inverse-on-surface leading-tight">
                           What do you need <em className="italic text-resonant-pink">today?</em>
                         </h1>
                       </div>
@@ -781,7 +781,7 @@ export default function RitualsPage() {
                             className="text-left p-6 rounded-3xl border border-outline-variant dark:border-outline-variant/30 bg-surface-container-lowest/60 dark:bg-forest-ink/60 hover:border-resonant-pink/40 hover:bg-resonant-pink/[0.02] transition-all duration-300 active:scale-[0.98] cursor-pointer group"
                           >
                             <div className="mb-5">{icon}</div>
-                            <h2 className="text-lg font-headline-md italic text-primary dark:text-inverse-on-surface leading-snug mb-1">
+                            <h2 className="text-lg font-serif italic text-primary dark:text-inverse-on-surface leading-snug mb-1">
                               {label}
                             </h2>
                             <p className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant">
@@ -840,7 +840,7 @@ export default function RitualsPage() {
                                     </div>
 
                                     {/* Heading */}
-                                    <h2 className="text-3xl md:text-4xl font-normal font-headline-md text-[#FAF6F0] leading-tight mb-3">
+                                    <h2 className="text-3xl md:text-4xl font-normal font-serif text-[#FAF6F0] leading-tight mb-3">
                                         Panchakarma <em className="italic text-resonant-pink">Cleanse</em> Season
                                     </h2>
 
@@ -913,7 +913,7 @@ export default function RitualsPage() {
                                                     </span>
                                                 )}
                                             </div>
-                                            <div className={`text-xl font-headline-md italic font-semibold mb-2 ${isSelected ? 'text-[#FAF6F0]' : 'text-on-surface dark:text-inverse-on-surface'}`}>
+                                            <div className={`text-xl font-serif italic font-semibold mb-2 ${isSelected ? 'text-[#FAF6F0]' : 'text-on-surface dark:text-inverse-on-surface'}`}>
                                                 {prog.subtitle}
                                             </div>
                                             <p className={`text-xs leading-relaxed ${isSelected ? 'text-on-surface-variant' : 'text-on-surface-variant dark:text-on-surface-variant'}`}>
@@ -1083,8 +1083,8 @@ export default function RitualsPage() {
                             <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-resonant-pink font-bold block mb-3">
                               BREATH SANCTUARY · PRANAYAMA
                             </span>
-                            <h2 className="text-3xl md:text-4xl font-normal font-headline-md text-primary dark:text-inverse-on-surface leading-tight">
-                              Guided Breath <span className="font-headline-md italic text-resonant-pink">Practice</span>
+                            <h2 className="text-3xl md:text-4xl font-normal font-serif text-primary dark:text-inverse-on-surface leading-tight">
+                              Guided Breath <span className="font-serif italic text-resonant-pink">Practice</span>
                             </h2>
                             <p className="text-sm text-on-surface-variant dark:text-on-surface-variant max-w-xl leading-relaxed mt-2">
                               Breathing patterns calibrated for your Vata constitution to settle the nervous system and anchor your energy.
@@ -1106,7 +1106,7 @@ export default function RitualsPage() {
                                   }`}
                                 >
                                   <div className="flex items-center justify-between mb-2">
-                                    <span className="font-headline-md italic text-lg font-semibold">{tech.name}</span>
+                                    <span className="font-serif italic text-lg font-semibold">{tech.name}</span>
                                     <span className="text-[9px] font-mono text-on-surface-variant">Ratio: {tech.ratio}</span>
                                   </div>
                                   <div className="flex flex-wrap gap-1 mb-3">
@@ -1228,10 +1228,10 @@ export default function RitualsPage() {
                                       
                                       {/* Inner text container */}
                                       <div className="z-10 text-center space-y-1">
-                                        <div className="font-headline-md text-2xl italic font-normal text-stone-850 dark:text-inverse-on-surface">
+                                        <div className="font-serif text-2xl italic font-normal text-stone-850 dark:text-inverse-on-surface">
                                           {pranayamaState === 'idle' ? 'Ready' : pranayamaPhase}
                                         </div>
-                                        <div className="font-headline-md text-4xl font-semibold text-primary dark:text-inverse-on-surface">
+                                        <div className="font-serif text-4xl font-semibold text-primary dark:text-inverse-on-surface">
                                           {pranayamaState === 'idle' ? `${pranayamaTimer.inhale}s` : `${pranayamaSecondsLeft}s`}
                                         </div>
                                       </div>
@@ -1303,7 +1303,7 @@ export default function RitualsPage() {
                                   <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-resonant-pink font-bold">
                                     FREQUENCY PAIRING · ACTIVE
                                   </div>
-                                  <h4 className="font-headline-md italic text-2xl text-primary dark:text-inverse-on-surface leading-tight">
+                                  <h4 className="font-serif italic text-2xl text-primary dark:text-inverse-on-surface leading-tight">
                                     {pranayamaTimer.trackName}
                                   </h4>
                                   <p className="text-xs text-on-surface-variant dark:text-on-surface-variant leading-normal">
@@ -1356,8 +1356,8 @@ export default function RitualsPage() {
                             <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-resonant-pink font-bold block mb-3">
                               ASANA SANCTUARY · DOSHA YOGA
                             </span>
-                            <h2 className="text-3xl md:text-4xl font-normal font-headline-md text-primary dark:text-inverse-on-surface leading-tight">
-                              Your Yoga <span className="font-headline-md italic text-resonant-pink">Practice</span>
+                            <h2 className="text-3xl md:text-4xl font-normal font-serif text-primary dark:text-inverse-on-surface leading-tight">
+                              Your Yoga <span className="font-serif italic text-resonant-pink">Practice</span>
                             </h2>
                             <p className="text-sm text-on-surface-variant dark:text-on-surface-variant max-w-xl leading-relaxed mt-2">
                               Asanas selected and sequenced specifically for your Vata constitution to restore balance, ground scattered energy, and build strength without depletion.
@@ -1521,7 +1521,7 @@ export default function RitualsPage() {
                               
                               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
                                 <div>
-                                  <h3 className="font-headline-md italic text-3xl text-primary dark:text-inverse-on-surface font-normal">
+                                  <h3 className="font-serif italic text-3xl text-primary dark:text-inverse-on-surface font-normal">
                                     Complete Vata Sequence Flow
                                   </h3>
                                   <p className="text-xs text-on-surface-variant dark:text-on-surface-variant leading-normal mt-1.5 max-w-md">
@@ -1606,7 +1606,7 @@ export default function RitualsPage() {
                                             <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-resonant-pink mb-1 font-semibold">
                                                 AAHAR · CLEANSE MODE
                                             </div>
-                                            <h3 className="font-headline-md italic text-2xl text-primary dark:text-inverse-on-surface font-normal mb-6">
+                                            <h3 className="font-serif italic text-2xl text-primary dark:text-inverse-on-surface font-normal mb-6">
                                                 Cleanse Diet Protocol
                                             </h3>
 
@@ -1663,7 +1663,7 @@ export default function RitualsPage() {
                                             <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-resonant-pink mb-1 font-semibold">
                                                 AGNI CHECK-IN · TODAY
                                             </div>
-                                            <h3 className="font-headline-md italic text-2xl text-primary dark:text-inverse-on-surface font-normal mb-6">
+                                            <h3 className="font-serif italic text-2xl text-primary dark:text-inverse-on-surface font-normal mb-6">
                                                 How is your digestion today?
                                             </h3>
 
@@ -1695,7 +1695,7 @@ export default function RitualsPage() {
 
                                             {/* Affirmation */}
                                             <div className="border-l border-resonant-pink/30 pl-5 py-1">
-                                                <p className="font-headline-md italic text-xl text-stone-700 dark:text-stone-300 leading-relaxed">
+                                                <p className="font-serif italic text-xl text-stone-700 dark:text-stone-300 leading-relaxed">
                                                     &ldquo;Purification is not deprivation — it is returning to your original self.&rdquo;
                                                 </p>
                                             </div>
