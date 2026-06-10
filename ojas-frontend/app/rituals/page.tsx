@@ -168,7 +168,6 @@ const PoseIcon = ({ id }: { id: string }) => {
 export default function RitualsPage() {
     const { prakriti, dominantPrakriti } = usePrakritiStore();
     const { cycle } = useCycleStore();
-    const cycleState = getCycleStateFromStore(cycle);
     const { user } = useUserStore();
     const { t } = useTranslation();
 
@@ -695,7 +694,7 @@ export default function RitualsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background dark:bg-[#111110] text-foreground dark:text-[#FAF6F0] flex flex-col justify-between selection:bg-resonant-pink/10 relative overflow-hidden transition-colors duration-500">
+        <div className="min-h-screen bg-background dark:bg-[#111110] text-foreground dark:text-[var(--ojas-light-surface)] flex flex-col justify-between selection:bg-resonant-pink/10 relative overflow-hidden transition-colors duration-500">
             {/* Sparkle Twinkle Background */}
             <div className="absolute inset-0 pointer-events-none opacity-30 z-0">
                 <div className="absolute w-1 h-1 bg-resonant-pink/40 rounded-full top-20 left-10 animate-ping" />
@@ -828,7 +827,7 @@ export default function RitualsPage() {
                         {(intentionMode === 'cleanse' || intentionMode === 'all') && (
                             <>
                         <div className="animate-fade-rise">
-                            <div className="bg-[#1C1C1A] dark:bg-[#111110] rounded-[32px] p-8 md:p-10 text-[#FAF6F0] relative overflow-hidden">
+                            <div className="bg-[#1C1C1A] dark:bg-[#111110] rounded-[32px] p-8 md:p-10 text-[var(--ojas-light-surface)] relative overflow-hidden">
                                 {/* Ambient warm glow */}
                                 <div className="absolute top-0 right-0 w-72 h-72 bg-resonant-pink/10 rounded-full blur-3xl pointer-events-none" />
                                 <div className="absolute bottom-0 left-0 w-48 h-48 bg-resonant-pink/5 rounded-full blur-2xl pointer-events-none" />
@@ -840,7 +839,7 @@ export default function RitualsPage() {
                                     </div>
 
                                     {/* Heading */}
-                                    <h2 className="text-3xl md:text-4xl font-normal font-serif text-[#FAF6F0] leading-tight mb-3">
+                                    <h2 className="text-3xl md:text-4xl font-normal font-serif text-[var(--ojas-light-surface)] leading-tight mb-3">
                                         Panchakarma <em className="italic text-resonant-pink">Cleanse</em> Season
                                     </h2>
 
@@ -856,7 +855,7 @@ export default function RitualsPage() {
                                                 key={s}
                                                 className={`px-3.5 py-1 rounded-full text-[9px] font-mono font-bold uppercase tracking-widest border transition-colors duration-300 ${
                                                     s === CURRENT_SEASON
-                                                        ? 'bg-[#FAF6F0] text-[#1C1C1A] border-[#FAF6F0]'
+                                                        ? 'bg-[var(--ojas-light-surface)] text-[#1C1C1A] border-[var(--ojas-light-surface)]'
                                                         : 'bg-transparent text-on-surface-variant border-stone-700'
                                                 }`}
                                             >
@@ -869,7 +868,7 @@ export default function RitualsPage() {
                                     <div className="flex flex-wrap gap-3">
                                         <button
                                             onClick={() => setCleanseActive(!cleanseActive)}
-                                            className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[#FAF6F0] text-[#1C1C1A] hover:bg-resonant-pink hover:text-white transition-all duration-300 active:scale-[0.98] cursor-pointer"
+                                            className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[var(--ojas-light-surface)] text-[#1C1C1A] hover:bg-resonant-pink hover:text-white transition-all duration-300 active:scale-[0.98] cursor-pointer"
                                         >
                                             {cleanseActive ? 'END CLEANSE' : 'BEGIN CLEANSE'}
                                         </button>
@@ -895,7 +894,7 @@ export default function RitualsPage() {
                                             onClick={() => setSelectedCleanse(isSelected ? null : prog.days as CleanseLength)}
                                             className={`text-left rounded-3xl p-6 border transition-all duration-500 cursor-pointer active:scale-[0.98] ${
                                                 isSelected
-                                                    ? 'bg-[#1C1C1A] dark:bg-[#111110] border-[#1C1C1A] text-[#FAF6F0] shadow-lg'
+                                                    ? 'bg-[#1C1C1A] dark:bg-[#111110] border-[#1C1C1A] text-[var(--ojas-light-surface)] shadow-lg'
                                                     : 'bg-surface-container-lowest/50 dark:bg-forest-ink/60 border-stone-300/40 dark:border-stone-700/40 text-primary dark:text-inverse-on-surface hover:border-resonant-pink/40'
                                             }`}
                                         >
@@ -913,7 +912,7 @@ export default function RitualsPage() {
                                                     </span>
                                                 )}
                                             </div>
-                                            <div className={`text-xl font-serif italic font-semibold mb-2 ${isSelected ? 'text-[#FAF6F0]' : 'text-on-surface dark:text-inverse-on-surface'}`}>
+                                            <div className={`text-xl font-serif italic font-semibold mb-2 ${isSelected ? 'text-[var(--ojas-light-surface)]' : 'text-on-surface dark:text-inverse-on-surface'}`}>
                                                 {prog.subtitle}
                                             </div>
                                             <p className={`text-xs leading-relaxed ${isSelected ? 'text-on-surface-variant' : 'text-on-surface-variant dark:text-on-surface-variant'}`}>
@@ -1029,7 +1028,7 @@ export default function RitualsPage() {
                               onClick={() => setActivePhase(phase)}
                               className={`py-3 text-[10px] font-mono uppercase tracking-wider rounded-lg transition-all duration-300 cursor-pointer select-none ${
                                 activePhase === phase
-                                  ? 'bg-resonant-pink text-white font-bold shadow-lg shadow-[#c06080]/20'
+                                  ? 'bg-resonant-pink text-white font-bold shadow-lg shadow-[var(--ojas-accent)]/20'
                                   : 'text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-white hover:bg-surface-container-lowest/5'
                               }`}
                             >
@@ -1101,7 +1100,7 @@ export default function RitualsPage() {
                                   onClick={() => handleSelectTechnique(tech)}
                                   className={`text-left rounded-3xl p-5 border transition-all duration-500 cursor-pointer active:scale-[0.98] ${
                                     isActive
-                                      ? 'bg-[#1C1C1A] dark:bg-[#111110] border-[#1C1C1A] text-[#FAF6F0] shadow-lg'
+                                      ? 'bg-[#1C1C1A] dark:bg-[#111110] border-[#1C1C1A] text-[var(--ojas-light-surface)] shadow-lg'
                                       : 'bg-surface-container-lowest dark:bg-forest-ink border-stone-300/40 dark:border-stone-700/40 text-primary dark:text-inverse-on-surface hover:border-resonant-pink/40'
                                   }`}
                                 >
@@ -1228,7 +1227,7 @@ export default function RitualsPage() {
                                       
                                       {/* Inner text container */}
                                       <div className="z-10 text-center space-y-1">
-                                        <div className="font-serif text-2xl italic font-normal text-stone-850 dark:text-inverse-on-surface">
+                                        <div className="font-serif text-2xl italic font-normal text-stone-800 dark:text-inverse-on-surface">
                                           {pranayamaState === 'idle' ? 'Ready' : pranayamaPhase}
                                         </div>
                                         <div className="font-serif text-4xl font-semibold text-primary dark:text-inverse-on-surface">
@@ -1267,7 +1266,7 @@ export default function RitualsPage() {
                                               handleTogglePlay();
                                             }
                                           }}
-                                          className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1C1A] text-[#FAF6F0] hover:bg-resonant-pink hover:text-white transition active:scale-95 cursor-pointer"
+                                          className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1C1A] text-[var(--ojas-light-surface)] hover:bg-resonant-pink hover:text-white transition active:scale-95 cursor-pointer"
                                         >
                                           {pranayamaState === 'idle' ? 'START' : pranayamaState === 'breathing' ? 'PAUSE' : 'RESUME'}
                                         </button>
@@ -1325,7 +1324,7 @@ export default function RitualsPage() {
                                       className={`px-3 py-1 rounded-full border transition cursor-pointer ${
                                         pranayamaAudio
                                           ? 'bg-resonant-pink/10 border-resonant-pink/20 text-resonant-pink'
-                                          : 'border-stone-300 dark:border-stone-850 text-on-surface-variant'
+                                          : 'border-stone-300 dark:border-stone-800 text-on-surface-variant'
                                       }`}
                                     >
                                       AUDIO {pranayamaAudio ? 'ON' : 'OFF'}
@@ -1379,7 +1378,7 @@ export default function RitualsPage() {
                                   }}
                                   className={`px-5 py-2.5 rounded-full border text-[9px] font-mono font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer ${
                                     isActive
-                                      ? 'bg-[#1C1917] text-[#FAF6F0] border-[#1C1917] dark:bg-[#FAF6F0] dark:text-[#12100E] dark:border-[#FAF6F0] shadow-sm'
+                                      ? 'bg-[var(--ojas-dark-text)] text-[var(--ojas-light-surface)] border-[var(--ojas-dark-text)] dark:bg-[var(--ojas-light-surface)] dark:text-[#12100E] dark:border-[var(--ojas-light-surface)] shadow-sm'
                                       : 'bg-transparent border-stone-300 dark:border-stone-700 text-on-surface-variant hover:border-resonant-pink hover:text-resonant-pink'
                                   }`}
                                 >
@@ -1495,7 +1494,7 @@ export default function RitualsPage() {
                                     </div>
 
                                     {/* Right side: Line art SVG and Begin Pose trigger */}
-                                    <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start w-full sm:w-auto gap-4 self-stretch sm:self-auto pt-4 sm:pt-0 border-t sm:border-t-0 border-outline-variant/40 dark:border-stone-850">
+                                    <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start w-full sm:w-auto gap-4 self-stretch sm:self-auto pt-4 sm:pt-0 border-t sm:border-t-0 border-outline-variant/40 dark:border-stone-800">
                                       <div className="bg-stone-100/40 dark:bg-stone-800/40 border border-stone-300/20 dark:border-outline-variant/30 rounded-2xl p-2.5">
                                         <PoseIcon id={asana.id} />
                                       </div>
@@ -1566,7 +1565,7 @@ export default function RitualsPage() {
                               </div>
 
                               {/* Action buttons */}
-                              <div className="flex flex-wrap gap-3 pt-6 border-t border-outline-variant/50 dark:border-stone-850">
+                              <div className="flex flex-wrap gap-3 pt-6 border-t border-outline-variant/50 dark:border-stone-800">
                                 <button
                                   onClick={() => setActivePoseIndex(0)}
                                   className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1C1A] text-white hover:bg-resonant-pink transition-all duration-300 active:scale-[0.98] cursor-pointer"
@@ -1678,7 +1677,7 @@ export default function RitualsPage() {
                                                         onClick={() => setAgni(agni === opt.id ? null : opt.id)}
                                                         className={`flex items-center gap-2 px-5 py-3 rounded-full border text-xs font-mono font-semibold tracking-wider transition-all duration-300 cursor-pointer ${
                                                             agni === opt.id
-                                                                ? 'bg-[#1C1917] text-[#F4EFEA] border-[#1C1917] dark:bg-resonant-pink dark:border-resonant-pink'
+                                                                ? 'bg-[var(--ojas-dark-text)] text-[var(--ojas-cream-bg)] border-[var(--ojas-dark-text)] dark:bg-resonant-pink dark:border-resonant-pink'
                                                                 : 'bg-surface-container-lowest/50 dark:bg-forest-ink/40 border-stone-300/60 dark:border-stone-700 text-on-surface-variant dark:text-on-surface-variant hover:border-resonant-pink/60 hover:text-resonant-pink'
                                                         }`}
                                                     >
@@ -1710,7 +1709,7 @@ export default function RitualsPage() {
                 </div>
 
                 {/* Footer */}
-                <footer className="w-full max-w-5xl mx-auto px-6 pb-6 pt-10 border-t border-[#1C1917]/5 dark:border-outline-variant/30 flex items-center justify-between text-[9px] md:text-[10px] font-mono text-on-surface-variant tracking-wider">
+                <footer className="w-full max-w-5xl mx-auto px-6 pb-6 pt-10 border-t border-[var(--ojas-dark-text)]/5 dark:border-outline-variant/30 flex items-center justify-between text-[9px] md:text-[10px] font-mono text-on-surface-variant tracking-wider">
                     <div>DOMINANT DOSHA / {dominantDosha.toUpperCase()}{cleanseActive ? ' · PANCHAKARMA ACTIVE' : ''}</div>
                     <div>© OJAS RITUAL MMXXVI</div>
                 </footer>

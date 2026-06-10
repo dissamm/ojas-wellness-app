@@ -16,9 +16,9 @@ export const Button = ({
     const baseClasses = 'font-mono uppercase tracking-[0.2em] rounded-full transition-all duration-300 active:scale-[0.98] font-bold text-center inline-flex items-center justify-center cursor-pointer';
 
     const variants = {
-        primary: 'bg-[#1C1917] text-[#F4EFEA] hover:bg-[#c06080] shadow-sm',
+        primary: 'bg-[var(--ojas-dark-text)] text-[var(--ojas-cream-bg)] hover:bg-[var(--ojas-accent)] shadow-sm',
         secondary: 'bg-stone-200/50 border border-stone-300/40 text-stone-600 hover:text-stone-900 hover:bg-stone-200/80',
-        outline: 'border border-[#c06080]/50 text-[#c06080] hover:bg-[#c06080] hover:text-white',
+        outline: 'border border-[var(--ojas-accent)]/50 text-[var(--ojas-accent)] hover:bg-[var(--ojas-accent)] hover:text-white',
     };
 
     const sizes = {

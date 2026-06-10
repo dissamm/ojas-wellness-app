@@ -7,6 +7,7 @@ import { useUserStore } from './store/userStore';
 import { Header } from './components/Header';
 import { hasCompletedPrakriti } from './lib/dominantDosha';
 import WellnessFlow from './WellnessFlow';
+import { CompactLunarAnimation } from './components/CompactLunarAnimation';
 
 export default function Home() {
   const router = useRouter();
@@ -142,7 +143,7 @@ export default function Home() {
               {/* Prakriti */}
               <div
                 onClick={() => router.push('/prakriti')}
-                className="group relative bg-surface p-stack-lg h-[400px] flex flex-col justify-end transition-all duration-500 hover:-translate-y-4 hover:shadow-xl rounded-lg overflow-hidden cursor-pointer"
+                className="group relative bg-surface p-stack-lg min-h-[500px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-4 hover:shadow-xl rounded-lg overflow-hidden cursor-pointer"
               >
                 <div className="absolute top-0 right-0 p-stack-md text-[#FFB6CB] opacity-20 group-hover:opacity-100 transition-opacity">
                   <span className="material-symbols-outlined text-[64px]" style={{ fontVariationSettings: "'FILL' 1" }}>eco</span>
@@ -160,10 +161,10 @@ export default function Home() {
               {/* Lunar Sync */}
               <div
                 onClick={() => router.push('/cycle')}
-                className="group relative bg-primary-container p-stack-lg h-[400px] flex flex-col justify-end transition-all duration-500 hover:-translate-y-4 hover:shadow-xl rounded-lg overflow-hidden cursor-pointer text-on-primary-container"
+                className="group relative bg-primary-container p-stack-lg min-h-[500px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-4 hover:shadow-xl rounded-lg overflow-hidden cursor-pointer text-on-primary-container"
               >
-                <div className="absolute top-0 right-0 p-stack-md text-tertiary-fixed-dim opacity-40 group-hover:opacity-100 transition-opacity">
-                  <span className="material-symbols-outlined text-[64px]" style={{ fontVariationSettings: "'FILL' 1" }}>brightness_4</span>
+                <div className="absolute top-0 right-0 p-stack-md opacity-40 group-hover:opacity-100 transition-opacity">
+                  <CompactLunarAnimation />
                 </div>
                 <div className="relative z-10">
                   <span className="font-label-caps text-label-caps text-secondary-fixed-dim font-bold block mb-stack-sm">COSMIC ALIGNMENT</span>
@@ -177,7 +178,7 @@ export default function Home() {
               {/* Audio */}
               <div
                 onClick={() => router.push('/music')}
-                className="group relative bg-surface p-stack-lg h-[400px] flex flex-col justify-end transition-all duration-500 hover:-translate-y-4 hover:shadow-xl rounded-lg overflow-hidden cursor-pointer"
+                className="group relative bg-surface p-stack-lg min-h-[500px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-4 hover:shadow-xl rounded-lg overflow-hidden cursor-pointer"
               >
                 <div className="absolute top-0 right-0 p-stack-md text-[#FFB6CB] opacity-20 group-hover:opacity-100 transition-opacity">
                   <span className="material-symbols-outlined text-[64px]" style={{ fontVariationSettings: "'FILL' 1" }}>graphic_eq</span>
@@ -246,17 +247,7 @@ export default function Home() {
         <footer className="w-full bg-surface-container-lowest">
           <div className="flex flex-col md:flex-row justify-between items-center px-margin-desktop py-stack-lg gap-gutter max-w-container-max mx-auto">
             <div className="font-display-lg text-headline-md text-[#FFB6CB]">OJAS</div>
-            <div className="flex flex-wrap justify-center gap-stack-md font-body-md text-label-md font-label-caps text-label-caps">
-              {['Privacy Policy', 'Terms of Service', 'Contact', 'Instagram', 'Journal'].map(link => (
-                <Link
-                  key={link}
-                  href="#"
-                  className="text-on-surface-variant hover:text-tertiary transition-all font-bold"
-                >
-                  {link}
-                </Link>
-              ))}
-            </div>
+
             <p className="font-body-md text-label-caps text-secondary text-center md:text-right font-bold">
               © 2026 OJAS Wellness. Ancient Wisdom, Modern Rhythm.
             </p>

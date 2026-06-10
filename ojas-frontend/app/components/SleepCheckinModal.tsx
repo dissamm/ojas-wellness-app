@@ -137,11 +137,11 @@ export function SleepCheckinModal({
       onClick={submitted ? onClose : undefined}
     >
       {/* Dim overlay */}
-      <div className="absolute inset-0 bg-[#1C1917]/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-[var(--ojas-dark-text)]/60 backdrop-blur-sm" onClick={onClose} />
 
       {/* Modal card */}
       <div
-        className="relative z-10 w-full max-w-lg bg-[#F0EBE3] dark:bg-[#1C1917] rounded-[32px] shadow-2xl border border-stone-200/40 dark:border-stone-800 overflow-hidden"
+        className="relative z-10 w-full max-w-lg bg-[#F0EBE3] dark:bg-[var(--ojas-dark-text)] rounded-[32px] shadow-2xl border border-stone-200/40 dark:border-stone-800 overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Ambient glow */}
@@ -162,7 +162,7 @@ export function SleepCheckinModal({
             /* ── Post-submission confirmation ─────────────────────── */
             <div className="text-center py-4">
               <div className="text-4xl mb-4">{getMoonIcon(moonPhase)}</div>
-              <h2 className="text-3xl md:text-4xl font-cormorant italic font-normal text-[#1C1917] dark:text-[#FAF6F0] mb-1">
+              <h2 className="text-3xl md:text-4xl font-instrument-serif italic font-normal text-[var(--ojas-dark-text)] dark:text-[var(--ojas-light-surface)] mb-1">
                 Logged.
               </h2>
               <p className="text-xl font-cormorant italic text-stone-500 dark:text-stone-400 mb-8">
@@ -171,7 +171,7 @@ export function SleepCheckinModal({
               <p className="text-sm text-stone-600 dark:text-stone-400 leading-relaxed mb-6 max-w-sm mx-auto">
                 {insight}
               </p>
-              <div className="mb-8 px-4 py-3 bg-[#FAF6F0] dark:bg-stone-900/60 border border-amber-500/20 rounded-2xl text-left max-w-sm mx-auto flex items-start gap-2.5">
+              <div className="mb-8 px-4 py-3 bg-[var(--ojas-light-surface)] dark:bg-stone-900/60 border border-amber-500/20 rounded-2xl text-left max-w-sm mx-auto flex items-start gap-2.5">
                 <span className="text-[14px] text-[#C27A5D]">☽</span>
                 <div className="text-[11px] font-mono leading-normal text-stone-500 dark:text-stone-400">
                   <span className="font-bold text-stone-700 dark:text-stone-300 block mb-0.5">COSMIC INFLUENCE</span>
@@ -199,7 +199,7 @@ export function SleepCheckinModal({
                 </div>
               </div>
 
-              <h2 className="text-2xl md:text-3xl font-cormorant font-normal text-[#1C1917] dark:text-[#FAF6F0] leading-tight mb-2 mt-3">
+              <h2 className="text-2xl md:text-3xl font-instrument-serif font-normal text-[var(--ojas-dark-text)] dark:text-[var(--ojas-light-surface)] leading-tight mb-2 mt-3">
                 Good morning, <em className="italic text-[#C27A5D]">{userName}</em>.<br />
                 How did you sleep?
               </h2>
@@ -296,7 +296,7 @@ export function SleepCheckinModal({
                 disabled={!isReady}
                 className={`w-full py-4 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.25em] transition-all duration-300 active:scale-[0.98] ${
                   isReady
-                    ? 'bg-[#1C1917] text-[#F4EFEA] hover:bg-[#C27A5D] cursor-pointer'
+                    ? 'bg-[var(--ojas-dark-text)] text-[var(--ojas-cream-bg)] hover:bg-[#C27A5D] cursor-pointer'
                     : 'bg-stone-300 dark:bg-stone-700 text-stone-500 cursor-not-allowed'
                 }`}
               >

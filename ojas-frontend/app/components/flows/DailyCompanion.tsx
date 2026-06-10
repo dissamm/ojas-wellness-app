@@ -44,13 +44,13 @@ export const DailyCompanion = () => {
                         <div className="p-4 bg-background rounded-2xl text-center border border-stone-200/40">
                             <p className="text-2xl mb-1">🌿</p>
                             <p className="text-[9px] font-mono text-stone-400 uppercase tracking-widest">Prakriti</p>
-                            <p className="font-serif italic font-semibold text-stone-850 mt-1">{user.dominantDosha || 'Vata'}</p>
+                            <p className="font-serif italic font-semibold text-stone-800 mt-1">{user.dominantDosha || 'Vata'}</p>
                         </div>
                         {user?.gender !== 'male' && (
                             <div className="p-4 bg-background rounded-2xl text-center border border-stone-200/40">
                                 <p className="text-2xl mb-1">🌙</p>
                                 <p className="text-[9px] font-mono text-stone-400 uppercase tracking-widest">Moon Sync</p>
-                                <p className="font-serif italic font-semibold text-stone-850 mt-1">
+                                <p className="font-serif italic font-semibold text-stone-800 mt-1">
                                     {user.menstrualCycleStart ? 'Aligned' : 'Exploring'}
                                 </p>
                             </div>

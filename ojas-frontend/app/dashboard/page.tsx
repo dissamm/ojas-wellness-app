@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { usePrakritiStore } from '../store/prakritiStore';
@@ -17,7 +17,7 @@ export default function Dashboard() {
   const router = useRouter();
   const { prakriti, dominantPrakriti } = usePrakritiStore();
   const { cycle } = useCycleStore();
-  const { currentEnergy, currentMood, dailyAffirmation } = useAppStore();
+  const { dailyAffirmation, currentMood } = useAppStore();
   const { user } = useUserStore();
   
   const dominantDoshaText = getDominantDoshaLabel(user, prakriti, dominantPrakriti);
@@ -27,7 +27,6 @@ export default function Dashboard() {
   // Sleep check-in state
   const { hasDoneCheckinToday, getTodayLog } = useSleepStore();
   const [showSleepModal, setShowSleepModal] = useState(false);
-  const [sleepModalSkipped, setSleepModalSkipped] = useState(false);
   const [todaySleepLog, setTodaySleepLog] = useState<SleepLog | null>(null);
 
   // Client-side sequential onboarding guards
@@ -73,8 +72,6 @@ export default function Dashboard() {
       const skippedKey = `ojas_sleep_skipped_${new Date().toISOString().slice(0, 10)}`;
       if (!localStorage.getItem(skippedKey)) {
         setTimeout(() => setShowSleepModal(true), 1200);
-      } else {
-        setSleepModalSkipped(true);
       }
     }
     const existing = getTodayLog();
@@ -110,16 +107,13 @@ export default function Dashboard() {
     setShowSleepModal(false);
     const skippedKey = `ojas_sleep_skipped_${new Date().toISOString().slice(0, 10)}`;
     localStorage.setItem(skippedKey, 'true');
-    setSleepModalSkipped(true);
   };
 
   const handleSleepComplete = (log: SleepLog) => {
     setTodaySleepLog(log);
-    setSleepModalSkipped(false);
   };
 
   const {
-    predictedMood,
     cycleDay,
     cyclePhase,
     moonPhase,
@@ -235,7 +229,7 @@ export default function Dashboard() {
               <div className="reveal bg-surface-container-low p-stack-md border-l-4 border-secondary-container active" style={{ transitionDelay: '0.1s' }}>
                 <span className="font-label-caps text-label-caps text-secondary mb-unit block">AFFIRMATION</span>
                 <blockquote className="font-quote text-quote text-primary leading-relaxed">
-                  "{dailyAffirmation || "I am the container for infinite peace, allowing the rhythm of the universe to guide my breath."}"
+                  &quot;{dailyAffirmation || "I am the container for infinite peace, allowing the rhythm of the universe to guide my breath."}&quot;
                 </blockquote>
               </div>
 
@@ -294,7 +288,7 @@ export default function Dashboard() {
                     <h4 className="font-headline-sm text-headline-sm text-primary uppercase tracking-tight">Morning Resonance</h4>
                   </div>
                   <p className="font-body-md text-body-md text-on-surface-variant italic max-w-[200px]">
-                    Align your frequency with the dawn's stillness.
+                    Align your frequency with the dawn&apos;s stillness.
                   </p>
                   <button className="mt-stack-sm px-stack-md py-2 bg-primary text-white font-label-caps text-label-caps rounded-full hover:bg-primary-container transition-all flex items-center gap-unit group-hover:shadow-lg">
                     BEGIN PRACTICE
@@ -352,7 +346,7 @@ export default function Dashboard() {
               {/* Ritual Space */}
               <div className="reveal bg-surface-container-low p-stack-lg rounded-xl active cursor-pointer hover:shadow-sm transition-shadow duration-500" style={{ transitionDelay: '0.6s' }} onClick={() => router.push('/rituals')}>
                 <div className="flex justify-between items-center mb-stack-lg">
-                  <h3 className="font-headline-md text-headline-md text-primary tracking-tight">Today's Rituals</h3>
+                  <h3 className="font-headline-md text-headline-md text-primary tracking-tight">Today&apos;s Rituals</h3>
                   <div className="flex items-center gap-unit">
                     <span className="w-2 h-2 rounded-full bg-secondary-container pulse-pink"></span>
                     <span className="font-label-caps text-label-caps text-secondary">LIVE SYNC</span>
@@ -402,9 +396,7 @@ export default function Dashboard() {
                 <div className="relative z-10 flex flex-col items-center gap-stack-md">
                   <span className="font-label-caps text-label-caps text-secondary tracking-widest uppercase">AURA STATE: {dominantDoshaText.toUpperCase()} ALIGNMENT</span>
                   <div className="relative w-64 h-64 flex items-center justify-center mt-4">
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-primary via-secondary to-secondary-container opacity-20 blur-3xl pulse-pink"></div>
                     <div className="absolute inset-4 rounded-full border border-secondary-container/30 lotus-float"></div>
-                    <div className="absolute inset-8 rounded-full border border-primary/20 animate-pulse"></div>
                     <div className="relative flex flex-col items-center">
                       <span className="font-display-lg text-[64px] text-primary leading-none group-hover:scale-105 transition-transform duration-700">{resonanceScore}%</span>
                       <span className="font-label-caps text-label-caps text-on-surface-variant">RESONANCE</span>
@@ -449,16 +441,7 @@ export default function Dashboard() {
                 © 2026 OJAS Wellness. Ancient Wisdom, Modern Rhythm. Integrated intelligence for the mindful soul.
               </p>
             </div>
-            <div className="flex flex-col md:flex-row gap-gutter md:justify-end items-start">
-              <div className="flex flex-col gap-unit">
-                <Link className="font-body-md text-body-md text-on-surface-variant hover:text-secondary hover:translate-x-1 transition-all" href="#">Privacy Policy</Link>
-                <Link className="font-body-md text-body-md text-on-surface-variant hover:text-secondary hover:translate-x-1 transition-all" href="#">Terms of Service</Link>
-              </div>
-              <div className="flex flex-col gap-unit">
-                <Link className="font-body-md text-body-md text-on-surface-variant hover:text-secondary hover:translate-x-1 transition-all" href="#">Journal</Link>
-                <Link className="font-body-md text-body-md text-on-surface-variant hover:text-secondary hover:translate-x-1 transition-all" href="#">Community</Link>
-              </div>
-            </div>
+
           </div>
         </footer>
       </div>

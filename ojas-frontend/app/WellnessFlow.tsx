@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useUserStore } from './store/userStore';
 import { DoshaAnimation } from './components/flows/DoshaAnimation';
 import { PrakritiAssessment } from './components/flows/PrakritiAssessment';
-import { PrakritiResult } from './components/flows/PrakritiResult';
+import { PrakritiResults } from './components/prakriti/PrakritiResults';
 import { MenstrualMoonCorrelation } from './components/flows/MenstrualMoonCorrelation';
 import { MusicRecommendations } from './components/flows/MusicRecommendations';
 import { DailyCompanion } from './components/flows/DailyCompanion';
@@ -35,7 +35,7 @@ export default function WellnessFlow() {
     }
 
     if (currentStep === 'result') {
-        return <PrakritiResult />;
+        return <PrakritiResults />;
     }
 
     if (currentStep === 'menstrual-moon') {

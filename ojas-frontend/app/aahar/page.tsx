@@ -308,7 +308,7 @@ export default function Aahar() {
                     onClick={() => setAgni(opt.id)}
                     className={`flex items-center gap-2 px-5 py-3 rounded-full border text-xs font-mono font-semibold tracking-wider transition-all duration-300 cursor-pointer ${
                       agni === opt.id
-                        ? 'bg-primary text-[#F4EFEA] border-primary dark:bg-secondary dark:border-secondary'
+                        ? 'bg-primary text-[var(--ojas-cream-bg)] border-primary dark:bg-secondary dark:border-secondary'
                         : 'bg-white/50 dark:bg-stone-900/40 border-stone-300/60 dark:border-stone-700 text-stone-600 dark:text-stone-400 hover:border-secondary/60 hover:text-secondary'
                     }`}
                   >
@@ -336,7 +336,7 @@ export default function Aahar() {
         </div>
 
         {/* ─── AUSHADHI · HERB & SUPPLEMENT GUIDE ───────────────────────────── */}
-        <div className="border-t border-stone-300/30 dark:border-stone-850 my-16 md:my-20" />
+        <div className="border-t border-stone-300/30 dark:border-stone-800 my-16 md:my-20" />
 
         <section className="animate-fade-rise">
           {/* Section label */}
@@ -438,7 +438,7 @@ export default function Aahar() {
                   className={`px-4.5 py-2 rounded-full border text-[9px] font-mono font-bold tracking-wider transition-all duration-300 cursor-pointer ${
                     isActive
                       ? 'bg-secondary text-white border-secondary'
-                      : 'bg-white/50 dark:bg-stone-900/40 border-stone-300/40 dark:border-stone-850 text-stone-600 dark:text-stone-400 hover:border-secondary/40 hover:text-secondary'
+                      : 'bg-white/50 dark:bg-stone-900/40 border-stone-300/40 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:border-secondary/40 hover:text-secondary'
                   }`}
                 >
                   {pill}
@@ -453,7 +453,7 @@ export default function Aahar() {
             {/* Left Column: Herb Cards Grid */}
             <div className="lg:col-span-8">
               {filteredHerbs.length === 0 ? (
-                <div className="bg-white/40 dark:bg-stone-900/20 border border-stone-300/20 dark:border-stone-850 rounded-[32px] p-12 text-center text-stone-500">
+                <div className="bg-white/40 dark:bg-stone-900/20 border border-stone-300/20 dark:border-stone-800 rounded-[32px] p-12 text-center text-stone-500">
                   <span className="text-3xl block mb-3">🌱</span>
                   <p className="text-xs font-mono">No herbs match your search or filter options.</p>
                 </div>

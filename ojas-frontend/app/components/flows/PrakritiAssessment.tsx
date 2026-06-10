@@ -334,8 +334,8 @@ export const PrakritiAssessment = () => {
                                       onClick={() => handleAnswer(opt.dosha)}
                                       className={`w-full text-left p-4 sm:p-5 rounded-2xl border transition-all duration-300 font-serif italic text-base sm:text-lg shadow-sm hover:translate-x-1 cursor-pointer leading-normal sm:leading-relaxed ${
                                           isSelected 
-                                          ? 'border-secondary bg-on-primary/45 text-stone-950 ring-1 ring-[#c06080]/30' 
-                                          : 'border-stone-200/80 bg-white/40 hover:border-secondary hover:bg-on-primary/30 text-stone-850 hover:text-stone-950'
+                                          ? 'border-secondary bg-on-primary/45 text-stone-950 ring-1 ring-[var(--ojas-accent)]/30' 
+                                          : 'border-stone-200/80 bg-white/40 hover:border-secondary hover:bg-on-primary/30 text-stone-800 hover:text-stone-950'
                                       }`}
                                   >
                                       {opt.text}

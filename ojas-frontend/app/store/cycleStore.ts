@@ -4,7 +4,7 @@ interface CycleData {
     startDate: string;
     cycleLengthDays: number;
     lastPeriodDate?: string;
-    currentPhase?: 'Menstrual' | 'Follicular' | 'Ovulatory' | 'Luteal';
+    currentPhase?: 'menstrual' | 'follicular' | 'ovulation' | 'luteal';
     dayInCycle?: number;
 }
 

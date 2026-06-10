@@ -11,6 +11,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        "ojas-accent": "var(--ojas-accent)",
+        "ojas-dark-text": "var(--ojas-dark-text)",
+        "ojas-light-surface": "var(--ojas-light-surface)",
+        "ojas-cream-bg": "var(--ojas-cream-bg)",
+        "ojas-warm-card": "var(--ojas-warm-card)",
         "surface-container-low": "#f5f3ef",
         "error-container": "#ffdad6",
         "secondary-fixed-dim": "#fbb2c7",
@@ -22,7 +27,7 @@ const config: Config = {
         "surface-container-lowest": "#ffffff",
         "on-primary-fixed-variant": "#085230",
         "tertiary-fixed-dim": "#ffafd7",
-        "background": "#fbf9f5",
+        "background": "var(--background)",
         "surface-container-highest": "#e4e2de",
         "secondary": "#864d5f",
         "outline-variant": "#bfc9bf",
@@ -39,7 +44,7 @@ const config: Config = {
         "on-secondary": "#ffffff",
         "inverse-primary": "#92d5a9",
         "surface-container": "#efeeea",
-        "on-background": "#1b1c1a",
+        "on-background": "var(--foreground)",
         "outline": "#707971",
         "surface": "#fbf9f5",
         "inverse-on-surface": "#f2f0ed",
@@ -100,21 +105,22 @@ const config: Config = {
 
       fontFamily: {
         "body-lg": ["EB Garamond", "serif"],
-        "headline-md": ["Notable", "sans-serif"],
+        "headline-md": ['"Instrument Serif"', "serif"],
         "label-md": ["Space Mono", "monospace"],
-        "quote": ["EB Garamond", "serif"],
-        "display-lg": ["Notable", "sans-serif"],
-        "display-lg-mobile": ["Notable", "sans-serif"],
-        "headline-sm": ["Notable", "sans-serif"],
+        "quote": ['"Instrument Serif"', "serif"],
+        "display-lg": ['"Instrument Serif"', "serif"],
+        "display-lg-mobile": ['"Instrument Serif"', "serif"],
+        "headline-sm": ['"Instrument Serif"', "serif"],
         "body-md": ["EB Garamond", "serif"],
         "label-caps": ["Space Mono", "monospace"],
         
         // Legacy
         bebas: ['"Bebas Neue"', 'sans-serif'],
         cormorant: ['"Cormorant Garamond"', 'serif'],
+        "instrument-serif": ['"Instrument Serif"', 'serif'],
         inter: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['var(--font-geist-mono)', 'monospace'],
-        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+        serif: ['"Instrument Serif"', 'Georgia', 'serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
 

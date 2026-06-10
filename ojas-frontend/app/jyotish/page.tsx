@@ -147,7 +147,7 @@ export default function JyotishPage() {
         </div>
 
         {/* Section 1: Birth Chart Overview Card */}
-        <div className="bg-primary dark:bg-[#111110] rounded-[32px] p-8 text-on-primary shadow-xl relative overflow-hidden transition-all duration-500 border border-stone-850">
+        <div className="bg-primary dark:bg-[#111110] rounded-[32px] p-8 text-on-primary shadow-xl relative overflow-hidden transition-all duration-500 border border-stone-800">
           <div className="absolute top-0 right-0 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
           <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-secondary font-bold mb-5">
             JANMA KUNDALI · BIRTH CHART
@@ -206,7 +206,7 @@ export default function JyotishPage() {
 
           <div className="space-y-6">
             {/* Transit 1 */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-stone-200/50 dark:border-stone-850 pb-5 gap-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-stone-200/50 dark:border-stone-800 pb-5 gap-4">
               <div className="space-y-2 flex-1">
                 <div className="flex items-center gap-3">
                   <span className="text-lg">☿</span>
@@ -233,7 +233,7 @@ export default function JyotishPage() {
             </div>
 
             {/* Transit 2 */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-stone-200/50 dark:border-stone-850 pb-5 gap-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-stone-200/50 dark:border-stone-800 pb-5 gap-4">
               <div className="space-y-2 flex-1">
                 <div className="flex items-center gap-3">
                   <span className="text-lg">♀</span>
@@ -260,7 +260,7 @@ export default function JyotishPage() {
             </div>
 
             {/* Transit 3 */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-stone-200/50 dark:border-stone-850 pb-5 gap-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-stone-200/50 dark:border-stone-800 pb-5 gap-4">
               <div className="space-y-2 flex-1">
                 <div className="flex items-center gap-3">
                   <span className="text-lg">♂</span>
@@ -331,11 +331,11 @@ export default function JyotishPage() {
                   <span className="text-5xl font-serif font-semibold text-secondary">
                     {jyotish.lifePathNumber}
                   </span>
-                  <span className="text-base font-serif italic text-stone-850 dark:text-white font-medium">
+                  <span className="text-base font-serif italic text-stone-800 dark:text-white font-medium">
                     {jyotish.lifePathTagline}
                   </span>
                 </div>
-                <p className="text-xs text-stone-555 dark:text-stone-400 leading-relaxed font-inter mt-2">
+                <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed font-inter mt-2">
                   {jyotish.lifePathDescription} Introspection, spiritual seeking, and truth-finding define your natural rhythms.
                 </p>
               </div>
@@ -353,7 +353,7 @@ export default function JyotishPage() {
               </div>
             </div>
 
-            <div className="md:col-span-4 p-5 bg-[#FAF6F0] dark:bg-stone-950/20 border border-stone-200/50 dark:border-stone-800/80 rounded-2xl space-y-1">
+            <div className="md:col-span-4 p-5 bg-[var(--ojas-light-surface)] dark:bg-stone-950/20 border border-stone-200/50 dark:border-stone-800/80 rounded-2xl space-y-1">
               <span className="text-[8px] font-mono uppercase tracking-wider text-stone-400 block mb-1">
                 POWER DAY THIS MONTH
               </span>
@@ -366,7 +366,7 @@ export default function JyotishPage() {
             </div>
           </div>
 
-          <div className="border-t border-stone-200/50 dark:border-stone-850 pt-5">
+          <div className="border-t border-stone-200/50 dark:border-stone-800 pt-5">
             <span className="text-[8px] font-mono uppercase tracking-wider text-stone-400 block mb-3">
               LIFE PATH MATRIX
             </span>
@@ -476,13 +476,13 @@ export default function JyotishPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-inter leading-relaxed">
               <thead>
-                <tr className="border-b border-stone-200/50 dark:border-stone-850 text-stone-400 font-mono text-[9px] tracking-wider uppercase">
+                <tr className="border-b border-stone-200/50 dark:border-stone-800 text-stone-400 font-mono text-[9px] tracking-wider uppercase">
                   <th className="pb-3">PLANET (GRAHA)</th>
                   <th className="pb-3">GOVERNED DOSHA</th>
                   <th className="pb-3">ELEMENTAL RULERSHIP</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-stone-200/30 dark:divide-stone-850">
+              <tbody className="divide-y divide-stone-200/30 dark:divide-stone-800">
                 <tr className="hover:bg-secondary/5 transition-colors">
                   <td className="py-4 font-medium flex items-center gap-2">
                     <span>☿</span> Mercury + <span>♀</span> Venus
@@ -508,7 +508,7 @@ export default function JyotishPage() {
             </table>
           </div>
 
-          <div className="mt-6 p-4 bg-[#FAF6F0] dark:bg-stone-950/20 border border-stone-200/50 dark:border-stone-800/80 rounded-2xl text-[11px] font-mono text-stone-500 dark:text-stone-400 flex items-start gap-3">
+          <div className="mt-6 p-4 bg-[var(--ojas-light-surface)] dark:bg-stone-950/20 border border-stone-200/50 dark:border-stone-800/80 rounded-2xl text-[11px] font-mono text-stone-500 dark:text-stone-400 flex items-start gap-3">
             <span className="text-secondary text-[13px]">☿</span>
             <p>
               <strong>Veda Note:</strong> Mercury is currently retrograde — your Vata constitution is especially sensitive this month. Prioritize nervous alignment practices.

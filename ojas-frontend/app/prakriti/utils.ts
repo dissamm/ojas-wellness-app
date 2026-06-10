@@ -1,4 +1,4 @@
-import { Question } from './quizData';
+import { Question } from '../data/prakritiData';
 
 export interface AssessmentResult {
   vata: number;

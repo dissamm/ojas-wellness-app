@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React, { useEffect, useRef } from 'react';
 
@@ -14,7 +15,7 @@ export const StardustCanvas = ({ dosha }: { dosha: string }) => {
 
         let width = 0;
         let height = 0;
-        let particles: any[] = [];
+        const particles: any[] = [];
         let animationFrameId: number;
 
         const resize = () => {

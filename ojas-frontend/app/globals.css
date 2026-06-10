@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,600&family=Inter:wght@300;400;500&display=swap');
-@import "./styles/fonts.css";
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Instrument+Serif:ital,wght@0,400;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+
 @import "./styles/theme.css";
 @import "./styles/dashboard.css";
 @import "./styles/rituals.css";
@@ -11,9 +11,18 @@
 @tailwind utilities;
 
 :root {
+  --background: #f7f3f8;
+  --foreground: #1a0a2e;
+  --ojas-accent: #c06080;
+  --ojas-dark-text: #1C1917;
+  --ojas-light-surface: #FAF6F0;
+  --ojas-cream-bg: #F4EFEA;
+  --ojas-warm-card: #FDF6EC;
 }
 
 :root.dark, html.dark {
+  --background: #0F0B1A;
+  --foreground: #F7F3F8;
 }
 
 body {
@@ -23,12 +32,9 @@ body {
 }
 
 /* Typography override for headings */
-h1, h2 {
-  font-family: 'Bebas Neue', sans-serif;
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Instrument Serif', serif;
   font-weight: 400;
-}
-h3, h4, h5, h6 {
-  font-family: 'Cormorant Garamond', serif;
 }
 
 /* Scrollbar styling */

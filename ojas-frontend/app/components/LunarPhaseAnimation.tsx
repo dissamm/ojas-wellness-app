@@ -22,7 +22,7 @@ const PHASES: PhaseDetail[] = [
 
 export const LunarPhaseAnimation = () => {
   const [currentPhaseIndex, setCurrentPhaseIndex] = useState(4); // Default to Full Moon
-  const [isPlaying, setIsPlaying] = useState(true); // Default to auto-playing for spectacular visual wow
+  const [isPlaying, setIsPlaying] = useState(false); // Default to paused to prevent distraction
   const [stars, setStars] = useState<{ x: number; y: number; size: number; delay: number }[]>([]);
 
   // Generate cosmic star coordinates once on mount
@@ -42,7 +42,7 @@ export const LunarPhaseAnimation = () => {
 
     const interval = setInterval(() => {
       setCurrentPhaseIndex((prev) => (prev + 1) % 8);
-    }, 1800);
+    }, 4500);
 
     return () => clearInterval(interval);
   }, [isPlaying]);
@@ -90,11 +90,11 @@ export const LunarPhaseAnimation = () => {
 
       {/* 2. Top Header Labels */}
       <div className="relative z-10 text-center mb-8 flex flex-col items-center gap-2">
-        <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-semibold">
+        <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[var(--ojas-accent)] font-semibold">
           CELESTIAL RHYTHM
         </span>
         <h2 className="text-3xl sm:text-4xl font-normal font-inter">
-          Phases of the <span className="font-instrument-serif italic text-[#c06080]">Moon</span>
+          Phases of the <span className="font-instrument-serif italic text-[var(--ojas-accent)]">Moon</span>
         </h2>
         <p className="text-xs text-stone-400 font-inter max-w-sm mt-1 leading-relaxed">
           A continuous animation through the eight lunar phases — rendered from photorealistic details.
@@ -106,7 +106,7 @@ export const LunarPhaseAnimation = () => {
         
         {/* Soft backlighting */}
         <div 
-          className="absolute w-52 h-52 sm:w-60 sm:h-60 rounded-full bg-[#c06080]/10 blur-3xl transition-opacity duration-1000"
+          className="absolute w-52 h-52 sm:w-60 sm:h-60 rounded-full bg-[var(--ojas-accent)]/10 blur-3xl transition-opacity duration-1000"
           style={{ opacity: activePhase.illumination / 100 }}
         />
 
@@ -114,7 +114,7 @@ export const LunarPhaseAnimation = () => {
         <div className="relative w-44 h-44 sm:w-48 sm:h-48 rounded-full overflow-hidden shadow-[0_0_60px_rgba(223,128,96,0.15)] border border-white/10 flex items-center justify-center bg-stone-950">
           
           {/* Base Moon Color Texture with procedural CSS Craters (fallback and offline texture) */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#EED4B6] via-stone-400 to-[#1C1917] rounded-full overflow-hidden opacity-95">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#EED4B6] via-stone-400 to-[var(--ojas-dark-text)] rounded-full overflow-hidden opacity-95">
             {/* CSS-rendered soft glowing craters */}
             <div className="absolute top-4 left-6 w-8 h-8 rounded-full bg-black/10 blur-[1px] border border-black/5" />
             <div className="absolute top-12 left-16 w-12 h-12 rounded-full bg-black/15 blur-[2px] border border-black/5" />
@@ -163,7 +163,7 @@ export const LunarPhaseAnimation = () => {
 
       {/* 4. Active Phase Details */}
       <div className="relative z-10 text-center max-w-md mb-8 flex flex-col items-center gap-1.5 min-h-[120px] justify-center">
-        <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#c06080] font-semibold">
+        <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[var(--ojas-accent)] font-semibold">
           PHASE {currentPhaseIndex + 1} OF 8
         </span>
         <h3 className="text-2xl sm:text-3xl font-serif text-white font-normal transition-all duration-300">
@@ -181,7 +181,7 @@ export const LunarPhaseAnimation = () => {
       <div className="relative z-10 mb-8">
         <button
           onClick={() => setIsPlaying(!isPlaying)}
-          className="px-6 py-2.5 rounded-full border border-[#c06080]/50 text-white font-mono text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-[#c06080] hover:text-white transition duration-300 cursor-pointer active:scale-95 shadow-sm"
+          className="px-6 py-2.5 rounded-full border border-[var(--ojas-accent)]/50 text-white font-mono text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-[var(--ojas-accent)] hover:text-white transition duration-300 cursor-pointer active:scale-95 shadow-sm"
         >
           {isPlaying ? 'PAUSE' : 'PLAY'}
         </button>
@@ -205,7 +205,7 @@ export const LunarPhaseAnimation = () => {
                 }}
                 className={`flex flex-col items-center p-2.5 rounded-2xl transition duration-500 cursor-pointer border ${
                   isActive 
-                    ? 'border-[#c06080]/60 bg-[#c06080]/10 shadow-[0_4px_12px_rgba(223,128,96,0.06)]' 
+                    ? 'border-[var(--ojas-accent)]/60 bg-[var(--ojas-accent)]/10 shadow-[0_4px_12px_rgba(223,128,96,0.06)]' 
                     : 'border-transparent hover:border-stone-800/60 hover:bg-stone-900/30'
                 }`}
               >

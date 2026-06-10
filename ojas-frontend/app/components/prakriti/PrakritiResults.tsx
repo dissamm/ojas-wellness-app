@@ -1,11 +1,12 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useUserStore } from '../../store/userStore';
 import { StardustCanvas, ElementalCanvas, SanctuaryOverlayCanvas } from './PrakritiAnimations';
-import Link from 'next/link';
+import { Disclaimer } from '../Disclaimer';
+import { DOSHA_DETAILS as FULL_DOSHA_DETAILS, DOSHA_MAP } from '../../data/prakritiData';
 
-const DOSHA_DETAILS = {
+const DOSHA_UI_DETAILS = {
     Vata: {
         symbol: 'air',
         elements: 'Ether & Air',
@@ -21,7 +22,7 @@ const DOSHA_DETAILS = {
             { icon: 'fitness_center', title: 'Physical Frame', desc: 'Lean, delicate bone structure with high mobility.' },
             { icon: 'nights_stay', title: 'Sleep Pattern', desc: 'Light, active dreaming state often easily interrupted.' }
         ],
-        sanctuaryImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBewH4V2sRmuDXUfvkyyCUVjPhX3Rc-0p9gZza1MMvszWIX6bTsx8m7xDExEK-yEfQgjtn4Ewq6Ei-mWMgLwp42JsdmaDhwtwQAFnGryadrXZl-bjL44z_cElGuPhLwZ7Jk2wuC-1lJyMmBnUjf4ktKmlijvgZOfK63VOk9qbIfo4m_Rbn6O_trypybvbpHqeoH3azLMBis9E76xqgso1B8iaQfreikjZZD5IdWBs5QZ_XEuKzxz6iwK0APZs1PlCIVz8QeeIUItNcr',
+        sanctuaryImage: '/sanctuary-vata.jpg',
         sanctuaryTitle: 'Element of Air'
     },
     Pitta: {
@@ -39,7 +40,7 @@ const DOSHA_DETAILS = {
             { icon: 'fitness_center', title: 'Physical Frame', desc: 'Moderate, athletic build with strong metabolism.' },
             { icon: 'nights_stay', title: 'Sleep Pattern', desc: 'Sound, moderate sleep with vivid, active dreams.' }
         ],
-        sanctuaryImage: 'https://images.unsplash.com/photo-1504198458649-3128b932f49e?q=80&w=2000&auto=format&fit=crop',
+        sanctuaryImage: '/sanctuary-pitta.jpg',
         sanctuaryTitle: 'Element of Fire'
     },
     Kapha: {
@@ -57,21 +58,70 @@ const DOSHA_DETAILS = {
             { icon: 'fitness_center', title: 'Physical Frame', desc: 'Solid, strong build with excellent endurance.' },
             { icon: 'nights_stay', title: 'Sleep Pattern', desc: 'Heavy, prolonged sleep with deep restfulness.' }
         ],
-        sanctuaryImage: 'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?q=80&w=2000&auto=format&fit=crop',
+        sanctuaryImage: '/sanctuary-kapha.jpg',
         sanctuaryTitle: 'Element of Earth'
     },
 };
 
-export const PrakritiResult = () => {
+const FavourAvoidGrid = ({ items, avoidItems }: { items: string[], avoidItems: string[] }) => (
+    <div className="grid md:grid-cols-2 gap-8">
+        <div className="bg-white/50 dark:bg-black/20 p-5 rounded-xl border border-sage-outline/20">
+            <h4 className="font-bold mb-3 flex items-center gap-2 text-ojas-green-dark dark:text-ojas-green">
+                <span className="material-symbols-outlined text-sm">check_circle</span>
+                Favour
+            </h4>
+            <ul className="space-y-3">
+                {items.map((item, i) => (
+                    <li key={i} className="flex gap-3 text-sm">
+                        <span className="w-1.5 h-1.5 rounded-full bg-ojas-green mt-1.5 flex-shrink-0"></span>
+                        {item}
+                    </li>
+                ))}
+            </ul>
+        </div>
+        <div className="bg-white/50 dark:bg-black/20 p-5 rounded-xl border border-sage-outline/20">
+            <h4 className="font-bold mb-3 flex items-center gap-2 text-[#b04020] dark:text-resonant-pink">
+                <span className="material-symbols-outlined text-sm">cancel</span>
+                Avoid
+            </h4>
+            <ul className="space-y-3">
+                {avoidItems.map((item, i) => (
+                    <li key={i} className="flex gap-3 text-sm">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#b04020]/60 mt-1.5 flex-shrink-0"></span>
+                        {item}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </div>
+);
+
+export const PrakritiResults = () => {
     const { user, setCurrentStep, resetAssessment, setDoshaComposition } = useUserStore();
-    const dominant = (user.dominantDosha || 'Vata') as keyof typeof DOSHA_DETAILS;
+    const [showRetakeConfirm, setShowRetakeConfirm] = useState(false);
+    const dominant = (user.dominantDosha || 'Vata') as keyof typeof DOSHA_UI_DETAILS;
     const composition = user.doshaComposition || { vata: 68, pitta: 22, kapha: 10 };
-    const details = DOSHA_DETAILS[dominant] || DOSHA_DETAILS.Vata;
+    const details = DOSHA_UI_DETAILS[dominant] || DOSHA_UI_DETAILS.Vata;
+    
+    // Dual Dosha Detection
+    const sortedScores = Object.entries(composition).sort((a, b) => b[1] - a[1]);
+    const secondaryKey = sortedScores[1][0] as keyof typeof composition;
+    const secondaryName = secondaryKey.charAt(0).toUpperCase() + secondaryKey.slice(1);
+    const secPct = sortedScores[1][1];
+    const isDual = secPct >= 28;
+
+    const [activeDeepDive, setActiveDeepDive] = useState<'primary' | 'secondary'>('primary');
+    
+    // Get full data from prakritiData for the deep dive based on toggle
+    const activeDoshaName = activeDeepDive === 'primary' ? dominant : (isDual ? secondaryName as keyof typeof DOSHA_UI_DETAILS : dominant);
+    const fullDetailsKey = DOSHA_MAP[activeDoshaName];
+    const fullDetails = FULL_DOSHA_DETAILS[fullDetailsKey];
 
     const handleRetakeClick = () => {
-        const confirmRetake = window.confirm("Are you sure? This will replace your current Prakriti results.");
-        if (!confirmRetake) return;
+        setShowRetakeConfirm(true);
+    };
 
+    const confirmRetake = () => {
         localStorage.removeItem('prakriti');
         localStorage.removeItem('dominantPrakriti');
         localStorage.removeItem('prakriti_quiz_progress');
@@ -79,6 +129,11 @@ export const PrakritiResult = () => {
 
         setDoshaComposition({ vata: 0, pitta: 0, kapha: 0 }, '');
         resetAssessment();
+        window.location.reload();
+    };
+
+    const cancelRetake = () => {
+        setShowRetakeConfirm(false);
     };
 
     const handleContinue = () => {
@@ -91,29 +146,23 @@ export const PrakritiResult = () => {
             {/* Particles Layer */}
             <StardustCanvas dosha={dominant} />
 
-            {/* Navigation */}
-            <nav className="fixed top-0 w-full z-50 bg-surface/80 dark:bg-forest-ink/80 backdrop-blur-xl px-margin-mobile md:px-margin-desktop py-unit border-b border-outline-variant/10">
-                <div className="max-w-container-max mx-auto flex justify-between items-center h-16">
-                    <div className="font-display-lg text-headline-sm text-primary dark:text-inverse-on-surface tracking-tighter">OJAS</div>
-                    <div className="hidden md:flex gap-stack-md">
-                        <span className="font-label-caps text-[10px] uppercase tracking-widest text-primary dark:text-inverse-on-surface border-b border-secondary-container pb-0.5 transition-colors">Analysis</span>
-                        <span className="font-label-caps text-[10px] uppercase tracking-widest text-on-surface-variant hover:text-secondary transition-colors cursor-pointer">Lunar Sync</span>
-                        <span className="font-label-caps text-[10px] uppercase tracking-widest text-on-surface-variant hover:text-secondary transition-colors cursor-pointer">Journey</span>
-                    </div>
-                    <div className="flex gap-stack-sm items-center">
-                        <span className="material-symbols-outlined text-primary dark:text-inverse-on-surface cursor-pointer hover:opacity-70">notifications</span>
-                        <span className="material-symbols-outlined text-primary dark:text-inverse-on-surface cursor-pointer hover:opacity-70">account_circle</span>
-                    </div>
-                </div>
-            </nav>
-
             {/* Global Controls */}
             <div className="fixed top-24 right-margin-desktop z-40 hidden lg:block">
                 <div className="flex flex-col gap-3">
-                    <button onClick={handleRetakeClick} className="bg-surface-container-low dark:bg-surface-container-highest border border-sage-outline/20 px-stack-md py-2 font-label-caps text-[10px] uppercase tracking-widest text-primary dark:text-forest-ink hover:bg-surface-bright dark:hover:bg-surface-dim transition-all active:scale-95 cursor-pointer">
-                        Retake Analysis
-                    </button>
-                    <button onClick={handleContinue} className="bg-primary text-on-primary px-stack-md py-2 font-label-caps text-[10px] uppercase tracking-widest active:scale-95 transition-all cursor-pointer">
+                    {showRetakeConfirm ? (
+                        <div className="bg-surface-container-low dark:bg-surface-container-highest border border-sage-outline/20 p-4 shadow-xl flex flex-col gap-3 rounded-xl backdrop-blur-md">
+                            <span className="font-label-caps text-[10px] uppercase tracking-widest text-primary dark:text-inverse-on-surface">Are you sure? This clears your results.</span>
+                            <div className="flex gap-2">
+                                <button onClick={confirmRetake} className="bg-[#b04020] text-white px-4 py-1.5 font-label-caps text-[10px] uppercase tracking-widest hover:opacity-90 transition-opacity rounded-md cursor-pointer">Yes</button>
+                                <button onClick={cancelRetake} className="bg-transparent border border-sage-outline/20 px-4 py-1.5 font-label-caps text-[10px] uppercase tracking-widest text-primary dark:text-inverse-on-surface hover:bg-surface-bright dark:hover:bg-surface-dim transition-colors rounded-md cursor-pointer">Cancel</button>
+                            </div>
+                        </div>
+                    ) : (
+                        <button onClick={handleRetakeClick} className="bg-surface-container-low dark:bg-surface-container-highest border border-sage-outline/20 px-stack-md py-2 font-label-caps text-[10px] uppercase tracking-widest text-primary dark:text-forest-ink hover:bg-surface-bright dark:hover:bg-surface-dim transition-all active:scale-95 cursor-pointer rounded-full">
+                            Retake Analysis
+                        </button>
+                    )}
+                    <button onClick={handleContinue} className="bg-primary text-on-primary px-stack-md py-2 font-label-caps text-[10px] uppercase tracking-widest active:scale-95 transition-all cursor-pointer rounded-full">
                         Continue Path
                     </button>
                 </div>
@@ -126,20 +175,40 @@ export const PrakritiResult = () => {
                     <div className="lg:col-span-7 flex flex-col gap-stack-sm animate-float">
                         <span className={`font-label-caps text-label-caps uppercase tracking-[0.4em] ${details.accentClass}`}>Your Prakriti Identity</span>
                         <h1 className="font-display-lg text-display-lg-mobile md:text-display-lg text-primary dark:text-inverse-on-surface tracking-tighter leading-[1] mb-4">
-                            Pure <span className="italic-serif font-italic-serif text-secondary lowercase">{dominant}</span> Energy
+                            {isDual ? (
+                                <>
+                                    Dual <span className="italic-serif font-italic-serif text-secondary lowercase">{dominant}</span> & <span className="italic-serif font-italic-serif text-secondary lowercase">{secondaryName}</span> Energy
+                                </>
+                            ) : (
+                                <>
+                                    Pure <span className="italic-serif font-italic-serif text-secondary lowercase">{dominant}</span> Energy
+                                </>
+                            )}
                         </h1>
                         <p className="font-body-lg text-on-surface-variant dark:text-surface-variant max-w-xl leading-relaxed">
-                            {details.description}
+                            {isDual ? `Your profile is strongly influenced by both ${dominant} and ${secondaryName}. While ${dominant} leads your constitution, your significant secondary ${secondaryName} creates a dynamic and highly adaptable energy signature.` : details.description}
                         </p>
                         
                         {/* Mobile Controls (visible only on small screens) */}
-                        <div className="flex flex-wrap gap-3 mt-6 lg:hidden">
-                            <button onClick={handleContinue} className="bg-primary text-on-primary px-6 py-3 font-label-caps text-[10px] uppercase tracking-widest active:scale-95 transition-all cursor-pointer">
-                                Continue Path
-                            </button>
-                            <button onClick={handleRetakeClick} className="bg-transparent border border-sage-outline/40 px-6 py-3 font-label-caps text-[10px] uppercase tracking-widest text-primary dark:text-inverse-on-surface active:scale-95 transition-all cursor-pointer">
-                                Retake
-                            </button>
+                        <div className="flex flex-col gap-3 mt-6 lg:hidden">
+                            {showRetakeConfirm ? (
+                                <div className="bg-surface-container-low dark:bg-surface-container-highest border border-sage-outline/20 p-4 flex flex-col gap-3 rounded-xl backdrop-blur-md animate-fade-rise">
+                                    <span className="font-label-caps text-[10px] uppercase tracking-widest text-primary dark:text-inverse-on-surface text-center">Are you sure? This clears your results.</span>
+                                    <div className="flex gap-2 justify-center">
+                                        <button onClick={confirmRetake} className="bg-[#b04020] text-white px-6 py-2 font-label-caps text-[10px] uppercase tracking-widest hover:opacity-90 transition-opacity flex-1 rounded-md cursor-pointer">Yes</button>
+                                        <button onClick={cancelRetake} className="bg-transparent border border-sage-outline/40 px-6 py-2 font-label-caps text-[10px] uppercase tracking-widest text-primary dark:text-inverse-on-surface transition-colors flex-1 rounded-md cursor-pointer">Cancel</button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="flex flex-wrap gap-3">
+                                    <button onClick={handleContinue} className="bg-primary text-on-primary px-6 py-3 font-label-caps text-[10px] uppercase tracking-widest active:scale-95 transition-all cursor-pointer flex-1 rounded-full">
+                                        Continue Path
+                                    </button>
+                                    <button onClick={handleRetakeClick} className="bg-transparent border border-sage-outline/40 px-6 py-3 font-label-caps text-[10px] uppercase tracking-widest text-primary dark:text-inverse-on-surface active:scale-95 transition-all cursor-pointer flex-1 rounded-full">
+                                        Retake
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                     
@@ -188,7 +257,7 @@ export const PrakritiResult = () => {
                                     <span className="text-primary dark:text-inverse-on-surface font-bold">{composition.pitta}%</span>
                                 </div>
                                 <div className="h-1.5 w-full bg-surface-container-highest dark:bg-stone-800 rounded-full overflow-hidden">
-                                    <div className="h-full bg-resonant-pink dark:bg-[#c06080] rounded-full bar-reveal" style={{ '--target-width': `${composition.pitta}%`, animationDelay: '0.2s' } as React.CSSProperties}></div>
+                                    <div className="h-full bg-resonant-pink dark:bg-[var(--ojas-accent)] rounded-full bar-reveal" style={{ '--target-width': `${composition.pitta}%`, animationDelay: '0.2s' } as React.CSSProperties}></div>
                                 </div>
                             </div>
                             
@@ -234,7 +303,7 @@ export const PrakritiResult = () => {
                     
                 </section>
 
-                {/* Element of Air Sanctuary */}
+                {/* Element Sanctuary */}
                 <section className="mt-stack-xl relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden group shadow-2xl">
                     <img 
                         alt="Sanctuary" 
@@ -259,8 +328,81 @@ export const PrakritiResult = () => {
                         </button>
                     </div>
                 </section>
+
+                {/* Deep Dive Accordion */}
+                <section className="mt-stack-xl max-w-4xl mx-auto space-y-4">
+                    <div className="flex flex-col items-center mb-stack-md gap-4">
+                        <h3 className="font-headline-sm text-primary dark:text-inverse-on-surface uppercase tracking-wide text-center">Deep Dive: Protocol & Herbs</h3>
+                        {isDual && (
+                            <div className="flex p-1 bg-white/40 dark:bg-black/40 rounded-full border border-outline-variant/20 backdrop-blur-md self-center">
+                                <button 
+                                    onClick={() => setActiveDeepDive('primary')}
+                                    className={`px-6 py-2 rounded-full font-label-caps text-[10px] uppercase tracking-widest transition-all ${activeDeepDive === 'primary' ? 'bg-primary text-on-primary shadow-sm' : 'text-primary dark:text-surface-variant hover:bg-white/20 dark:hover:bg-white/5 cursor-pointer'}`}
+                                >
+                                    Primary: {dominant}
+                                </button>
+                                <button 
+                                    onClick={() => setActiveDeepDive('secondary')}
+                                    className={`px-6 py-2 rounded-full font-label-caps text-[10px] uppercase tracking-widest transition-all ${activeDeepDive === 'secondary' ? 'bg-primary text-on-primary shadow-sm' : 'text-primary dark:text-surface-variant hover:bg-white/20 dark:hover:bg-white/5 cursor-pointer'}`}
+                                >
+                                    Secondary: {secondaryName}
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                    
+                    {/* Diet */}
+                    <details className="group bg-white/40 dark:bg-forest-ink/60 border border-outline-variant/20 rounded-xl overflow-hidden backdrop-blur-md [&_summary::-webkit-details-marker]:hidden">
+                        <summary className="flex items-center justify-between p-6 cursor-pointer font-label-caps tracking-widest text-primary dark:text-inverse-on-surface uppercase">
+                            Dietary Principles
+                            <span className="material-symbols-outlined transition duration-300 group-open:rotate-180">expand_more</span>
+                        </summary>
+                        <div className="p-6 pt-0 text-on-surface-variant dark:text-surface-variant font-body-md border-t border-outline-variant/10 mt-4">
+                            <p className="mb-6 italic-serif font-italic-serif text-lg text-primary dark:text-white/80">{fullDetails.foods.principle}</p>
+                            <FavourAvoidGrid items={fullDetails.foods.prefer} avoidItems={fullDetails.foods.avoid} />
+                        </div>
+                    </details>
+                    
+                    {/* Lifestyle */}
+                    <details className="group bg-white/40 dark:bg-forest-ink/60 border border-outline-variant/20 rounded-xl overflow-hidden backdrop-blur-md [&_summary::-webkit-details-marker]:hidden">
+                        <summary className="flex items-center justify-between p-6 cursor-pointer font-label-caps tracking-widest text-primary dark:text-inverse-on-surface uppercase">
+                            Lifestyle & Routine
+                            <span className="material-symbols-outlined transition duration-300 group-open:rotate-180">expand_more</span>
+                        </summary>
+                        <div className="p-6 pt-0 text-on-surface-variant dark:text-surface-variant font-body-md border-t border-outline-variant/10 mt-4">
+                            <p className="mb-6 italic-serif font-italic-serif text-lg text-primary dark:text-white/80">{fullDetails.lifestyle.principle}</p>
+                            <FavourAvoidGrid items={fullDetails.lifestyle.prefer} avoidItems={fullDetails.lifestyle.avoid} />
+                        </div>
+                    </details>
+
+                    {/* Herbs */}
+                    <details className="group bg-white/40 dark:bg-forest-ink/60 border border-outline-variant/20 rounded-xl overflow-hidden backdrop-blur-md [&_summary::-webkit-details-marker]:hidden">
+                        <summary className="flex items-center justify-between p-6 cursor-pointer font-label-caps tracking-widest text-primary dark:text-inverse-on-surface uppercase">
+                            Botanical Allies
+                            <span className="material-symbols-outlined transition duration-300 group-open:rotate-180">expand_more</span>
+                        </summary>
+                        <div className="p-6 pt-0 text-on-surface-variant dark:text-surface-variant font-body-md border-t border-outline-variant/10 mt-4">
+                            <div className="grid md:grid-cols-2 gap-4 mt-2">
+                                {fullDetails.herbs.map((herb, idx) => (
+                                    <div key={idx} className="flex gap-4 items-start p-5 bg-white/50 dark:bg-black/20 rounded-xl border border-sage-outline/10 hover:border-sage-outline/30 transition-colors">
+                                        <div className="text-3xl filter drop-shadow-sm">{herb.icon}</div>
+                                        <div>
+                                            <div className="flex flex-col mb-2">
+                                                <h4 className="font-bold text-primary dark:text-inverse-on-surface text-base">{herb.name}</h4>
+                                                <span className="text-[10px] font-mono uppercase tracking-widest opacity-60 text-primary dark:text-white/60">{herb.sanskrit}</span>
+                                            </div>
+                                            <p className="text-sm leading-relaxed opacity-90">{herb.use}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </details>
+                </section>
                 
             </main>
+
+            <Disclaimer className="mb-stack-lg" />
 
             {/* Footer */}
             <footer className="w-full mt-stack-xl bg-surface-container dark:bg-forest-ink border-t border-outline-variant/10 px-margin-mobile md:px-margin-desktop py-stack-xl max-w-container-max mx-auto relative z-10">

@@ -17,7 +17,7 @@ const SOLFEGGIO_SOUNDSCAPES = [
     description: 'Stabilizes restless energy, reduces anxiety, and grounds the nervous system.',
     benefit: 'Reduces cortisol & balances Vata wind',
     icon: '⛰️',
-    streamUrl: 'https://www.youtube.com/results?search_query=432hz+grounding+meditation+music',
+    streamUrl: 'https://www.youtube.com/watch?v=xQ6xgDI7Whc',
   },
   {
     frequency: '528Hz',
@@ -26,7 +26,7 @@ const SOLFEGGIO_SOUNDSCAPES = [
     description: 'Evokes emotional cellular repair, dissolves inner irritation, and cools fiery focus.',
     benefit: 'Cools inflammation & calms Pitta fire',
     icon: '🌊',
-    streamUrl: 'https://www.youtube.com/results?search_query=528hz+pitta+soothing+meditation+music',
+    streamUrl: 'https://www.youtube.com/watch?v=UK-lRShtNro',
   },
   {
     frequency: '639Hz',
@@ -35,7 +35,7 @@ const SOLFEGGIO_SOUNDSCAPES = [
     description: 'Fosters deep connection, releases stagnant emotions, and energizes heart centers.',
     benefit: 'Clears stagnation & activates Kapha spirit',
     icon: '🌸',
-    streamUrl: 'https://www.youtube.com/results?search_query=639hz+heart+chakra+kapha+music',
+    streamUrl: 'https://www.youtube.com/watch?v=M2_K_H5K25w',
   },
 ];
 
@@ -55,15 +55,15 @@ export default function MusicPage() {
   // Derive predicted phase from cycle start date if exists
   const getCyclePhase = useCallback((day: number, length: number): string => {
     const quarterLength = Math.floor(length / 4);
-    if (day <= 5 || day <= quarterLength * 0.25) return 'Menstrual';
-    if (day <= quarterLength) return 'Menstrual';
-    if (day <= quarterLength * 2) return 'Follicular';
-    if (day <= quarterLength * 2.5) return 'Ovulatory';
-    return 'Luteal';
+    if (day <= 5 || day <= quarterLength * 0.25) return 'menstrual';
+    if (day <= quarterLength) return 'menstrual';
+    if (day <= quarterLength * 2) return 'follicular';
+    if (day <= quarterLength * 2.5) return 'ovulation';
+    return 'luteal';
   }, []);
 
   useEffect(() => {
-    let phase = 'Follicular';
+    let phase = 'follicular';
     if (cycle && cycle.startDate) {
       const today = new Date();
       const last = new Date(cycle.startDate);
@@ -73,14 +73,14 @@ export default function MusicPage() {
       phase = getCyclePhase(currentDay, cycleLength);
     } else {
       // Fallback phase mapping based on slider energy
-      if (energyLevel <= 3) phase = 'Menstrual';
-      else if (energyLevel <= 5) phase = 'Luteal';
-      else if (energyLevel <= 8) phase = 'Follicular';
-      else phase = 'Ovulatory';
+      if (energyLevel <= 3) phase = 'menstrual';
+      else if (energyLevel <= 5) phase = 'luteal';
+      else if (energyLevel <= 8) phase = 'follicular';
+      else phase = 'ovulation';
     }
     setPredictionPhase(phase);
-    setMusicRecommendations(getMusicRecommendations(phase, energyLevel));
-  }, [cycle, energyLevel, getCyclePhase]);
+    setMusicRecommendations(getMusicRecommendations(phase, energyLevel, selectedDosha));
+  }, [cycle, energyLevel, getCyclePhase, selectedDosha]);
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEnergyLevel(parseInt(e.target.value));
@@ -167,7 +167,7 @@ export default function MusicPage() {
                   max="10"
                   value={energyLevel}
                   onChange={handleSliderChange}
-                  className="w-full h-1 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-[#c06080] mb-4"
+                  className="w-full h-1 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-[var(--ojas-accent)] mb-4"
                 />
 
                 <div className="flex justify-between text-[9px] font-mono text-stone-400 uppercase tracking-widest mb-6">
@@ -245,7 +245,7 @@ export default function MusicPage() {
                   <div className="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
                     <div>
                       <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary font-bold block">
-                        CURATED SANCTUARY PLAYLIST
+                        PHASE-SYNCED FREQUENCIES
                       </span>
                       <h2 className="text-xl sm:text-2xl font-serif italic text-white font-normal mt-1">
                         Ayurvedic Indie Pop gems
@@ -265,7 +265,12 @@ export default function MusicPage() {
                           <div className="flex-1 flex items-center gap-4">
                             {/* Interactive Disc Visualizer */}
                             <button
-                              onClick={() => setActiveVisualizer(isPlaying ? null : idx)}
+                              onClick={() => {
+                                setActiveVisualizer(isPlaying ? null : idx);
+                                if (!isPlaying && song.youtubeUrl) {
+                                  window.open(song.youtubeUrl, '_blank', 'noopener,noreferrer');
+                                }
+                              }}
                               className={`w-10 h-10 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center text-sm shadow-md cursor-pointer relative overflow-hidden flex-shrink-0 ${
                                 isPlaying ? 'animate-spin [animation-duration:4s]' : ''
                               }`}
@@ -289,7 +294,7 @@ export default function MusicPage() {
                           {/* Action Streams */}
                           <div className="flex gap-2 flex-wrap sm:flex-nowrap flex-shrink-0 items-center">
                             <a
-                              href={song.spotifyUrl}
+                              href={`https://open.spotify.com/search/${encodeURIComponent(song.artist + ' ' + song.title)}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-wider bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-300 rounded-full transition-all duration-300"
@@ -401,7 +406,7 @@ export default function MusicPage() {
               }}
               className="px-10 py-4.5 rounded-full text-xs font-mono font-bold uppercase tracking-[0.2em] bg-primary hover:bg-secondary text-white transition-all duration-300 shadow-md cursor-pointer text-center"
             >
-              COMPILE WELLNESS PORTAL & ENTER DASHBOARD →
+              Continue to Dashboard →
             </button>
           </div>
 

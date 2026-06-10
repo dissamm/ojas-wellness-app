@@ -45,7 +45,7 @@ export const useMoodPrediction = (
   const [predictedMood, setPredictedMood] = useState<number | null>(null);
   const [moodType, setMoodType] = useState<string>('');
   const [cycleDay, setCycleDay] = useState<number>(9);
-  const [cyclePhase, setCyclePhase] = useState<string>('Follicular');
+  const [cyclePhase, setCyclePhase] = useState<string>('follicular');
   const [moonPhase, setMoonPhase] = useState<string>('Waxing Crescent');
   const [moonIllumination, setMoonIllumination] = useState<number>(35);
   const [musicRecommendations, setMusicRecommendations] = useState<RecommendedSong[]>([]);
@@ -94,11 +94,11 @@ export const useMoodPrediction = (
         console.warn("Failed to fetch mood prediction, using offline math fallback: ", err);
         // Clean mock fallback
         const quarterLength = Math.floor(length / 4);
-        let phase = 'Follicular';
-        if (day <= 5) phase = 'Menstrual';
-        else if (day <= quarterLength * 2) phase = 'Follicular';
-        else if (day <= quarterLength * 2.5) phase = 'Ovulatory';
-        else phase = 'Luteal';
+        let phase = 'follicular';
+        if (day <= 5) phase = 'menstrual';
+        else if (day <= quarterLength * 2) phase = 'follicular';
+        else if (day <= quarterLength * 2.5) phase = 'ovulation';
+        else phase = 'luteal';
 
         setCyclePhase(phase);
         setPredictedMood(7);

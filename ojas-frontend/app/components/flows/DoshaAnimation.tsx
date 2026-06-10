@@ -155,7 +155,7 @@ export const DoshaAnimation = () => {
                             <div className="md:w-1/2 space-y-stack-md">
                                 <h3 className="font-headline-md text-[32px] text-primary-fixed">The Elemental Pulse</h3>
                                 <blockquote className="font-quote text-[24px] text-[#89ba99] italic">
-                                    "Health is a state of equilibrium between the three humors, the seven tissues, and the three wastes."
+                                    &quot;Health is a state of equilibrium between the three humors, the seven tissues, and the three wastes.&quot;
                                 </blockquote>
                                 <p className="font-body-md text-[17px] text-[#89ba99] leading-relaxed">
                                     Our modern rituals are designed to harmonize these forces using pure botanical essences and mindful movement. Your discovery starts with understanding your Prakriti—your original nature.

@@ -18,10 +18,10 @@ interface PhaseCardProps {
 
 const normalizePhase = (phaseStr: string): 'menstrual' | 'follicular' | 'ovulation' | 'luteal' => {
   const p = (phaseStr || '').toLowerCase();
-  if (p.includes('menstrual')) return 'menstrual';
-  if (p.includes('follicular')) return 'follicular';
-  if (p.includes('ovulat') || p.includes('ovulation')) return 'ovulation';
-  if (p.includes('luteal')) return 'luteal';
+  if (p === 'menstrual') return 'menstrual';
+  if (p === 'follicular') return 'follicular';
+  if (p === 'ovulation' || p === 'ovulatory') return 'ovulation';
+  if (p === 'luteal') return 'luteal';
   return 'menstrual'; // fallback
 };
 
@@ -75,7 +75,7 @@ const phaseConfig = {
       'I am open to new beginnings and fresh directions.'
     ],
     buttonText: 'Show Me The Music',
-    buttonClass: 'bg-gradient-to-br from-ojas-follicular to-[#c06080]/80 text-on-primary hover:shadow-[0_0_20px_rgba(194,122,93,0.4)]',
+    buttonClass: 'bg-gradient-to-br from-ojas-follicular to-[var(--ojas-accent)]/80 text-on-primary hover:shadow-[0_0_20px_rgba(194,122,93,0.4)]',
     doshaTitle: 'Vata Energy (Rising)',
     doshaPractices: [
       'Increase light morning workouts',
@@ -230,7 +230,7 @@ export const PhaseCard: React.FC<PhaseCardProps> = ({
                   <stop offset="100%" stopColor="#2D1B2E" />
                 </linearGradient>
                 <linearGradient id="follicular-progress-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#c06080" />
+                  <stop offset="0%" stopColor="var(--ojas-accent)" />
                   <stop offset="100%" stopColor="#8B9D6E" />
                 </linearGradient>
                 <linearGradient id="ovulation-progress-grad" x1="0%" y1="0%" x2="100%" y2="100%">

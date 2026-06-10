@@ -126,7 +126,7 @@ export default function LoginPage() {
           </main>
         </div>
 
-        <footer className="w-full max-w-7xl mx-auto px-8 pb-6 pt-6 border-t border-primary/5 dark:border-stone-850 flex items-center justify-between text-[9px] md:text-[10px] font-mono text-stone-500 tracking-wider">
+        <footer className="w-full max-w-7xl mx-auto px-8 pb-6 pt-6 border-t border-primary/5 dark:border-stone-800 flex items-center justify-between text-[9px] md:text-[10px] font-mono text-stone-500 tracking-wider">
           <div>SECURE PASS</div>
           <div>© OJAS RITUAL MMXXVI</div>
         </footer>

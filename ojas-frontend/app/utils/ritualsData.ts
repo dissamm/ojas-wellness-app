@@ -11,10 +11,10 @@ export interface Ritual {
     linkType?: 'spotify' | 'youtube' | 'generic';
     planetaryTag?: string; // e.g. "☿ Mercury Rx"
     phaseModifications?: {
-        Menstrual?: Partial<Omit<Ritual, 'id' | 'time' | 'dosha' | 'phaseModifications'>>;
-        Follicular?: Partial<Omit<Ritual, 'id' | 'time' | 'dosha' | 'phaseModifications'>>;
-        Ovulatory?: Partial<Omit<Ritual, 'id' | 'time' | 'dosha' | 'phaseModifications'>>;
-        Luteal?: Partial<Omit<Ritual, 'id' | 'time' | 'dosha' | 'phaseModifications'>>;
+        menstrual?: Partial<Omit<Ritual, 'id' | 'time' | 'dosha' | 'phaseModifications'>>;
+        follicular?: Partial<Omit<Ritual, 'id' | 'time' | 'dosha' | 'phaseModifications'>>;
+        ovulation?: Partial<Omit<Ritual, 'id' | 'time' | 'dosha' | 'phaseModifications'>>;
+        luteal?: Partial<Omit<Ritual, 'id' | 'time' | 'dosha' | 'phaseModifications'>>;
     };
 }
 
@@ -30,7 +30,7 @@ export const ritualsList: Ritual[] = [
         linkText: 'Morning Ambient Playlist',
         linkType: 'spotify',
         phaseModifications: {
-            Menstrual: {
+            menstrual: {
                 activity: 'Gentle Menses Waking',
                 description: 'Wake up with extra soft transitions. Lie in bed for 5 extra minutes focusing on deep abdominal breathing to ease pelvic cramping.',
                 duration: 20
@@ -59,12 +59,12 @@ export const ritualsList: Ritual[] = [
         linkText: 'Breathing Solfeggio Frequencies',
         linkType: 'spotify',
         phaseModifications: {
-            Menstrual: {
+            menstrual: {
                 activity: 'Soothing Nadi Shodhana (No Retention)',
                 description: 'Alternate nostril breathing with soft, equal breaths. Do not hold your breath to avoid strain on pelvic energy.',
                 duration: 10
             },
-            Ovulatory: {
+            ovulation: {
                 activity: 'Dynamic Breathwork (Kapalabhati)',
                 description: 'A more active breathwork session to channel peak ovulatory energy and clear stagnant channels.',
                 duration: 8
@@ -82,7 +82,7 @@ export const ritualsList: Ritual[] = [
         linkText: 'Guided Morning Flow',
         linkType: 'youtube',
         phaseModifications: {
-            Menstrual: {
+            menstrual: {
                 activity: 'Restorative Yin Yoga',
                 description: 'Deeply relaxing poses like Child\'s Pose and Reclined Butterfly to open the hips, relax the lower back, and comfort cramping. Avoid inversions.',
                 duration: 30,
@@ -90,7 +90,7 @@ export const ritualsList: Ritual[] = [
                 linkText: 'Menstrual Restorative Yoga',
                 linkType: 'youtube'
             },
-            Luteal: {
+            luteal: {
                 activity: 'Slow Flow Hatha Yoga',
                 description: 'Slow down the pace to match luteal wind-down. Focus on hip openers and twists to release emotional and physical pressure.',
                 duration: 20
@@ -108,7 +108,7 @@ export const ritualsList: Ritual[] = [
         linkText: 'Abhyanga Ritual Guide',
         linkType: 'youtube',
         phaseModifications: {
-            Menstrual: {
+            menstrual: {
                 activity: 'Gentle Foot & Head Massage',
                 description: 'Avoid full-body vigorous abhyanga during the heaviest days of bleeding. Instead, massage warm sesame oil into your feet (Padabhyanga) and scalp.',
                 duration: 10
@@ -123,12 +123,12 @@ export const ritualsList: Ritual[] = [
         dosha: ['Vata', 'Pitta', 'Kapha'],
         description: 'A warm, cooked breakfast to ignite digestive fire (Agni). (Vata: cooked oats, Pitta: sweet stewed apples/pears, Kapha: light warm grains).',
         phaseModifications: {
-            Menstrual: {
+            menstrual: {
                 activity: 'Iron-Rich Warm Breakfast',
                 description: 'Warm spiced porridge with dates, raisins, and a pinch of ginger to replenish iron and ground your body. Avoid cold smoothies.',
                 duration: 20
             },
-            Follicular: {
+            follicular: {
                 activity: 'Nutrient-Dense Light Breakfast',
                 description: 'Include fermented foods or fresh sprouts to align with rising estrogen and aid follicular growth.',
                 duration: 15
@@ -143,7 +143,7 @@ export const ritualsList: Ritual[] = [
         dosha: ['Vata', 'Pitta', 'Kapha'],
         description: 'Eat your largest and most complete meal of the day now when the sun is highest, representing the peak of your digestive Agni.',
         phaseModifications: {
-            Menstrual: {
+            menstrual: {
                 activity: 'Warming Comforting Kitchari',
                 description: 'Enjoy a bowl of warm, soupy split-mung dal kitchari with cumin, coriander, and fennel. Soft and extremely easy to digest.',
                 duration: 30
@@ -161,7 +161,7 @@ export const ritualsList: Ritual[] = [
         linkText: 'Acoustic Soundscapes',
         linkType: 'spotify',
         phaseModifications: {
-            Menstrual: {
+            menstrual: {
                 activity: 'Slow Centered Forest Bathing',
                 description: 'Walk very slowly and intentionally. Focus on grounding the soles of your feet with each step, breathing out any accumulated fatigue.',
                 duration: 10
@@ -187,7 +187,7 @@ export const ritualsList: Ritual[] = [
         dosha: ['Vata', 'Pitta', 'Kapha'],
         description: 'A light, warm dinner eaten at least 3 hours before sleep to support optimal digestion and sleep hygiene.',
         phaseModifications: {
-            Menstrual: {
+            menstrual: {
                 activity: 'Mineral-Rich Warming Soups',
                 description: 'Enjoy warm soups, steamed greens, and well-cooked root vegetables with ghee. Keep the portion light to ensure energy is directed to menstruation.',
                 duration: 30
@@ -205,7 +205,7 @@ export const ritualsList: Ritual[] = [
         linkText: 'How to Make Golden Milk',
         linkType: 'youtube',
         phaseModifications: {
-            Menstrual: {
+            menstrual: {
                 activity: 'Menses Chamomile-Ginger Infusion',
                 description: 'Sip warm chamomile tea infused with fresh ginger and fennel seeds to soothe uterine contractions and invite profound sleep.',
                 duration: 25
@@ -224,7 +224,7 @@ export const ritualsList: Ritual[] = [
 
 export const getCycleStateFromStore = (cycle: { startDate: string; cycleLengthDays: number } | null) => {
     if (!cycle || !cycle.startDate) {
-        return { day: 9, phase: 'Follicular' as const };
+        return { day: 9, phase: 'follicular' as const };
     }
     const today = new Date();
     const last = new Date(cycle.startDate);
@@ -235,22 +235,22 @@ export const getCycleStateFromStore = (cycle: { startDate: string; cycleLengthDa
     if (day > length) day = length;
 
     const quarterLength = Math.floor(length / 4);
-    let phase: 'Menstrual' | 'Follicular' | 'Ovulatory' | 'Luteal' = 'Follicular';
-    if (day <= 5) phase = 'Menstrual';
-    else if (day <= quarterLength * 2) phase = 'Follicular';
-    else if (day <= quarterLength * 2.5) phase = 'Ovulatory';
-    else phase = 'Luteal';
+    let phase: 'menstrual' | 'follicular' | 'ovulation' | 'luteal' = 'follicular';
+    if (day <= 5) phase = 'menstrual';
+    else if (day <= quarterLength * 2) phase = 'follicular';
+    else if (day <= quarterLength * 2.5) phase = 'ovulation';
+    else phase = 'luteal';
 
     return { day, phase };
 };
 
 export const getRitualsForDosha = (
     dominantDosha: string | null,
-    currentPhase: 'Menstrual' | 'Follicular' | 'Ovulatory' | 'Luteal' | string,
+    currentPhase: 'menstrual' | 'follicular' | 'ovulation' | 'luteal' | string,
     showPhaseModifications: boolean = true
 ): Ritual[] => {
     const dosha = dominantDosha || 'Pitta';
-    const phaseKey = (currentPhase || 'Follicular') as 'Menstrual' | 'Follicular' | 'Ovulatory' | 'Luteal';
+    const phaseKey = (currentPhase || 'follicular') as 'menstrual' | 'follicular' | 'ovulation' | 'luteal';
 
     return ritualsList
         .filter(ritual => ritual.dosha.includes(dosha))
