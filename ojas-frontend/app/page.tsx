@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUserStore } from './store/userStore';
 import { Header } from './components/Header';
-import { hasCompletedPrakriti } from './lib/dominantDosha';
+import { isFullyOnboarded, getResumeStep } from './lib/onboardingState';
 import WellnessFlow from './WellnessFlow';
 import { CompactLunarAnimation } from './components/CompactLunarAnimation';
 
@@ -54,7 +54,13 @@ export default function Home() {
   const handleBeginJourney = (e: React.MouseEvent) => {
     e.preventDefault();
     if (isAuthenticated) {
-      router.push(hasCompletedPrakriti(user) ? '/dashboard' : '/prakriti');
+      if (isFullyOnboarded(user)) {
+        router.push('/dashboard');
+      } else {
+        const nextStep = getResumeStep(user);
+        useUserStore.getState().setCurrentStep(nextStep);
+        router.push(`/?step=${nextStep}`);
+      }
     } else {
       router.push('/register');
     }
@@ -62,12 +68,12 @@ export default function Home() {
 
   return (
     <>
-      <div className="relative min-h-screen w-full overflow-x-hidden bg-background text-on-background flex flex-col selection:bg-secondary-container selection:text-on-secondary-container">
+      <div className="relative min-h-screen w-full overflow-x-hidden flex flex-col selection:bg-secondary-container selection:text-on-secondary-container">
         {/* We use the unified Header component instead of the HTML header to keep state intact */}
         <Header />
 
         {/* ── HERO ── */}
-        <section className="relative min-h-screen flex flex-col items-center justify-center pt-24 overflow-hidden bg-[radial-gradient(circle_at_center,#004d2c_0%,#00341c_100%)] text-on-primary">
+        <section className="relative min-h-screen flex flex-col items-center justify-center pt-24 overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none reveal">
             <svg
               className="animate-[spin_60s_linear_infinite]"
@@ -83,10 +89,10 @@ export default function Home() {
           </div>
 
           <div className="z-10 text-center px-margin-mobile reveal">
-            <h1 className="font-display-lg text-[80px] md:text-[140px] tracking-[10px] md:tracking-[24px] mb-stack-sm animate-float text-[#FFB6CB]">
+            <h1 className="font-display-lg text-[80px] md:text-[140px] tracking-[10px] md:tracking-[24px] mb-stack-sm animate-float text-resonant-pink">
               OJAS
             </h1>
-            <p className="font-quote text-quote italic mb-stack-lg text-secondary-fixed">
+            <p className="font-quote text-quote italic mb-stack-lg text-surface-cream">
               Sync your rhythm with the cosmic pulse
             </p>
 
@@ -115,10 +121,10 @@ export default function Home() {
         {/* ── ABOUT ── */}
         <section className="py-stack-xl px-margin-desktop max-w-container-max mx-auto grid md:grid-cols-2 gap-stack-xl items-center bg-background">
           <div className="space-y-stack-md reveal">
-            <h2 className="font-headline-md text-headline-md text-primary leading-tight">
-              Ancient Wisdom,<br />Modern Rhythm <span className="text-[#FFB6CB]">❧</span>
+            <h2 className="font-headline-md text-headline-md text-surface-cream leading-tight">
+              Ancient Wisdom,<br />Modern Rhythm <span className="text-resonant-pink">❧</span>
             </h2>
-            <div className="w-24 h-1 bg-[#FFB6CB]" />
+            <div className="w-24 h-1 bg-resonant-pink" />
           </div>
           <div className="space-y-stack-md reveal">
             <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed italic">
@@ -129,126 +135,58 @@ export default function Home() {
             </p>
             <Link
               href="#"
-              className="inline-block font-label-caps text-label-caps text-primary border-b border-primary pb-1 hover:text-tertiary hover:border-tertiary transition-all"
+              className="inline-block font-label-caps text-label-caps text-surface-cream border-b border-surface-cream pb-1 hover:text-tertiary hover:border-tertiary transition-all"
             >
               LEARN OUR PHILOSOPHY
             </Link>
           </div>
         </section>
 
-        {/* ── GALLERY (Bento) ── */}
-        <section className="py-stack-xl px-margin-desktop bg-surface-container-low">
-          <div className="max-w-container-max mx-auto reveal">
-            <div className="grid md:grid-cols-3 gap-gutter">
-              {/* Prakriti */}
-              <div
-                onClick={() => router.push('/prakriti')}
-                className="group relative bg-surface p-stack-lg min-h-[500px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-4 hover:shadow-xl rounded-lg overflow-hidden cursor-pointer"
-              >
-                <div className="absolute top-0 right-0 p-stack-md text-[#FFB6CB] opacity-20 group-hover:opacity-100 transition-opacity">
-                  <span className="material-symbols-outlined text-[64px]" style={{ fontVariationSettings: "'FILL' 1" }}>eco</span>
-                </div>
-                <div className="relative z-10">
-                  <span className="font-label-caps text-label-caps text-secondary font-bold block mb-stack-sm">CONSTITUTION</span>
-                  <h3 className="font-headline-sm text-headline-sm text-primary mb-stack-md">Prakriti</h3>
-                  <p className="font-body-md text-body-md text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    Discover your unique elemental composition and unlock personalized nutritional paths.
-                  </p>
-                </div>
-                <div className="absolute inset-0 bg-primary-container/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-              </div>
 
-              {/* Lunar Sync */}
-              <div
-                onClick={() => router.push('/cycle')}
-                className="group relative bg-primary-container p-stack-lg min-h-[500px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-4 hover:shadow-xl rounded-lg overflow-hidden cursor-pointer text-on-primary-container"
-              >
-                <div className="absolute top-0 right-0 p-stack-md opacity-40 group-hover:opacity-100 transition-opacity">
-                  <CompactLunarAnimation />
-                </div>
-                <div className="relative z-10">
-                  <span className="font-label-caps text-label-caps text-secondary-fixed-dim font-bold block mb-stack-sm">COSMIC ALIGNMENT</span>
-                  <h3 className="font-headline-sm text-headline-sm text-on-primary mb-stack-md">Lunar Sync</h3>
-                  <p className="font-body-md text-body-md text-on-primary-container opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    Align your deep work and rest cycles with the waxing and waning moon phases.
-                  </p>
-                </div>
-              </div>
-
-              {/* Audio */}
-              <div
-                onClick={() => router.push('/music')}
-                className="group relative bg-surface p-stack-lg min-h-[500px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-4 hover:shadow-xl rounded-lg overflow-hidden cursor-pointer"
-              >
-                <div className="absolute top-0 right-0 p-stack-md text-[#FFB6CB] opacity-20 group-hover:opacity-100 transition-opacity">
-                  <span className="material-symbols-outlined text-[64px]" style={{ fontVariationSettings: "'FILL' 1" }}>graphic_eq</span>
-                </div>
-                <div className="relative z-10">
-                  <span className="font-label-caps text-label-caps text-secondary font-bold block mb-stack-sm">SONIC HEALING</span>
-                  <h3 className="font-headline-sm text-headline-sm text-primary mb-stack-md">Frequencies</h3>
-                  <p className="font-body-md text-body-md text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    Binaural beats layered with traditional mantras to recalibrate your nervous system.
-                  </p>
-                </div>
-                <div className="absolute inset-0 bg-tertiary-container/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── JOURNEY ── */}
-        <section className="py-stack-xl px-margin-desktop bg-background overflow-hidden">
-          <div className="max-w-4xl mx-auto reveal">
-            <h2 className="font-headline-md text-headline-md text-center text-primary mb-stack-xl">
-              The Path to Radiance
+        {/* ── CORE PILLARS ── */}
+        <section className="py-stack-xl px-margin-desktop overflow-hidden bg-transparent max-w-container-max mx-auto">
+          <div className="reveal">
+            <h2 className="font-headline-md text-[40px] md:text-[56px] text-center text-surface-cream mb-stack-xl uppercase tracking-widest">
+              Core Pillars
             </h2>
 
-            <div className="relative space-y-stack-xl">
-              {/* Vertical Line */}
-              <div className="absolute left-1/2 top-0 bottom-0 w-[1px] -translate-x-1/2 hidden md:block bg-[#FFB6CB]/20" />
-
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
               {[
-                { stage: '01', title: 'Genesis',         desc: 'Intake and elemental analysis of your current state of being.' },
-                { stage: '02', title: 'Synchronization', desc: 'Mapping your bio-data against the current lunar and solar cycles.' },
-                { stage: '03', title: 'Healing',         desc: 'Targeted herbal, audio, and physical practices to restore OJAS.' },
-                { stage: '04', title: 'Rituals',         desc: 'Daily micro-habits that maintain your peak vibrational state.' },
+                { icon: 'psychology', title: 'Prakriti Analysis', desc: 'The anchor feature. Discover your unique mind-body constitution.' },
+                { icon: 'self_improvement', title: 'Ritual Protocol', desc: 'Phase-synced daily practices tailored to your elemental flow.' },
+                { icon: 'restaurant', title: 'Aahar Intelligence', desc: 'Dosha-specific food & herb guidance to restore your inner fire.' },
+                { icon: 'flare', title: 'Jyotish Forecast', desc: 'Vedic astrology meets your daily wellness. Align with the stars.' },
               ].map((item, i) => (
-                <div key={item.stage} className="relative flex flex-col md:flex-row items-center justify-between gap-stack-lg">
-                  {i % 2 === 0 ? (
-                    <>
-                      <div className="md:w-5/12 text-center md:text-right">
-                        <h4 className="font-headline-sm text-headline-sm text-primary">{item.title}</h4>
-                        <p className="font-body-md text-body-md text-on-surface-variant">{item.desc}</p>
-                      </div>
-                      <div className="relative z-10 w-4 h-4 rounded-full border-4 border-background bg-[#FFB6CB] animate-dot-pulse" />
-                      <div className="md:w-5/12 hidden md:block font-label-caps text-label-caps font-bold text-[#FFB6CB]">
-                        STAGE {item.stage}
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="md:w-5/12 hidden md:block font-label-caps text-label-caps font-bold text-[#FFB6CB] text-right">
-                        STAGE {item.stage}
-                      </div>
-                      <div className="relative z-10 w-4 h-4 rounded-full border-4 border-background bg-[#FFB6CB] animate-dot-pulse" />
-                      <div className="md:w-5/12 text-center md:text-left">
-                        <h4 className="font-headline-sm text-headline-sm text-primary">{item.title}</h4>
-                        <p className="font-body-md text-body-md text-on-surface-variant">{item.desc}</p>
-                      </div>
-                    </>
-                  )}
+                <div key={i} className="bg-white/5 border border-white/10 p-stack-lg rounded-2xl hover:bg-white/10 hover:border-resonant-pink/30 transition-all group flex flex-col items-center text-center cursor-default">
+                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-stack-md group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-primary text-[32px]">{item.icon}</span>
+                  </div>
+                  <h4 className="font-headline-sm text-[28px] text-surface-cream mb-stack-sm">{item.title}</h4>
+                  <p className="font-body-md text-surface-cream/70 italic-serif text-[18px] max-w-sm">{item.desc}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ── FOOTER ── */}
-        <footer className="w-full bg-surface-container-lowest">
-          <div className="flex flex-col md:flex-row justify-between items-center px-margin-desktop py-stack-lg gap-gutter max-w-container-max mx-auto">
-            <div className="font-display-lg text-headline-md text-[#FFB6CB]">OJAS</div>
+        {/* ── HORIZON (CTA) ── */}
+        <section className="py-stack-xl px-margin-desktop text-center bg-transparent border-t border-white/10">
+          <div className="max-w-md mx-auto reveal">
+            <h2 className="font-display-lg text-[40px] md:text-display-lg text-surface-cream mb-stack-md animate-float">
+              Begin Your Alignment
+            </h2>
+            <p className="font-body-md text-surface-cream/70 mb-stack-lg">
+              Unlock a more attuned version of yourself.
+            </p>
+          </div>
+        </section>
 
-            <p className="font-body-md text-label-caps text-secondary text-center md:text-right font-bold">
+        {/* ── FOOTER ── */}
+        <footer className="w-full bg-transparent border-t border-white/5">
+          <div className="flex flex-col md:flex-row justify-between items-center px-margin-desktop py-stack-lg gap-gutter max-w-container-max mx-auto">
+            <div className="font-display-lg text-headline-md text-resonant-pink">OJAS</div>
+
+            <p className="font-body-md text-label-caps text-surface-cream/60 text-center md:text-right font-bold">
               © 2026 OJAS Wellness. Ancient Wisdom, Modern Rhythm.
             </p>
           </div>

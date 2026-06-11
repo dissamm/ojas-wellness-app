@@ -115,8 +115,6 @@ const config: Config = {
         "label-caps": ["Space Mono", "monospace"],
         
         // Legacy
-        bebas: ['"Bebas Neue"', 'sans-serif'],
-        cormorant: ['"Cormorant Garamond"', 'serif'],
         "instrument-serif": ['"Instrument Serif"', 'serif'],
         inter: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['var(--font-geist-mono)', 'monospace'],
@@ -174,6 +172,10 @@ const config: Config = {
         'dot-pulse': {
           '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
           '50%': { opacity: '1', transform: 'scale(1.3)' },
+        },
+        'mesh-shift': {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
         }
       },
 
@@ -186,6 +188,7 @@ const config: Config = {
         'lotus-pulse': 'lotus-pulse 3s ease-in-out infinite',
         'divider-grow': 'divider-grow 1s cubic-bezier(0.16,1,0.3,1) both',
         'dot-pulse': 'dot-pulse 2.5s ease-in-out infinite',
+        'mesh-shift': 'mesh-shift 20s ease infinite',
       },
 
       backdropBlur: {

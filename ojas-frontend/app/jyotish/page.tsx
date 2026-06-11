@@ -1,10 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Header } from '../components/Header';
-import { Card } from '../components/Card';
 import { useUserStore } from '../store/userStore';
 import { getJyotishProfile } from '../utils/jyotishData';
 
@@ -23,7 +21,6 @@ export default function JyotishPage() {
   const { user, isAuthenticated } = useUserStore();
   const [isMounted, setIsMounted] = useState(false);
   const [addedTransitIds, setAddedTransitIds] = useState<Record<string, boolean>>({});
-  const [healthInsightExpanded, setHealthInsightExpanded] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -121,405 +118,312 @@ export default function JyotishPage() {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-background text-foreground transition-colors duration-300">
+    <div className="bg-forest-ink text-surface-cream selection:bg-resonant-pink selection:text-forest-ink overflow-x-hidden min-h-screen">
+      <style dangerouslySetInnerHTML={{__html: `
+        .breathing-glow {
+            animation: breathe 8s ease-in-out infinite;
+            background: radial-gradient(circle, rgba(254, 181, 202, 0.1) 0%, rgba(0, 52, 28, 0) 70%);
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 12px;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: #feb5ca; /* Resonant Pink */
+        }
+
+        .ritual-btn:active {
+            transform: scale(0.95);
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+
+        .matrix-cell {
+            transition: all 0.3s ease;
+        }
+        .matrix-cell:hover {
+            background-color: rgba(254, 181, 202, 0.15);
+            color: #feb5ca;
+        }
+
+        .italic-serif-font {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+        }
+      `}} />
+
+      {/* Atmospheric Background */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="breathing-glow absolute top-[-10%] right-[-10%] w-[600px] h-[600px]"></div>
+        <div className="breathing-glow absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px]" style={{ animationDelay: '-4s' }}></div>
+      </div>
+
       <Header />
 
-      <main className="max-w-4xl mx-auto px-6 md:px-10 py-14 md:py-20 space-y-10">
-        {/* Return Link */}
-        <Link
-          href="/dashboard"
-          className="inline-flex items-center gap-2 text-stone-400 hover:text-stone-900 dark:hover:text-white transition-colors text-xs font-mono uppercase tracking-widest"
-        >
-          ← Return to Dashboard
-        </Link>
+      <main className="relative z-10 pt-[120px] pb-stack-xl max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+        {/* Compact Hero Section */}
+        <header className="flex flex-col md:flex-row md:items-end justify-between mb-stack-md fade-in-up">
+            <div className="max-w-3xl">
+                <button onClick={() => router.push('/dashboard')} className="inline-flex items-center gap-2 font-label-caps text-[10px] text-resonant-pink hover:opacity-70 transition-opacity mb-4 cursor-pointer">
+                    <span className="material-symbols-outlined text-[14px]">arrow_back</span>
+                    Return to Dashboard
+                </button>
+                <h1 className="font-headline-md text-[36px] md:text-[56px] uppercase leading-none">
+                    Your <span className="italic-serif-font lowercase tracking-normal text-resonant-pink">Jyotish</span> Blueprint
+                </h1>
+                <p className="mt-2 font-italic-serif italic text-body-lg text-white/70">
+                    A celestial mapping of your cosmic anatomy.
+                </p>
+            </div>
+            <div className="hidden lg:block text-right pb-1">
+                <span className="font-label-caps text-[10px] opacity-50 uppercase text-white/50">Session Status</span>
+                <p className="font-label-md text-resonant-pink uppercase tracking-widest">Active Alignment</p>
+            </div>
+        </header>
 
-        {/* Page Header */}
-        <div className="animate-fade-rise">
-          <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-secondary font-bold mb-4">
-            VEDIC ASTROLOGY · JYOTISH
-          </div>
-          <h1 className="text-4xl md:text-5xl font-normal font-quote text-primary dark:text-on-primary leading-tight mb-4">
-            Your <em className="italic text-secondary">Jyotish</em> Blueprint
-          </h1>
-          <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed max-w-xl">
-            Your birth chart, planetary transits, and numerology woven into your daily Ayurvedic practice.
-          </p>
+        {/* Central Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+            {/* Left Column (Main Focus) */}
+            <div className="lg:col-span-7 space-y-gutter">
+                {/* Birth Chart Overview */}
+                <section className="fade-in-up delay-1 opacity-0" style={{ animationFillMode: 'forwards' }}>
+                    <div className="glass-card p-6">
+                        <div className="flex justify-between items-start mb-6">
+                            <div>
+                                <span className="font-label-caps text-label-caps text-resonant-pink block mb-1">Janma Kundali</span>
+                                <h2 className="font-headline-sm text-headline-sm uppercase">Vedic Alignment</h2>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                            <div className="flex flex-col items-center text-center p-4 rounded-xl border border-white/5 bg-white/5">
+                                <span className="material-symbols-outlined text-resonant-pink text-[32px] mb-2" style={{ fontVariationSettings: "'wght' 200" }}>sunny</span>
+                                <span className="font-label-caps text-[10px] opacity-60 uppercase text-white/60">Sun</span>
+                                <span className="font-headline-sm text-[16px] uppercase">{jyotish.sunSign.rashi}</span>
+                            </div>
+                            <div className="flex flex-col items-center text-center p-4 rounded-xl border border-white/5 bg-white/5">
+                                <span className="material-symbols-outlined text-resonant-pink text-[32px] mb-2" style={{ fontVariationSettings: "'wght' 200" }}>dark_mode</span>
+                                <span className="font-label-caps text-[10px] opacity-60 uppercase text-white/60">Moon</span>
+                                <span className="font-headline-sm text-[16px] uppercase">{jyotish.moonSign.rashi}</span>
+                            </div>
+                            <div className="flex flex-col items-center text-center p-4 rounded-xl border border-white/5 bg-white/5">
+                                <span className="material-symbols-outlined text-resonant-pink text-[32px] mb-2" style={{ fontVariationSettings: "'wght' 200" }}>north_east</span>
+                                <span className="font-label-caps text-[10px] opacity-60 uppercase text-white/60">Asc</span>
+                                <span className="font-headline-sm text-[16px] uppercase">{jyotish.lagna.rashi}</span>
+                            </div>
+                            <div className="flex flex-col items-center text-center p-4 rounded-xl border border-white/5 bg-white/5">
+                                <span className="material-symbols-outlined text-resonant-pink text-[32px] mb-2" style={{ fontVariationSettings: "'wght' 200" }}>stars</span>
+                                <span className="font-label-caps text-[10px] opacity-60 uppercase text-white/60">Nakshatra</span>
+                                <span className="font-headline-sm text-[16px] uppercase">{jyotish.nakshatra}</span>
+                            </div>
+                        </div>
+                        <div className="p-4 bg-primary-container/10 border border-primary/20 rounded-lg">
+                            <p className="font-body-md text-[15px] leading-relaxed text-white/80">
+                                <span className="text-resonant-pink font-semibold">Synthesis:</span> Your {jyotish.lagna.english} ascendant brings emotional depth to your {jyotish.sunSign.english} restlessness. The {jyotish.moonSign.english} moon gifts you transformative intuition.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Graha-Dosha Matrix */}
+                <section className="fade-in-up delay-2 opacity-0" style={{ animationFillMode: 'forwards' }}>
+                    <div className="glass-card overflow-hidden">
+                        <div className="p-6 border-b border-white/10">
+                            <h3 className="font-headline-sm text-[18px] uppercase">Graha-Dosha Matrix</h3>
+                        </div>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left font-label-md text-[13px]">
+                                <thead>
+                                    <tr className="border-b border-white/10 bg-white/5 text-white/80">
+                                        <th className="px-6 py-4 font-label-caps text-resonant-pink">Graha</th>
+                                        <th className="px-6 py-4 font-label-caps">Dosha</th>
+                                        <th className="px-6 py-4 font-label-caps">Governs</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-white/5 text-white/70">
+                                    <tr className="hover:bg-white/5 transition-colors">
+                                        <td className="px-6 py-4 flex items-center gap-3 font-headline-sm text-[13px] uppercase text-white">
+                                            <span className="text-xl text-resonant-pink">☉</span> Surya
+                                        </td>
+                                        <td className="px-6 py-4">Pitta</td>
+                                        <td className="px-6 py-4">Vitality, Digestion</td>
+                                    </tr>
+                                    <tr className="hover:bg-white/5 transition-colors">
+                                        <td className="px-6 py-4 flex items-center gap-3 font-headline-sm text-[13px] uppercase text-white">
+                                            <span className="text-xl text-resonant-pink">☽</span> Chandra
+                                        </td>
+                                        <td className="px-6 py-4">Kapha/Vata</td>
+                                        <td className="px-6 py-4">Emotions, Sleep</td>
+                                    </tr>
+                                    <tr className="hover:bg-white/5 transition-colors">
+                                        <td className="px-6 py-4 flex items-center gap-3 font-headline-sm text-[13px] uppercase text-white">
+                                            <span className="text-xl text-resonant-pink">☿</span> Budha
+                                        </td>
+                                        <td className="px-6 py-4">Mixed</td>
+                                        <td className="px-6 py-4">Intellect, Nerves</td>
+                                    </tr>
+                                    <tr className="hover:bg-white/5 transition-colors">
+                                        <td className="px-6 py-4 flex items-center gap-3 font-headline-sm text-[13px] uppercase text-white">
+                                            <span className="text-xl text-resonant-pink">♃</span> Guru
+                                        </td>
+                                        <td className="px-6 py-4">Kapha</td>
+                                        <td className="px-6 py-4">Expansion, Immunity</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            {/* Right Column (Insights & Transits) */}
+            <div className="lg:col-span-5 space-y-gutter">
+                {/* Active Transits */}
+                <section className="fade-in-up delay-3 opacity-0" style={{ animationFillMode: 'forwards' }}>
+                    <div className="glass-card p-6">
+                        <div className="flex items-center justify-between mb-6">
+                            <h3 className="font-headline-sm text-[18px] uppercase">Active Transits</h3>
+                            <span className="material-symbols-outlined text-white/50 text-[20px]">auto_awesome</span>
+                        </div>
+                        <div className="space-y-4">
+                            {/* Transit Item */}
+                            <div className="p-4 border-l-2 border-resonant-pink bg-white/5 space-y-2 group transition-all hover:bg-white/[0.08]">
+                                <div className="flex justify-between items-start">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xl text-resonant-pink">☿</span>
+                                        <span className="font-headline-sm text-[12px] uppercase">Mercury Retrograde</span>
+                                    </div>
+                                    <span className="bg-resonant-pink text-forest-ink px-2 py-0.5 font-label-caps text-[9px] rounded-sm">VATA WATCH</span>
+                                </div>
+                                <p className="font-body-md text-[13px] text-white/70">Prioritize grounding spices and mental stillness.</p>
+                                <button onClick={() => handleAddRitual(transitsList[0])} className="ritual-btn w-full mt-2 py-1.5 border border-resonant-pink/30 hover:bg-resonant-pink hover:text-forest-ink font-label-caps text-[9px] transition-all uppercase cursor-pointer">
+                                    {addedTransitIds['transit-mercury'] ? '✓ ADDED' : '+ RITUAL'}
+                                </button>
+                            </div>
+
+                            {/* Transit Item */}
+                            <div className="p-4 border-l-2 border-primary-fixed bg-white/5 space-y-2 group transition-all hover:bg-white/[0.08]">
+                                <div className="flex justify-between items-start">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xl text-primary-fixed">♀</span>
+                                        <span className="font-headline-sm text-[12px] uppercase">Venus in Taurus</span>
+                                    </div>
+                                    <span className="bg-primary-container text-on-primary-container px-2 py-0.5 font-label-caps text-[9px] rounded-sm">PITTA SOOTHE</span>
+                                </div>
+                                <p className="font-body-md text-[13px] text-white/70">Window for lymphatic drainage and herbal baths.</p>
+                                <button onClick={() => handleAddRitual(transitsList[1])} className="ritual-btn w-full mt-2 py-1.5 border border-primary-fixed/30 hover:bg-primary-fixed hover:text-forest-ink font-label-caps text-[9px] transition-all uppercase cursor-pointer text-primary-fixed">
+                                    {addedTransitIds['transit-venus'] ? '✓ ADDED' : '+ RITUAL'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Numerology Matrix */}
+                <section className="fade-in-up delay-4 opacity-0" style={{ animationFillMode: 'forwards' }}>
+                    <div className="glass-card p-6">
+                        <div className="mb-6">
+                            <h3 className="font-headline-sm text-[18px] uppercase">Anka Jyotish</h3>
+                            <p className="font-italic-serif italic text-white/70 text-[14px]">Numerical vibrations of your path.</p>
+                        </div>
+                        <div className="flex justify-around mb-6 text-center">
+                            <div>
+                                <span className="font-label-caps text-[9px] opacity-60 uppercase block mb-1 text-white/60">Life Path</span>
+                                <div className="font-headline-md text-resonant-pink text-[40px] leading-none">{jyotish.lifePathNumber}</div>
+                                <span className="font-italic-serif text-[12px] opacity-60">{jyotish.lifePathTagline}</span>
+                            </div>
+                            <div className="w-px h-12 bg-white/10 self-center"></div>
+                            <div>
+                                <span className="font-label-caps text-[9px] opacity-60 uppercase block mb-1 text-white/60">Personal Year</span>
+                                <div className="font-headline-md text-white/80 text-[40px] leading-none">{jyotish.personalYearNumber}</div>
+                                <span className="font-italic-serif text-[12px] opacity-60">Cycle</span>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-3 border border-white/10">
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
+                                <div key={n} className={`matrix-cell aspect-square border border-white/10 flex flex-col items-center justify-center p-2 text-center ${n === jyotish.lifePathNumber ? 'bg-resonant-pink/20 text-resonant-pink ring-1 ring-inset ring-resonant-pink/30' : ''}`}>
+                                    <span className="font-label-caps text-[10px]">{n}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            </div>
         </div>
 
-        {/* Section 1: Birth Chart Overview Card */}
-        <div className="bg-primary dark:bg-[#111110] rounded-[32px] p-8 text-on-primary shadow-xl relative overflow-hidden transition-all duration-500 border border-stone-800">
-          <div className="absolute top-0 right-0 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-secondary font-bold mb-5">
-            JANMA KUNDALI · BIRTH CHART
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8 border-y border-white/5 py-6">
-            <div>
-              <span className="text-[9px] font-mono uppercase tracking-wider text-stone-400 block mb-1">Sun Sign</span>
-              <span className="text-lg font-serif italic text-white block">Mithuna ({jyotish.sunSign.english})</span>
-            </div>
-            <div>
-              <span className="text-[9px] font-mono uppercase tracking-wider text-stone-400 block mb-1">Moon Sign</span>
-              <span className="text-lg font-serif italic text-white block">Vrishchika ({jyotish.moonSign.english})</span>
-            </div>
-            <div>
-              <span className="text-[9px] font-mono uppercase tracking-wider text-stone-400 block mb-1">Ascendant (Lagna)</span>
-              <span className="text-lg font-serif italic text-white block">Karka ({jyotish.lagna.english})</span>
-            </div>
-            <div>
-              <span className="text-[9px] font-mono uppercase tracking-wider text-stone-400 block mb-1">Nakshatra</span>
-              <span className="text-lg font-serif italic text-white block">{jyotish.nakshatra}</span>
-            </div>
-          </div>
-
-          <p className="text-stone-300 text-sm font-serif italic leading-relaxed mb-6">
-            &ldquo;Your {jyotish.lagna.english} ascendant brings emotional depth to your {jyotish.sunSign.english} restlessness. The {jyotish.moonSign.english} moon gifts you transformative intuition.&rdquo;
-          </p>
-
-          <button
-            onClick={() => setHealthInsightExpanded(!healthInsightExpanded)}
-            className="text-[10px] font-mono uppercase tracking-wider text-secondary hover:text-white transition-colors cursor-pointer border-b border-secondary/30"
-          >
-            {healthInsightExpanded ? 'HIDE INSIGHTS ↑' : 'WHAT DOES THIS MEAN FOR MY HEALTH? →'}
-          </button>
-
-          {healthInsightExpanded && (
-            <div className="mt-6 p-5 bg-white/5 rounded-2xl border border-white/5 text-stone-300 text-xs leading-relaxed font-inter space-y-3 animate-fade-rise">
-              <p>
-                Having a <strong>Cancer Ascendant (Karka)</strong> rules your physical constitution via the Moon, increasing Kapha elements and emotional sensitivity. Your digestion is directly tied to your emotional environment.
-              </p>
-              <p>
-                The <strong>Gemini Sun (Mithuna)</strong> introduces restless air and ether elements (Vata) into your cellular intelligence. This can manifest as an overactive mind, nervous digestion, or irregular sleep cycles, particularly during transit shifts.
-              </p>
-              <p>
-                Your <strong>Scorpio Moon (Vrishchika)</strong> demands deep, intuitive processing. Unexpressed emotions directly affect your Pitta and digestion. Grounding practices (like Nadi Shodhana) and warm, nourishing spices are vital to bridge your restless mental state and deep water instincts.
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Section 2: Active Transits Card */}
-        <Card className="relative overflow-hidden">
-          <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-secondary font-bold mb-6">
-            ACTIVE TRANSITS · THIS MONTH
-          </div>
-
-          <div className="space-y-6">
-            {/* Transit 1 */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-stone-200/50 dark:border-stone-800 pb-5 gap-4">
-              <div className="space-y-2 flex-1">
-                <div className="flex items-center gap-3">
-                  <span className="text-lg">☿</span>
-                  <span className="font-serif italic text-lg text-stone-900 dark:text-white font-medium">Mercury Retrograde</span>
-                  <span className="text-[9px] font-mono text-stone-400">Until June 18</span>
-                  <span className="px-2.5 py-0.5 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-500 text-[8px] font-mono font-bold uppercase tracking-wider rounded-full">
-                    ⚠ VATA AGGRAVATING
-                  </span>
+        {/* Bottom Section: Full-Width Timeline */}
+        <section className="mt-gutter fade-in-up delay-5 opacity-0" style={{ animationFillMode: 'forwards' }}>
+            <div className="glass-card p-8">
+                <div className="flex items-center justify-between mb-8">
+                    <h3 className="font-headline-sm text-headline-sm uppercase">Cosmic Wellness Forecast: June</h3>
+                    <div className="flex gap-2">
+                        <button className="w-8 h-8 flex items-center justify-center border border-white/10 hover:border-resonant-pink transition-colors cursor-pointer">
+                            <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+                        </button>
+                        <button className="w-8 h-8 flex items-center justify-center border border-white/10 hover:border-resonant-pink transition-colors cursor-pointer">
+                            <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+                        </button>
+                    </div>
                 </div>
-                <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed font-inter">
-                  <strong>Implication:</strong> Scattered thinking, communication errors, tech issues. Double your Nadi Shodhana practice.
-                </p>
-              </div>
-              <button
-                onClick={() => handleAddRitual(transitsList[0])}
-                className={`px-4 py-2 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider transition-all duration-300 flex-shrink-0 cursor-pointer ${
-                  addedTransitIds['transit-mercury']
-                    ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20'
-                    : 'bg-secondary/10 hover:bg-secondary/20 text-secondary border border-secondary/20 active:scale-95'
-                }`}
-              >
-                {addedTransitIds['transit-mercury'] ? '✓ ADDED TO RITUALS' : '+ ADD TO RITUALS'}
-              </button>
-            </div>
-
-            {/* Transit 2 */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-stone-200/50 dark:border-stone-800 pb-5 gap-4">
-              <div className="space-y-2 flex-1">
-                <div className="flex items-center gap-3">
-                  <span className="text-lg">♀</span>
-                  <span className="font-serif italic text-lg text-stone-900 dark:text-white font-medium">Venus in Taurus</span>
-                  <span className="text-[9px] font-mono text-stone-400">Until July 4</span>
-                  <span className="px-2.5 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-605 dark:text-emerald-400 text-[8px] font-mono font-bold uppercase tracking-wider rounded-full text-emerald-600">
-                    ✦ PITTA SOOTHING
-                  </span>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+                    {/* Week 1 */}
+                    <div className="relative pl-6 border-l border-resonant-pink">
+                        <div className="absolute -left-[6px] top-0 w-3 h-3 rounded-full bg-resonant-pink shadow-[0_0_10px_#feb5ca]"></div>
+                        <span className="font-label-caps text-[10px] text-resonant-pink mb-2 block uppercase tracking-widest">Week 01</span>
+                        <h4 className="font-headline-sm text-[16px] uppercase mb-2">Creative Surge</h4>
+                        <p className="font-body-md text-white/70 text-[14px]">Mercury trine Jupiter supports vocal expression. Excellent for long-term planning.</p>
+                    </div>
+                    {/* Week 2 */}
+                    <div className="relative pl-6 border-l border-white/10">
+                        <div className="absolute -left-[4px] top-0 w-2 h-2 rounded-full border border-white/40 bg-forest-ink"></div>
+                        <span className="font-label-caps text-[10px] opacity-60 mb-2 block uppercase tracking-widest text-white/50">Week 02</span>
+                        <h4 className="font-headline-sm text-[16px] uppercase mb-2">Introspection</h4>
+                        <p className="font-body-md text-white/70 text-[14px]">Retrograde shadows emerge. Reduce commitments and focus on internal Agni.</p>
+                    </div>
+                    {/* Week 3 */}
+                    <div className="relative pl-6 border-l border-primary-fixed">
+                        <div className="absolute -left-[6px] top-0 w-3 h-3 rounded-full bg-primary-fixed shadow-[0_0_10px_#00341c]"></div>
+                        <span className="font-label-caps text-[10px] text-primary-fixed mb-2 block uppercase tracking-widest">Week 03</span>
+                        <h4 className="font-headline-sm text-[16px] uppercase mb-2">Grounding Week</h4>
+                        <p className="font-body-md text-white/70 text-[14px]">Solstice alignment. A time for deep rooting and rhythmic movement.</p>
+                    </div>
                 </div>
-                <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed font-inter">
-                  <strong>Implication:</strong> Sensory pleasures restore balance. Favour music, good food, and beauty in your rituals.
-                </p>
-              </div>
-              <button
-                onClick={() => handleAddRitual(transitsList[1])}
-                className={`px-4 py-2 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider transition-all duration-300 flex-shrink-0 cursor-pointer ${
-                  addedTransitIds['transit-venus']
-                    ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20'
-                    : 'bg-secondary/10 hover:bg-secondary/20 text-secondary border border-secondary/20 active:scale-95'
-                }`}
-              >
-                {addedTransitIds['transit-venus'] ? '✓ ADDED TO RITUALS' : '+ ADD TO RITUALS'}
-              </button>
             </div>
-
-            {/* Transit 3 */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-stone-200/50 dark:border-stone-800 pb-5 gap-4">
-              <div className="space-y-2 flex-1">
-                <div className="flex items-center gap-3">
-                  <span className="text-lg">♂</span>
-                  <span className="font-serif italic text-lg text-stone-900 dark:text-white font-medium">Mars in Leo</span>
-                  <span className="text-[9px] font-mono text-stone-400">Until July 20</span>
-                  <span className="px-2.5 py-0.5 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-500 text-[8px] font-mono font-bold uppercase tracking-wider rounded-full">
-                    🔥 PITTA ELEVATING
-                  </span>
-                </div>
-                <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed font-inter">
-                  <strong>Implication:</strong> Competitive energy peaks. Avoid overexertion. Sheetali Pranayama recommended.
-                </p>
-              </div>
-              <button
-                onClick={() => handleAddRitual(transitsList[2])}
-                className={`px-4 py-2 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider transition-all duration-300 flex-shrink-0 cursor-pointer ${
-                  addedTransitIds['transit-mars']
-                    ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20'
-                    : 'bg-secondary/10 hover:bg-secondary/20 text-secondary border border-secondary/20 active:scale-95'
-                }`}
-              >
-                {addedTransitIds['transit-mars'] ? '✓ ADDED TO RITUALS' : '+ ADD TO RITUALS'}
-              </button>
-            </div>
-
-            {/* Transit 4 */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="space-y-2 flex-1">
-                <div className="flex items-center gap-3">
-                  <span className="text-lg">♃</span>
-                  <span className="font-serif italic text-lg text-stone-900 dark:text-white font-medium">Jupiter in Gemini</span>
-                  <span className="text-[9px] font-mono text-stone-400">Full year</span>
-                  <span className="px-2.5 py-0.5 bg-stone-100 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-stone-650 dark:text-stone-400 text-[8px] font-mono font-bold uppercase tracking-wider rounded-full">
-                    ✦ VATA EXPANDING
-                  </span>
-                </div>
-                <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed font-inter">
-                  <strong>Implication:</strong> Philosophical growth period. Excellent for learning and new wellness practices.
-                </p>
-              </div>
-              <button
-                onClick={() => handleAddRitual(transitsList[3])}
-                className={`px-4 py-2 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider transition-all duration-300 flex-shrink-0 cursor-pointer ${
-                  addedTransitIds['transit-jupiter']
-                    ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20'
-                    : 'bg-secondary/10 hover:bg-secondary/20 text-secondary border border-secondary/20 active:scale-95'
-                }`}
-              >
-                {addedTransitIds['transit-jupiter'] ? '✓ ADDED TO RITUALS' : '+ ADD TO RITUALS'}
-              </button>
-            </div>
-          </div>
-        </Card>
-
-        {/* Section 3: Numerology Card */}
-        <Card>
-          <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-secondary font-bold mb-6">
-            ANKA JYOTISH · NUMEROLOGY
-          </div>
-
-          <div className="grid md:grid-cols-12 gap-8 items-start mb-8">
-            <div className="md:col-span-8 space-y-6">
-              <div>
-                <span className="text-[9px] font-mono uppercase tracking-wider text-stone-400 block mb-1">
-                  LIFE PATH NUMBER
-                </span>
-                <div className="flex items-baseline gap-4">
-                  <span className="text-5xl font-serif font-semibold text-secondary">
-                    {jyotish.lifePathNumber}
-                  </span>
-                  <span className="text-base font-serif italic text-stone-800 dark:text-white font-medium">
-                    {jyotish.lifePathTagline}
-                  </span>
-                </div>
-                <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed font-inter mt-2">
-                  {jyotish.lifePathDescription} Introspection, spiritual seeking, and truth-finding define your natural rhythms.
-                </p>
-              </div>
-
-              <div>
-                <span className="text-[9px] font-mono uppercase tracking-wider text-stone-400 block mb-1">
-                  PERSONAL YEAR NUMBER (2026)
-                </span>
-                <h4 className="text-lg font-serif italic text-stone-900 dark:text-white font-normal">
-                  Year {jyotish.personalYearNumber}
-                </h4>
-                <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed font-inter mt-1">
-                  {jyotish.personalYearInsight}
-                </p>
-              </div>
-            </div>
-
-            <div className="md:col-span-4 p-5 bg-[var(--ojas-light-surface)] dark:bg-stone-950/20 border border-stone-200/50 dark:border-stone-800/80 rounded-2xl space-y-1">
-              <span className="text-[8px] font-mono uppercase tracking-wider text-stone-400 block mb-1">
-                POWER DAY THIS MONTH
-              </span>
-              <div className="text-3xl font-serif font-semibold text-stone-900 dark:text-white">
-                June {jyotish.powerDay}
-              </div>
-              <p className="text-[10px] text-stone-500 leading-relaxed font-inter">
-                Your numerological peak day for important decisions, new beginnings, and deep therapeutic practices.
-              </p>
-            </div>
-          </div>
-
-          <div className="border-t border-stone-200/50 dark:border-stone-800 pt-5">
-            <span className="text-[8px] font-mono uppercase tracking-wider text-stone-400 block mb-3">
-              LIFE PATH MATRIX
-            </span>
-            <div className="grid grid-cols-3 md:grid-cols-9 gap-3">
-              {[
-                { n: 1, label: 'Leader' },
-                { n: 2, label: 'Peacemaker' },
-                { n: 3, label: 'Creator' },
-                { n: 4, label: 'Builder' },
-                { n: 5, label: 'Explorer' },
-                { n: 6, label: 'Nurturer' },
-                { n: 7, label: 'Seeker' },
-                { n: 8, label: 'Achiever' },
-                { n: 9, label: 'Humanitarian' },
-              ].map((item) => (
-                <div
-                  key={item.n}
-                  className={`p-2.5 rounded-xl border text-center font-mono ${
-                    item.n === jyotish.lifePathNumber
-                      ? 'bg-secondary/10 border-secondary text-secondary font-bold'
-                      : 'bg-white/40 dark:bg-stone-900/40 border-stone-200/40 dark:border-stone-800 text-stone-400'
-                  }`}
-                >
-                  <div className="text-xs">{item.n}</div>
-                  <div className="text-[7px] uppercase tracking-wider mt-0.5 truncate">{item.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Card>
-
-        {/* Section 4: Monthly Wellness Forecast Card */}
-        <Card>
-          <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-secondary font-bold mb-6">
-            COSMIC WELLNESS FORECAST · JUNE 2026
-          </div>
-
-          <div className="space-y-4">
-            {/* Week 1 */}
-            <div className="p-4 bg-white/50 dark:bg-stone-900/30 border border-stone-200/30 dark:border-stone-800/80 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div className="space-y-1">
-                <span className="text-[9px] font-mono font-bold text-stone-450 dark:text-stone-400">
-                  WEEK 1 (JUN 1–7)
-                </span>
-                <p className="text-xs text-stone-700 dark:text-stone-300 font-inter leading-relaxed">
-                  Grounding week. Mercury shadow lifts. Ideal for beginning new rituals.
-                </p>
-              </div>
-              <span className="px-2.5 py-0.5 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-500 text-[8px] font-mono font-bold uppercase tracking-wider rounded-full flex-shrink-0">
-                VATA WATCH
-              </span>
-            </div>
-
-            {/* Week 2 */}
-            <div className="p-4 bg-white/50 dark:bg-stone-900/30 border border-stone-200/30 dark:border-stone-800/80 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div className="space-y-1">
-                <span className="text-[9px] font-mono font-bold text-stone-450 dark:text-stone-400">
-                  WEEK 2 (JUN 8–14)
-                </span>
-                <p className="text-xs text-stone-700 dark:text-stone-300 font-inter leading-relaxed">
-                  Creative surge. Venus trine favours artistic expression and music therapy.
-                </p>
-              </div>
-              <span className="px-2.5 py-0.5 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-500 text-[8px] font-mono font-bold uppercase tracking-wider rounded-full flex-shrink-0">
-                PITTA ELEVATED
-              </span>
-            </div>
-
-            {/* Week 3 */}
-            <div className="p-4 bg-white/50 dark:bg-stone-900/30 border border-stone-200/30 dark:border-stone-800/80 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div className="space-y-1">
-                <span className="text-[9px] font-mono font-bold text-stone-450 dark:text-stone-400">
-                  WEEK 3 (JUN 15–21)
-                </span>
-                <p className="text-xs text-stone-700 dark:text-stone-300 font-inter leading-relaxed">
-                  Mercury stations direct Jun 18. Avoid major decisions until Jun 20.
-                </p>
-              </div>
-              <span className="px-2.5 py-0.5 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-500 text-[8px] font-mono font-bold uppercase tracking-wider rounded-full flex-shrink-0">
-                VATA WATCH
-              </span>
-            </div>
-
-            {/* Week 4 */}
-            <div className="p-4 bg-white/50 dark:bg-stone-900/30 border border-stone-200/30 dark:border-stone-800/80 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div className="space-y-1">
-                <span className="text-[9px] font-mono font-bold text-stone-450 dark:text-stone-400">
-                  WEEK 4 (JUN 22–30)
-                </span>
-                <p className="text-xs text-stone-700 dark:text-stone-300 font-inter leading-relaxed">
-                  Mars energy peaks. Channel into Yoga and physical practice, not conflict.
-                </p>
-              </div>
-              <span className="px-2.5 py-0.5 bg-stone-100 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-stone-500 dark:text-stone-450 text-[8px] font-mono font-bold uppercase tracking-wider rounded-full flex-shrink-0">
-                KAPHA SLUGGISH
-              </span>
-            </div>
-          </div>
-        </Card>
-
-        {/* Section 5: Dosha-Planet Connection Matrix Card */}
-        <Card>
-          <div className="text-[9px] font-mono uppercase tracking-[0.25em] text-secondary font-bold mb-6">
-            GRAHA-DOSHA MATRIX
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-inter leading-relaxed">
-              <thead>
-                <tr className="border-b border-stone-200/50 dark:border-stone-800 text-stone-400 font-mono text-[9px] tracking-wider uppercase">
-                  <th className="pb-3">PLANET (GRAHA)</th>
-                  <th className="pb-3">GOVERNED DOSHA</th>
-                  <th className="pb-3">ELEMENTAL RULERSHIP</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-stone-200/30 dark:divide-stone-800">
-                <tr className="hover:bg-secondary/5 transition-colors">
-                  <td className="py-4 font-medium flex items-center gap-2">
-                    <span>☿</span> Mercury + <span>♀</span> Venus
-                  </td>
-                  <td className="py-4 text-secondary font-mono uppercase tracking-wider font-bold">Vata</td>
-                  <td className="py-4 text-stone-500">Air + Ether</td>
-                </tr>
-                <tr className="hover:bg-secondary/5 transition-colors">
-                  <td className="py-4 font-medium flex items-center gap-2">
-                    <span>☉</span> Sun + <span>♂</span> Mars
-                  </td>
-                  <td className="py-4 text-secondary font-mono uppercase tracking-wider font-bold">Pitta</td>
-                  <td className="py-4 text-stone-500">Fire</td>
-                </tr>
-                <tr className="hover:bg-secondary/5 transition-colors">
-                  <td className="py-4 font-medium flex items-center gap-2">
-                    <span>☽</span> Moon + <span>♃</span> Jupiter
-                  </td>
-                  <td className="py-4 text-secondary font-mono uppercase tracking-wider font-bold">Kapha</td>
-                  <td className="py-4 text-stone-500">Water + Earth</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div className="mt-6 p-4 bg-[var(--ojas-light-surface)] dark:bg-stone-950/20 border border-stone-200/50 dark:border-stone-800/80 rounded-2xl text-[11px] font-mono text-stone-500 dark:text-stone-400 flex items-start gap-3">
-            <span className="text-secondary text-[13px]">☿</span>
-            <p>
-              <strong>Veda Note:</strong> Mercury is currently retrograde — your Vata constitution is especially sensitive this month. Prioritize nervous alignment practices.
-            </p>
-          </div>
-        </Card>
+        </section>
       </main>
 
-      <footer className="w-full max-w-4xl mx-auto px-6 pb-6 pt-6 border-t border-stone-200/20 flex items-center justify-between text-[9px] font-mono text-stone-400 tracking-wider">
-        <div>VEDIC BLUEPRINT / OJAS</div>
-        <div>© OJAS RITUAL MMXXVI</div>
+      <footer className="w-full mt-stack-xl bg-transparent border-t border-white/10 px-margin-mobile md:px-margin-desktop py-stack-lg max-w-container-max mx-auto relative z-10 flex flex-col md:flex-row justify-between items-center gap-gutter">
+          <div className="font-display-lg text-headline-sm text-white">OJAS</div>
+          <div className="flex gap-6">
+              <a className="font-label-caps text-label-caps text-white/80 hover:text-resonant-pink transition-all" href="#">Instagram</a>
+              <a className="font-label-caps text-label-caps text-white/80 hover:text-resonant-pink transition-all" href="#">Journal</a>
+              <a className="font-label-caps text-label-caps text-white/80 hover:text-resonant-pink transition-all" href="#">Privacy</a>
+          </div>
+          <p className="font-body-md text-[14px] text-white/60">© 2026 OJAS Wellness. Ancient Wisdom, Modern Rhythm.</p>
       </footer>
     </div>
   );

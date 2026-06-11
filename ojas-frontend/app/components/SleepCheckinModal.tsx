@@ -165,7 +165,7 @@ export function SleepCheckinModal({
               <h2 className="text-3xl md:text-4xl font-instrument-serif italic font-normal text-[var(--ojas-dark-text)] dark:text-[var(--ojas-light-surface)] mb-1">
                 Logged.
               </h2>
-              <p className="text-xl font-cormorant italic text-stone-500 dark:text-stone-400 mb-8">
+              <p className="text-xl font-serif italic text-stone-500 dark:text-stone-400 mb-8">
                 Rest acknowledged.
               </p>
               <p className="text-sm text-stone-600 dark:text-stone-400 leading-relaxed mb-6 max-w-sm mx-auto">
@@ -285,7 +285,7 @@ export function SleepCheckinModal({
 
               {/* Affirmation */}
               <div className="border-l border-[#C27A5D]/30 pl-4 py-1 mb-8">
-                <p className="font-cormorant italic text-lg text-stone-600 dark:text-stone-400 leading-relaxed">
+                <p className="font-serif italic text-lg text-stone-600 dark:text-stone-400 leading-relaxed">
                   &ldquo;Sleep is the first medicine. Honour the restoration.&rdquo;
                 </p>
               </div>

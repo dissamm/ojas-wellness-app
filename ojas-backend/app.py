@@ -18,8 +18,9 @@ from functools import wraps
 from database import init_db, create_user, get_user_by_email, get_user_by_id, update_user_profile
 
 app = Flask(__name__)
-CORS(app)
-app.config['JWT_SECRET_KEY'] = os.environ.get("JWT_SECRET_KEY", "ojas-cosmic-secret-key-108")
+allowed_origins = os.environ.get("CORS_ORIGINS", "http://localhost:3000,https://your-app.vercel.app").split(",")
+CORS(app, origins=allowed_origins)
+app.config['JWT_SECRET_KEY'] = os.environ.get("JWT_SECRET_KEY", "fallback-dev-secret-key")
 
 # Initialize database tables on load/import
 init_db()
@@ -667,4 +668,4 @@ if __name__ == '__main__':
     print("📍 Server running...")
     print("=" * 50)
     port = int(os.environ.get('PORT', 5000))
-    app.run(debug=True, host='0.0.0.0', port=port)
+    app.run(debug=False, host='0.0.0.0', port=port)

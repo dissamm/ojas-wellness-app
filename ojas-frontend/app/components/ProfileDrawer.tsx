@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUserStore } from '../store/userStore';
 import { useLanguageStore, useTranslation, Language } from '../store/languageStore';
-import { Camera, Edit2, Check, X, Lock, Trash2, Mail, Globe, Bell } from 'lucide-react';
+import { Edit2, Check, X, Lock, Trash2, Mail, Globe, Bell } from 'lucide-react';
 
 interface ProfileDrawerProps {
   isOpen: boolean;
@@ -33,6 +33,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
   const [passwordStatus, setPasswordStatus] = useState<{ success?: boolean; message?: string }>({});
   const [deleteStatus, setDeleteStatus] = useState<{ success?: boolean; message?: string }>({});
   const [helpStatus, setHelpStatus] = useState<{ success?: boolean; message?: string }>({});
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   
   // Support form inputs
   const [helpSubject, setHelpSubject] = useState('');
@@ -43,8 +44,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
   // Notification preference
   const [notificationsOn, setNotificationsOn] = useState(true);
 
-  // File upload input ref
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
 
   // Load name, notifications on mount/open
   useEffect(() => {
@@ -74,33 +74,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
     setIsEditingName(false);
   };
 
-  const handleAvatarClick = () => {
-    fileInputRef.current?.click();
-  };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-    
-    const file = files[0];
-    // Verify format
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
-    if (!validTypes.includes(file.type)) {
-      alert("Invalid format! Please upload PNG, JPG, or WEBP.");
-      return;
-    }
-    
-    // Read as Base64
-    const reader = new FileReader();
-    reader.onload = async () => {
-      const base64 = reader.result as string;
-      useUserStore.setState((state) => ({
-        user: { ...state.user, profilePicture: base64 }
-      }));
-      await syncUserProfile();
-    };
-    reader.readAsDataURL(file);
-  };
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -141,8 +115,13 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
   const handleDeleteAccountSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setDeleteStatus({});
-    const confirmed = window.confirm(t('confirmDeleteMessage'));
-    if (!confirmed) return;
+    
+    if (!isConfirmingDelete) {
+      setIsConfirmingDelete(true);
+      return;
+    }
+    
+    if (deleteConfirmText !== 'DELETE') return;
     
     const res = await deleteAccount();
     if (res.success) {
@@ -198,7 +177,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
           
           {/* Section 1 & 2: Header + Avatar Upload */}
           <div className="flex flex-col items-center text-center space-y-4 pb-6 border-b border-stone-200 dark:border-stone-800">
-            <div className="relative group cursor-pointer" onClick={handleAvatarClick}>
+            <div className="relative mb-4">
               {/* Avatar circle */}
               <div className="w-24 h-24 rounded-full overflow-hidden border border-stone-300/80 dark:border-stone-800 bg-white dark:bg-stone-900 flex items-center justify-center text-xl font-mono font-bold text-stone-600 dark:text-stone-400 relative">
                 {user?.profilePicture ? (
@@ -206,21 +185,8 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
                 ) : (
                   userInitial
                 )}
-                {/* Upload Hover Overlay */}
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <Camera className="text-white" size={20} />
-                </div>
               </div>
             </div>
-            
-            {/* Hidden Input File Picker */}
-            <input 
-              type="file" 
-              ref={fileInputRef} 
-              onChange={handleFileChange} 
-              accept="image/png, image/jpeg, image/webp" 
-              className="hidden" 
-            />
 
             {/* Editable Name */}
             <div className="w-full flex flex-col items-center">
@@ -247,7 +213,7 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <span className="font-cormorant text-xl font-semibold text-stone-800 dark:text-stone-100">
+                  <span className="font-serif text-xl font-semibold text-stone-800 dark:text-stone-100">
                     {user?.name || 'Anonymous User'}
                   </span>
                   <button 
@@ -364,7 +330,10 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
             {/* Delete Account toggler */}
             <div>
               <button 
-                onClick={() => setActiveAccountSection(activeAccountSection === 'delete' ? 'none' : 'delete')}
+                onClick={() => {
+                  setActiveAccountSection(activeAccountSection === 'delete' ? 'none' : 'delete');
+                  setIsConfirmingDelete(false);
+                }}
                 className="w-full flex items-center justify-between text-xs py-2 text-stone-600 dark:text-stone-300 hover:text-red-500 transition-colors"
               >
                 <span className="flex items-center gap-2"><Trash2 size={14} className="text-red-400" /> {t('deleteAccount')}</span>
@@ -375,6 +344,21 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
                   <p className="text-[11px] text-red-500 dark:text-red-400 font-medium">
                     ⚠️ {t('confirmDeleteMessage')}
                   </p>
+                  {isConfirmingDelete && (
+                    <div className="mt-3">
+                      <label className="block text-[9px] font-mono uppercase tracking-wider mb-1 text-red-400 font-bold">
+                        Type &quot;DELETE&quot; to confirm
+                      </label>
+                      <input 
+                        type="text" 
+                        value={deleteConfirmText}
+                        onChange={(e) => setDeleteConfirmText(e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl bg-white dark:bg-stone-900 border border-red-300/60 dark:border-red-800 text-xs text-stone-800 dark:text-stone-200 focus:outline-none focus:border-red-500"
+                        placeholder="DELETE"
+                        required
+                      />
+                    </div>
+                  )}
                   {deleteStatus.message && (
                     <p className={`text-[10px] font-mono ${deleteStatus.success ? 'text-green-500' : 'text-red-500'}`}>
                       {deleteStatus.message}
@@ -382,10 +366,20 @@ export const ProfileDrawer = ({ isOpen, onClose }: ProfileDrawerProps) => {
                   )}
                   <button 
                     type="submit" 
-                    className="w-full py-2 bg-red-500 hover:bg-red-600 text-white text-xs font-mono uppercase tracking-wider rounded-xl transition-colors font-bold"
+                    disabled={isConfirmingDelete && deleteConfirmText !== 'DELETE'}
+                    className={`w-full py-2 text-white text-xs font-mono uppercase tracking-wider rounded-xl transition-colors font-bold ${isConfirmingDelete && deleteConfirmText !== 'DELETE' ? 'bg-red-300 dark:bg-red-800/50 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600'}`}
                   >
-                    {t('deleteButton')}
+                    {isConfirmingDelete ? 'Yes, Delete My Account' : t('deleteButton')}
                   </button>
+                  {isConfirmingDelete && (
+                    <button 
+                      type="button"
+                      onClick={() => { setIsConfirmingDelete(false); setDeleteConfirmText(''); }}
+                      className="w-full py-2 mt-2 bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 text-xs font-mono uppercase tracking-wider rounded-xl transition-colors font-bold"
+                    >
+                      Cancel
+                    </button>
+                  )}
                 </form>
               )}
             </div>

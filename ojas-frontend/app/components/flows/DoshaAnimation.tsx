@@ -61,12 +61,7 @@ export const DoshaAnimation = () => {
             <nav className="fixed top-0 w-full z-50 bg-[#040d08]/80 backdrop-blur-md">
                 <div className="flex justify-between items-center px-margin-desktop py-stack-md max-w-container-max mx-auto">
                     <div className="font-display-lg text-display-lg-mobile md:text-display-lg tracking-tighter text-primary-fixed">OJAS</div>
-                    <div className="hidden md:flex gap-stack-lg">
-                        <a className="font-label-caps text-label-caps text-on-surface-variant hover:text-secondary transition-colors" href="#">Rituals</a>
-                        <a className="font-label-caps text-label-caps text-on-surface-variant hover:text-secondary transition-colors" href="#">Apothecary</a>
-                        <a className="font-label-caps text-label-caps text-on-surface-variant hover:text-secondary transition-colors" href="#">Wisdom</a>
-                        <a className="font-label-caps text-label-caps text-on-surface-variant hover:text-secondary transition-colors" href="#">About</a>
-                    </div>
+
                     <button className="font-headline-sm text-label-caps px-4 py-2 bg-primary-container text-on-primary-container tracking-widest active:scale-95 transition-transform border-none">
                         Discovery
                     </button>
@@ -80,7 +75,7 @@ export const DoshaAnimation = () => {
                         <span className="font-label-caps text-label-caps text-secondary-container mb-stack-sm block">JOURNEY TO SELF</span>
                         <h1 className="font-display-lg text-[40px] md:text-[64px] text-primary-fixed mb-stack-md">Dosha Discovery</h1>
                         <p className="font-body-lg text-[20px] text-on-primary-fixed-variant max-w-xl mb-stack-lg leading-relaxed">
-                            Within the midnight forest of the soul, your unique rhythm awaits illumination. Explore the fundamental energies that compose your being.
+                            Ayurveda holds that every person is born with a unique mind-body constitution. This 7-minute quiz reveals yours — and everything we build for you follows from it.
                         </p>
                         <div className="flex items-center gap-stack-lg">
                             <button 
@@ -89,7 +84,7 @@ export const DoshaAnimation = () => {
                             >
                                 BEGIN ASSESSMENT
                             </button>
-                            <span className="font-body-md text-secondary italic text-xl">Estimated time: 7 lunar minutes</span>
+                            <span className="font-body-md text-secondary italic text-xl">Takes about 7 minutes</span>
                         </div>
                     </div>
                     <div className="order-1 md:order-2 flex justify-center relative">
@@ -117,18 +112,18 @@ export const DoshaAnimation = () => {
                             <p className="font-body-md text-[17px] text-[#89ba99] mb-stack-lg flex-grow leading-relaxed">
                                 The energy of movement. Governs breathing, muscle contraction, and cellular mobility. When in balance, Vata promotes creativity and flexibility.
                             </p>
-                            <a className="font-label-caps text-label-caps text-secondary-container border-b border-secondary-container/30 pb-1 hover:border-secondary-container transition-all" href="#">CHARACTERISTICS</a>
+
                         </div>
                         
                         {/* Pitta */}
                         <div className="glass-card p-stack-lg flex flex-col items-start h-full rounded-2xl">
-                            <span className="material-symbols-outlined text-[64px] text-secondary-container mb-stack-md">mode_fan</span>
+                            <span className="material-symbols-outlined text-[64px] text-secondary-container mb-stack-md">local_fire_department</span>
                             <h2 className="font-headline-md text-[32px] text-primary-fixed mb-stack-sm">Pitta</h2>
                             <p className="font-label-caps text-[10px] text-secondary mb-stack-md tracking-widest">FIRE &amp; WATER</p>
                             <p className="font-body-md text-[17px] text-[#89ba99] mb-stack-lg flex-grow leading-relaxed">
                                 The energy of transformation. Responsible for digestion, metabolism, and temperature regulation. Balanced Pitta yields intelligence and understanding.
                             </p>
-                            <a className="font-label-caps text-label-caps text-secondary-container border-b border-secondary-container/30 pb-1 hover:border-secondary-container transition-all" href="#">CHARACTERISTICS</a>
+
                         </div>
                         
                         {/* Kapha */}
@@ -139,7 +134,7 @@ export const DoshaAnimation = () => {
                             <p className="font-body-md text-[17px] text-[#89ba99] mb-stack-lg flex-grow leading-relaxed">
                                 The energy of lubrication and structure. Provides strength, stamina, and stability. In balance, Kapha is expressed as love, calm, and forgiveness.
                             </p>
-                            <a className="font-label-caps text-label-caps text-secondary-container border-b border-secondary-container/30 pb-1 hover:border-secondary-container transition-all" href="#">CHARACTERISTICS</a>
+
                         </div>
                     </div>
                 </section>
@@ -155,13 +150,14 @@ export const DoshaAnimation = () => {
                             <div className="md:w-1/2 space-y-stack-md">
                                 <h3 className="font-headline-md text-[32px] text-primary-fixed">The Elemental Pulse</h3>
                                 <blockquote className="font-quote text-[24px] text-[#89ba99] italic">
-                                    &quot;Health is a state of equilibrium between the three humors, the seven tissues, and the three wastes.&quot;
+                                    &quot;Health is a state of equilibrium between the three humors, the seven tissues, and the three wastes.&quot;<br/>
+                                    <span className="text-[16px] mt-2 block">— Charaka Samhita, ~600 BCE</span>
                                 </blockquote>
                                 <p className="font-body-md text-[17px] text-[#89ba99] leading-relaxed">
-                                    Our modern rituals are designed to harmonize these forces using pure botanical essences and mindful movement. Your discovery starts with understanding your Prakriti—your original nature.
+                                    OJAS personalises your daily rituals, music, cycle tracking, and food guidance around your Prakriti — your original nature as defined by Ayurveda.
                                 </p>
-                                <button className="border border-secondary-container text-secondary-container px-6 py-3 mt-4 font-label-caps text-label-caps hover:bg-secondary-container hover:text-[#040d08] transition-all rounded-full">
-                                    LEARN MORE ABOUT RHYTHMS
+                                <button onClick={handleContinue} className="border border-secondary-container text-secondary-container px-6 py-3 mt-4 font-label-caps text-label-caps hover:bg-secondary-container hover:text-[#040d08] transition-all rounded-full">
+                                    BEGIN ASSESSMENT
                                 </button>
                             </div>
                         </div>
@@ -180,7 +176,7 @@ export const DoshaAnimation = () => {
                             <a className="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors" href="#">Contact</a>
                         </div>
                         <p className="font-body-md text-body-md text-on-surface-variant opacity-60">
-                            © 2026 OJAS Modern Ayurveda. All rights reserved.
+                            © 2026 OJAS Wellness. All rights reserved.
                         </p>
                     </div>
                 </div>

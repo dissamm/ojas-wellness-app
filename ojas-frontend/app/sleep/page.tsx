@@ -7,6 +7,7 @@ import { Header } from '../components/Header';
 import { Card } from '../components/Card';
 import { useUserStore } from '../store/userStore';
 import { useSleepStore, SleepLog } from '../store/sleepStore';
+import { SleepCheckinModal } from '../components/SleepCheckinModal';
 
 // ─── Moon phase data ──────────────────────────────────────────────────────────
 const MOON_ICONS: Record<string, string> = {
@@ -72,6 +73,7 @@ export default function SleepHistoryPage() {
   const { user, isAuthenticated } = useUserStore();
   const { logs: realLogs } = useSleepStore();
   const [isMounted, setIsMounted] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -87,6 +89,16 @@ export default function SleepHistoryPage() {
     <div className="relative min-h-screen w-full bg-background text-foreground transition-colors duration-300">
       <Header />
 
+      {isModalOpen && (
+        <SleepCheckinModal
+          userName={user?.name || 'Seeker'}
+          dominantDosha={user?.dominantDosha || 'Pitta'}
+          moonPhase={logs[0]?.moonPhase || 'Waning Crescent'}
+          onClose={() => setIsModalOpen(false)}
+          onComplete={() => {}}
+        />
+      )}
+
       <main className="max-w-4xl mx-auto px-6 md:px-10 py-14 md:py-20 space-y-10">
 
         {/* ── Return link */}
@@ -98,16 +110,24 @@ export default function SleepHistoryPage() {
         </Link>
 
         {/* ── Page header */}
-        <div className="animate-fade-rise">
-          <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-secondary font-bold mb-4">
-            SLEEP ARCHIVE
+        <div className="animate-fade-rise flex flex-col md:flex-row md:items-end justify-between gap-6 mb-4">
+          <div>
+            <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-secondary font-bold mb-4">
+              SLEEP ARCHIVE
+            </div>
+            <h1 className="text-4xl md:text-5xl font-normal font-quote text-primary dark:text-on-primary leading-tight mb-4">
+              Nightly <em className="italic text-secondary">Sleep</em> History
+            </h1>
+            <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
+              30-day restoration archive, aligned with lunar phases and your {user?.dominantDosha || 'Pitta'} Prakriti.
+            </p>
           </div>
-          <h1 className="text-4xl md:text-5xl font-normal font-quote text-primary dark:text-on-primary leading-tight mb-4">
-            Nightly <em className="italic text-secondary">Sleep</em> History
-          </h1>
-          <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
-            30-day restoration archive, aligned with lunar phases and your {user?.dominantDosha || 'Pitta'} Prakriti.
-          </p>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="px-6 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-secondary text-white hover:opacity-90 transition-opacity self-start md:self-auto cursor-pointer flex-shrink-0"
+          >
+            + LOG SLEEP
+          </button>
         </div>
 
         {/* ── Pattern Insight Card */}

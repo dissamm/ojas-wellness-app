@@ -56,7 +56,7 @@ export default function PrakritiPage() {
   }
 
   return (
-    <div className="min-h-screen bg-primary text-foreground flex flex-col justify-between selection:bg-secondary-fixed/20 transition-colors duration-500">
+    <div className="min-h-screen bg-transparent text-surface-cream flex flex-col justify-between selection:bg-secondary-fixed/20 transition-colors duration-500">
       <div>
         <Header />
         <PrakritiQuiz onComplete={handleSubmit} />

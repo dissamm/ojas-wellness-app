@@ -7,7 +7,7 @@ import { useUserStore } from '../store/userStore';
 import { Header } from '../components/Header';
 import { Card } from '../components/Card';
 import { Input } from '../components/Input';
-import { hasCompletedPrakriti } from '../lib/dominantDosha';
+import { isFullyOnboarded, getResumeStep } from '../lib/onboardingState';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -32,9 +32,10 @@ export default function LoginPage() {
       const success = await loginUser(email, password);
       if (success) {
         const currentUser = useUserStore.getState().user;
-        if (!hasCompletedPrakriti(currentUser)) {
-          useUserStore.getState().setCurrentStep('dosha-animation');
-          router.push('/');
+        if (!isFullyOnboarded(currentUser)) {
+          const nextStep = getResumeStep(currentUser);
+          useUserStore.getState().setCurrentStep(nextStep);
+          router.push(`/?step=${nextStep}`);
         } else {
           router.push('/dashboard');
         }

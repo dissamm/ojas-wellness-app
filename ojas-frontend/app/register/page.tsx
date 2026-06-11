@@ -73,7 +73,7 @@ export default function RegisterPage() {
   const rules = [
     { id: 'length', label: 'Minimum 6 characters', valid: password.length >= 6 },
     { id: 'uppercase', label: 'At least 1 uppercase letter (A–Z)', valid: /[A-Z]/.test(password) },
-    { id: 'digit', label: 'At least 1 digit (0–9)', valid: /ojas-warm-card/.test(password) },
+    { id: 'digit', label: 'At least 1 digit (0–9)', valid: /\d/.test(password) },
     { id: 'special', label: 'At least 1 special character (e.g. !@#$%^&*)', valid: /[^A-Za-z0-9]/.test(password) },
     { id: 'sequence', label: 'No sequential characters (e.g. 123, abc)', valid: !hasSequential },
   ];

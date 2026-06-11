@@ -72,6 +72,7 @@ export default function ProfilePage() {
   const [passwordStatus, setPasswordStatus] = useState<{ ok?: boolean; msg?: string }>({});
   const [deleteStatus, setDeleteStatus] = useState<{ ok?: boolean; msg?: string }>({});
   const [openAccountForm, setOpenAccountForm] = useState<'none' | 'email' | 'password' | 'delete'>('none');
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
 
   const [isDark, setIsDark] = useState(false);
   const [notifs, setNotifs] = useState(true);
@@ -194,8 +195,10 @@ export default function ProfilePage() {
 
   const handleDeleteAccount = async (e: React.FormEvent) => {
     e.preventDefault();
-    const confirmed = window.confirm('This action is permanent and cannot be undone. Are you sure?');
-    if (!confirmed) return;
+    if (!isConfirmingDelete) {
+      setIsConfirmingDelete(true);
+      return;
+    }
     const res = await deleteAccount();
     if (res.success) {
       setDeleteStatus({ ok: true, msg: 'Account deleted. Redirecting...' });
@@ -361,7 +364,10 @@ export default function ProfilePage() {
 
             {/* Delete Account */}
             <div className={`${blockCls} border-red-200/70 dark:border-red-900/30`}>
-              <button className={`${rowCls} text-red-500 dark:text-red-400 hover:text-red-600`} onClick={() => setOpenAccountForm(openAccountForm === 'delete' ? 'none' : 'delete')}>
+              <button className={`${rowCls} text-red-500 dark:text-red-400 hover:text-red-600`} onClick={() => {
+                setOpenAccountForm(openAccountForm === 'delete' ? 'none' : 'delete');
+                setIsConfirmingDelete(false);
+              }}>
                 <span className="flex items-center gap-3"><Trash2 size={15} /><span>Delete Account</span></span>
                 <ChevronRight size={15} className={`transition-transform ${openAccountForm === 'delete' ? 'rotate-90' : ''}`} />
               </button>
@@ -372,9 +378,16 @@ export default function ProfilePage() {
                     <span>This action is <strong>permanent and irreversible</strong>. All data including Prakriti results, cycle history, and preferences will be deleted.</span>
                   </div>
                   {deleteStatus.msg && <p className={`text-xs font-mono ${deleteStatus.ok ? 'text-green-500' : 'text-red-500'}`}>{deleteStatus.msg}</p>}
-                  <button type="submit" className="px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white text-[10px] font-mono uppercase tracking-[0.18em] rounded-full transition-colors font-bold">
-                    Delete Permanently
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <button type="submit" className="px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white text-[10px] font-mono uppercase tracking-[0.18em] rounded-full transition-colors font-bold">
+                      {isConfirmingDelete ? 'Yes, Delete Permanently' : 'Delete Permanently'}
+                    </button>
+                    {isConfirmingDelete && (
+                      <button type="button" onClick={() => setIsConfirmingDelete(false)} className="px-6 py-2.5 bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 text-[10px] font-mono uppercase tracking-[0.18em] rounded-full transition-colors font-bold">
+                        Cancel
+                      </button>
+                    )}
+                  </div>
                 </form>
               )}
             </div>

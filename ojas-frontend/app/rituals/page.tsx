@@ -568,7 +568,7 @@ export default function RitualsPage() {
                                             </span>
                                         ))}
                                     </div>
-                                    <h3 className={`text-xl sm:text-2xl font-serif italic font-normal ${done ? 'line-through text-stone-450' : 'text-primary dark:text-inverse-on-surface'}`}>
+                                    <h3 className={`text-xl sm:text-2xl font-serif italic font-normal ${done ? 'line-through text-stone-400' : 'text-primary dark:text-inverse-on-surface'}`}>
                                         {practice.activity}
                                     </h3>
                                     <p className="text-on-surface-variant dark:text-on-surface-variant text-sm leading-relaxed">
@@ -687,7 +687,10 @@ export default function RitualsPage() {
             <div className="min-h-screen bg-background text-foreground flex flex-col justify-between">
                 <Header />
                 <main className="flex-grow flex items-center justify-center">
-                    <div className="animate-spin text-4xl">🌿</div>
+                    <div className="flex flex-col items-center">
+                        <div className="w-12 h-12 border-4 border-secondary border-t-transparent rounded-full animate-spin mb-4"></div>
+                        <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-stone-500">Loading Rituals...</span>
+                    </div>
                 </main>
             </div>
         );
@@ -1006,7 +1009,7 @@ export default function RitualsPage() {
                             >
                                 <div className="flex justify-between items-center mb-4">
                                     <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-resonant-pink font-semibold">
-                                        PANCHAKARMA · DAY {ACTIVE_CLEANSE_DAY} OF {ACTIVE_CLEANSE_TOTAL} · <span className="animate-pulse">● LIVE SYNC</span>
+                                        PANCHAKARMA · DAY {ACTIVE_CLEANSE_DAY} OF {ACTIVE_CLEANSE_TOTAL}
                                     </div>
                                     <span className="text-[9px] font-mono text-on-surface-variant uppercase tracking-wider">{cleanseProgress}%</span>
                                 </div>
@@ -1111,7 +1114,7 @@ export default function RitualsPage() {
                                   <div className="flex flex-wrap gap-1 mb-3">
                                     {tech.doshas.map(d => {
                                       const dClean = d.replace(/[+\s]/g, '').toLowerCase();
-                                      let pillColor = 'bg-stone-105 dark:bg-stone-800 text-on-surface-variant';
+                                      let pillColor = 'bg-stone-100 dark:bg-stone-800 text-on-surface-variant';
                                       if (dClean === 'vata') pillColor = 'bg-blue-500/10 text-blue-500 border border-blue-500/10';
                                       else if (dClean === 'pitta') pillColor = 'bg-resonant-pink/10 text-resonant-pink border border-resonant-pink/10';
                                       else if (dClean === 'kapha') pillColor = 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/10';
@@ -1477,7 +1480,7 @@ export default function RitualsPage() {
                                             {asana.sanskritName}
                                           </span>
                                         </div>
-                                        <h3 className={`text-xl sm:text-2xl font-serif italic font-normal ${done ? 'line-through text-stone-450' : 'text-primary dark:text-inverse-on-surface'}`}>
+                                        <h3 className={`text-xl sm:text-2xl font-serif italic font-normal ${done ? 'line-through text-stone-400' : 'text-primary dark:text-inverse-on-surface'}`}>
                                           {asana.name}
                                         </h3>
                                         <p className="text-on-surface-variant dark:text-on-surface-variant text-sm leading-relaxed max-w-2xl">

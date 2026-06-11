@@ -9,9 +9,11 @@ import { useAppStore } from '../store/appStore';
 import { useUserStore } from '../store/userStore';
 import { getRitualsForDosha, getTopThreeRituals } from '../utils/ritualsData';
 import { useMoodPrediction } from '../lib/api';
+import { isFullyOnboarded, getResumeStep } from '../lib/onboardingState';
 import { getDominantDoshaLabel } from '../lib/dominantDosha';
 import { SleepCheckinModal } from '../components/SleepCheckinModal';
 import { useSleepStore, SleepLog } from '../store/sleepStore';
+import { Header } from '../components/Header';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -40,27 +42,14 @@ export default function Dashboard() {
     }
 
     if (user && user.name) {
-      const hasPrakriti = localStorage.getItem('prakriti') || user.dominantDosha;
-      if (!hasPrakriti) {
-        router.replace('/prakriti');
-        return;
-      }
-
-      if (user.gender !== 'male') {
-        const hasCycle = cycle?.startDate || user.menstrualCycleStart;
-        if (!hasCycle) {
-          router.replace('/cycle');
-          return;
-        }
-      }
-
-      const hasMusic = (user.musicPreferences && user.musicPreferences.length > 0) || localStorage.getItem('musicPreferencesSet') === 'true';
-      if (!hasMusic) {
-        router.replace('/music');
+      if (!isFullyOnboarded(user)) {
+        const nextStep = getResumeStep(user);
+        useUserStore.getState().setCurrentStep(nextStep);
+        router.replace(`/?step=${nextStep}`);
         return;
       }
     }
-  }, [user, cycle, router]);
+  }, [user, router]);
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -166,27 +155,9 @@ export default function Dashboard() {
       )}
 
       <div className="ambient-glow min-h-screen">
-        {/* Top Navigation Bar */}
-        <nav className="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl">
-          <div className="flex justify-between items-center px-4 md:px-margin-desktop py-unit max-w-container-max mx-auto">
-            <div className="font-display-lg text-primary dark:text-inverse-primary tracking-tighter" style={{ fontSize: '32px' }}>OJAS</div>
-            <div className="hidden md:flex items-center gap-gutter">
-              <Link href="/prakriti" className="font-label-caps text-label-caps uppercase tracking-widest text-primary dark:text-inverse-primary border-b-2 border-secondary-container pb-1 transition-colors duration-300">Analysis</Link>
-              <Link href="/cycle" className="font-label-caps text-label-caps uppercase tracking-widest text-on-surface-variant dark:text-on-surface-variant/70 hover:text-secondary transition-colors duration-300">Lunar Sync</Link>
-              <Link href="/rituals" className="font-label-caps text-label-caps uppercase tracking-widest text-on-surface-variant dark:text-on-surface-variant/70 hover:text-secondary transition-colors duration-300">Journey</Link>
-            </div>
-            <div className="flex items-center gap-stack-md">
-              <button className="text-primary hover:text-secondary transition-colors">
-                <span className="material-symbols-outlined">notifications</span>
-              </button>
-              <button className="text-primary hover:text-secondary transition-colors">
-                <span className="material-symbols-outlined">person</span>
-              </button>
-            </div>
-          </div>
-        </nav>
+        <Header />
 
-        <main className="pt-32 pb-stack-xl max-w-container-max mx-auto px-4 md:px-margin-desktop">
+        <main className="pt-8 pb-stack-xl max-w-container-max mx-auto px-4 md:px-margin-desktop">
           {/* Hero Section */}
           <section className="flex flex-col md:flex-row items-start justify-between mb-stack-xl reveal active" style={{ transitionDelay: '0s' }}>
             <div className="w-full md:w-2/3">
@@ -207,16 +178,50 @@ export default function Dashboard() {
                   <circle cx="50" cy="60" r="2" fill="#864d5f"></circle>
                 </svg>
               </div>
-              <h1 className="font-display-lg text-[40px] md:text-display-lg text-primary leading-none mb-unit hover:tracking-tight transition-all duration-700">
+              <h1 className="font-display-lg text-[40px] md:text-display-lg text-surface-cream leading-none mb-unit hover:tracking-tight transition-all duration-700">
                 {greeting}, {user?.name || "friend"}
               </h1>
-              <p className="font-body-lg text-body-lg italic text-secondary-container mix-blend-multiply">
+              <p className="font-body-lg text-[22px] text-surface-cream/80 max-w-xl italic-serif leading-relaxed">
                 The sun finds you in resonance.
               </p>
             </div>
             <div className="mt-stack-md md:mt-0 md:text-right reveal active" style={{ transitionDelay: '0.2s' }}>
-              <span className="font-label-caps text-label-caps text-on-surface-variant opacity-60">PHASE: {moonPhase ? moonPhase.toUpperCase() : 'GIBBOUS MOON'}</span>
-              <div className="font-headline-sm text-headline-sm text-primary">{formattedDate}</div>
+              <span className="font-label-caps text-label-caps text-surface-cream/70 opacity-60">PHASE: {moonPhase ? moonPhase.toUpperCase() : 'GIBBOUS MOON'}</span>
+              <div className="font-headline-sm text-headline-sm text-surface-cream">{formattedDate}</div>
+            </div>
+          </section>
+
+          {/* Your Tools Quick Access */}
+          <section className="mb-stack-xl reveal active" style={{ transitionDelay: '0.1s' }}>
+            <h2 className="font-label-caps text-label-caps text-surface-cream/50 uppercase tracking-widest mb-stack-md">Your Tools</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+              <Link href="/aahar" className="block">
+                <div className="bg-white/5 border border-white/10 p-stack-md rounded-xl hover:bg-white/10 hover:border-resonant-pink/30 transition-all cursor-pointer h-full">
+                  <div className="flex justify-between items-center mb-unit">
+                    <span className="font-headline-sm text-[20px] text-surface-cream">🌿 Today&apos;s Aahar</span>
+                    <span className="material-symbols-outlined text-surface-cream/50 text-[18px]">arrow_forward</span>
+                  </div>
+                  <p className="font-body-md text-surface-cream/70 italic-serif text-[15px]">3 foods aligned with your {dominantDoshaText || 'Vata'} phase</p>
+                </div>
+              </Link>
+              <Link href="/jyotish" className="block">
+                <div className="bg-white/5 border border-white/10 p-stack-md rounded-xl hover:bg-white/10 hover:border-resonant-pink/30 transition-all cursor-pointer h-full">
+                  <div className="flex justify-between items-center mb-unit">
+                    <span className="font-headline-sm text-[20px] text-surface-cream">☿ Jyotish Forecast</span>
+                    <span className="material-symbols-outlined text-surface-cream/50 text-[18px]">arrow_forward</span>
+                  </div>
+                  <p className="font-body-md text-surface-cream/70 italic-serif text-[15px]">{moonPhase ? `Moon in ${moonPhase.split(' ')[1] || 'transit'}` : 'Mercury transit'} active — your focus window</p>
+                </div>
+              </Link>
+              <Link href="/rituals" className="block">
+                <div className="bg-white/5 border border-white/10 p-stack-md rounded-xl hover:bg-white/10 hover:border-resonant-pink/30 transition-all cursor-pointer h-full">
+                  <div className="flex justify-between items-center mb-unit">
+                    <span className="font-headline-sm text-[20px] text-surface-cream">🕯 Ritual Protocol</span>
+                    <span className="material-symbols-outlined text-surface-cream/50 text-[18px]">arrow_forward</span>
+                  </div>
+                  <p className="font-body-md text-surface-cream/70 italic-serif text-[15px]">4 practices synced to {displayPhase}</p>
+                </div>
+              </Link>
             </div>
           </section>
 
@@ -226,71 +231,71 @@ export default function Dashboard() {
             {/* Left Column (4 columns) */}
             <div className="md:col-span-4 flex flex-col gap-gutter">
               {/* Daily Affirmation */}
-              <div className="reveal bg-surface-container-low p-stack-md border-l-4 border-secondary-container active" style={{ transitionDelay: '0.1s' }}>
-                <span className="font-label-caps text-label-caps text-secondary mb-unit block">AFFIRMATION</span>
-                <blockquote className="font-quote text-quote text-primary leading-relaxed">
+              <div className="reveal bg-white/5 p-stack-md border-l-4 border-resonant-pink rounded-xl active border-y border-r border-white/10" style={{ transitionDelay: '0.1s' }}>
+                <span className="font-label-caps text-label-caps text-resonant-pink mb-unit block tracking-widest">AFFIRMATION</span>
+                <blockquote className="font-quote text-quote text-surface-cream leading-relaxed">
                   &quot;{dailyAffirmation || "I am the container for infinite peace, allowing the rhythm of the universe to guide my breath."}&quot;
                 </blockquote>
               </div>
 
               {/* Sleep Log */}
               <div 
-                className="reveal bg-surface-container-high p-stack-md rounded-lg active cursor-pointer hover:shadow-md transition-all" 
+                className="reveal bg-white/5 border border-white/10 p-stack-md rounded-xl active cursor-pointer hover:border-resonant-pink/30 hover:bg-white/10 transition-all" 
                 style={{ transitionDelay: '0.2s' }}
                 onClick={() => { if (!todaySleepLog) setShowSleepModal(true); else router.push('/sleep'); }}
               >
                 <div className="flex justify-between items-center mb-stack-md">
-                  <h3 className="font-label-caps text-label-caps text-primary">SLEEP LOG</h3>
-                  <span className="material-symbols-outlined text-primary">nights_stay</span>
+                  <h3 className="font-label-caps text-label-caps text-surface-cream tracking-widest">SLEEP LOG</h3>
+                  <span className="material-symbols-outlined text-surface-cream/50">nights_stay</span>
                 </div>
                 
                 {todaySleepLog ? (
                   <>
                     <div className="flex items-end gap-stack-sm mb-unit">
-                      <div className="font-display-lg text-primary" style={{ fontSize: '48px' }}>{todaySleepLog.hoursSlept || 0}</div>
-                      <div className="font-label-md text-label-md text-on-surface-variant pb-2">HOURS</div>
+                      <div className="font-display-lg text-resonant-pink" style={{ fontSize: '48px' }}>{todaySleepLog.hoursSlept || 0}</div>
+                      <div className="font-label-md text-label-md text-surface-cream/70 pb-2 tracking-widest">HOURS</div>
                     </div>
                     <div className="flex items-center gap-unit">
-                      <span className="material-symbols-outlined text-secondary-container" style={{ fontVariationSettings: "'FILL' 1" }}>circle</span>
-                      <div className="h-1 flex-1 bg-outline-variant rounded-full overflow-hidden">
-                        <div className="h-full bg-secondary-container" style={{ width: todaySleepLog.sleepDepth === 'deep' ? '82%' : todaySleepLog.sleepDepth === 'light' ? '40%' : '15%' }}></div>
+                      <span className="material-symbols-outlined text-resonant-pink/70" style={{ fontVariationSettings: "'FILL' 1" }}>circle</span>
+                      <div className="h-1 flex-1 bg-surface-cream/10 rounded-full overflow-hidden">
+                        <div className="h-full bg-resonant-pink" style={{ width: todaySleepLog.sleepDepth === 'deep' ? '82%' : todaySleepLog.sleepDepth === 'light' ? '40%' : '15%' }}></div>
                       </div>
-                      <span className="font-label-md text-label-md text-on-surface-variant uppercase">{todaySleepLog.sleepDepth === 'deep' ? '82% DEPTH' : todaySleepLog.sleepDepth === 'light' ? '40% DEPTH' : '15% DEPTH'}</span>
+                      <span className="font-label-md text-label-md text-surface-cream/70 uppercase tracking-widest">{todaySleepLog.sleepDepth === 'deep' ? '82% DEPTH' : todaySleepLog.sleepDepth === 'light' ? '40% DEPTH' : '15% DEPTH'}</span>
                     </div>
-                    <div className="mt-stack-md flex justify-between text-on-surface-variant">
+                    <div className="mt-stack-md flex justify-between text-surface-cream/70">
                       <div className="flex items-center gap-unit group">
                         <span className="material-symbols-outlined text-[18px] group-hover:rotate-12 transition-transform">bedtime</span>
-                        <span className="font-label-md text-label-md uppercase">{todaySleepLog.dreamThemes[0] || '10:45 PM'}</span>
+                        <span className="font-label-md text-label-md uppercase tracking-widest">{todaySleepLog.dreamThemes[0] || '10:45 PM'}</span>
                       </div>
                       <div className="flex items-center gap-unit group">
-                        <span className="material-symbols-outlined text-[18px] group-hover:scale-110 transition-transform">wb_sunny</span>
-                        <span className="font-label-md text-label-md">06:10 AM</span>
+                        <span className="material-symbols-outlined text-[18px] group-hover:scale-110 transition-transform text-yellow-200/80">wb_sunny</span>
+                        <span className="font-label-md text-label-md tracking-widest">06:10 AM</span>
                       </div>
                     </div>
                   </>
                 ) : (
                   <div className="text-center py-6">
-                    <span className="font-label-caps text-secondary">TAP TO LOG SLEEP</span>
+                    <span className="font-label-caps text-resonant-pink tracking-widest">TAP TO LOG SLEEP</span>
                   </div>
                 )}
               </div>
 
               {/* Featured Image Card */}
-              <div className="reveal bg-surface-container-low/40 backdrop-blur-md p-stack-md rounded-xl border border-outline-variant/30 flex flex-col items-center justify-center text-center min-h-[320px] relative overflow-hidden active cursor-pointer group" style={{ transitionDelay: '0.3s' }} onClick={() => router.push('/rituals')}>
-                <div className="absolute inset-0 bg-gradient-to-tr from-secondary/5 to-primary/5 pointer-events-none group-hover:opacity-75 transition-opacity duration-700"></div>
+              <div className="reveal bg-white/5 backdrop-blur-md p-stack-md rounded-xl border border-white/10 flex flex-col items-center justify-center text-center min-h-[320px] relative overflow-hidden active cursor-pointer group hover:border-resonant-pink/30 hover:bg-white/10 transition-colors" style={{ transitionDelay: '0.3s' }} onClick={() => router.push('/rituals')}>
+                <div className="absolute inset-0 bg-gradient-to-tr from-resonant-pink/5 to-transparent pointer-events-none group-hover:opacity-100 opacity-0 transition-opacity duration-700"></div>
                 <div className="relative z-10 flex flex-col items-center gap-stack-md">
                   <div className="w-16 h-16 flex items-center justify-center">
-                    <div className="absolute w-12 h-12 bg-secondary-container/20 rounded-full animate-pulse"></div>
-                    <span className="material-symbols-outlined text-secondary text-headline-md lotus-float">spa</span>
+                    <div className="absolute w-12 h-12 bg-resonant-pink/20 rounded-full animate-pulse"></div>
+                    <span className="material-symbols-outlined text-resonant-pink text-headline-md lotus-float">spa</span>
                   </div>
                   <div className="space-y-unit">
-                    <span className="font-label-caps text-label-caps text-secondary tracking-widest block">MEDITATION</span>
-                    <h4 className="font-headline-sm text-headline-sm text-primary uppercase tracking-tight">Morning Resonance</h4>
+                    <span className="font-label-caps text-label-caps text-resonant-pink tracking-widest block">MEDITATION</span>
+                    <h2 className="font-headline-sm text-[28px] text-surface-cream mb-stack-sm flex items-center gap-2">Morning Resonance</h2>
                   </div>
-                  <p className="font-body-md text-body-md text-on-surface-variant italic max-w-[200px]">
+                  <p className="font-body-md text-body-md text-surface-cream/70 italic-serif max-w-[200px]">
                     Align your frequency with the dawn&apos;s stillness.
                   </p>
-                  <button className="mt-stack-sm px-stack-md py-2 bg-primary text-white font-label-caps text-label-caps rounded-full hover:bg-primary-container transition-all flex items-center gap-unit group-hover:shadow-lg">
+                  <button className="mt-stack-sm px-stack-md py-2 bg-resonant-pink text-forest-ink font-label-caps text-label-caps rounded-full hover:bg-surface-cream transition-all flex items-center gap-unit group-hover:shadow-[0_0_15px_rgba(254,181,202,0.4)] tracking-widest">
                     BEGIN PRACTICE
                     <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">play_arrow</span>
                   </button>
@@ -298,15 +303,15 @@ export default function Dashboard() {
               </div>
 
               {/* Decorative Kitten Card */}
-              <div className="reveal bg-surface-container-low/30 backdrop-blur-md p-stack-md rounded-xl border border-outline-variant/20 flex flex-col items-center justify-center text-center relative overflow-hidden lotus-float active" style={{ transitionDelay: '0.3s' }}>
-                <div className="absolute inset-0 bg-gradient-to-b from-secondary/5 to-transparent pointer-events-none"></div>
+              <div className="reveal bg-white/5 backdrop-blur-md p-stack-md rounded-xl border border-white/10 flex flex-col items-center justify-center text-center relative overflow-hidden lotus-float active" style={{ transitionDelay: '0.3s' }}>
+                <div className="absolute inset-0 bg-gradient-to-b from-resonant-pink/5 to-transparent pointer-events-none"></div>
                 <div className="relative z-10 w-full">
-                  <img src="/meditating-cat.png" alt="Meditating Kitten" className="w-full h-auto rounded-lg mix-blend-multiply opacity-90 object-cover" style={{ minHeight: '160px' }} />
+                  <img src="/meditating-cat.png" alt="Meditating Kitten" className="w-full h-auto rounded-lg mix-blend-screen opacity-70 object-cover" style={{ minHeight: '160px' }} />
                   <div className="mt-stack-sm">
-                    <span className="font-label-caps text-[10px] text-secondary tracking-[0.2em] uppercase">Inner Stillness</span>
+                    <span className="font-label-caps text-[10px] text-surface-cream/50 tracking-[0.2em] uppercase">Inner Stillness</span>
                   </div>
                 </div>
-                <div className="absolute -bottom-8 -right-8 w-24 h-24 bg-secondary-container/10 blur-3xl rounded-full"></div>
+                <div className="absolute -bottom-8 -right-8 w-24 h-24 bg-resonant-pink/10 blur-3xl rounded-full"></div>
               </div>
             </div>
 
@@ -315,14 +320,14 @@ export default function Dashboard() {
               {/* Seasonal Rhythm & Moon */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
                 <Link href={user?.gender !== 'male' ? '/cycle' : '/prakriti'} className="block h-full">
-                  <div className="reveal bg-secondary-fixed p-stack-md rounded-xl flex flex-col justify-between h-48 active hover:shadow-lg transition-shadow duration-500" style={{ transitionDelay: '0.4s' }}>
+                  <div className="reveal bg-white/5 border border-white/10 p-stack-md rounded-xl flex flex-col justify-between h-48 active hover:border-resonant-pink/40 hover:bg-white/10 transition-all duration-500" style={{ transitionDelay: '0.4s' }}>
                     <div>
-                      <span className="font-label-caps text-label-caps text-on-secondary-fixed-variant uppercase">SEASONAL RHYTHM</span>
-                      <h3 className="font-headline-sm text-headline-sm text-primary mt-unit">{displayPhase}</h3>
+                      <span className="font-label-caps text-label-caps text-surface-cream/50 uppercase tracking-widest">SEASONAL RHYTHM</span>
+                      <h3 className="font-headline-sm text-headline-sm text-surface-cream mt-unit">{displayPhase}</h3>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="font-label-md text-label-md text-on-secondary-fixed-variant uppercase">{displayTip}</span>
-                      <div className="px-stack-sm py-1 bg-surface/30 rounded-full font-label-caps text-label-caps text-primary hover:bg-surface/50 transition-colors">
+                      <span className="font-label-md text-label-md text-surface-cream/70 uppercase tracking-widest">{displayTip}</span>
+                      <div className="px-stack-sm py-1 bg-white/10 rounded-full font-label-caps text-[10px] tracking-widest text-resonant-pink border border-resonant-pink/30">
                         {displayBadge}
                       </div>
                     </div>
@@ -330,53 +335,49 @@ export default function Dashboard() {
                 </Link>
 
                 <Link href="/jyotish" className="block h-full">
-                  <div className="reveal bg-primary-container p-stack-md rounded-xl flex flex-col justify-between h-48 text-on-primary active hover:shadow-lg transition-shadow duration-500" style={{ transitionDelay: '0.5s' }}>
+                  <div className="reveal bg-white/5 border border-white/10 p-stack-md rounded-xl flex flex-col justify-between h-48 text-surface-cream active hover:border-resonant-pink/40 hover:bg-white/10 transition-all duration-500" style={{ transitionDelay: '0.5s' }}>
                     <div>
-                      <span className="font-label-caps text-label-caps text-on-primary-container">CURRENT VIBE</span>
-                      <h3 className="font-headline-sm text-headline-sm text-surface mt-unit capitalize">{displayVibe}</h3>
+                      <span className="font-label-caps text-label-caps text-surface-cream/50 tracking-widest">CURRENT VIBE</span>
+                      <h3 className="font-headline-sm text-headline-sm text-surface-cream mt-unit capitalize">{displayVibe}</h3>
                     </div>
                     <div className="flex items-center gap-stack-md">
-                      <span className="material-symbols-outlined text-secondary-container" style={{ fontSize: '40px', fontVariationSettings: "'FILL' 1" }}>brightness_4</span>
-                      <span className="font-body-md text-body-md opacity-80">Moon in {moonPhase?.split(' ')[1] || 'Cancer'}. Ground through hydration.</span>
+                      <span className="material-symbols-outlined text-yellow-200/80" style={{ fontSize: '40px', fontVariationSettings: "'FILL' 1" }}>brightness_4</span>
+                      <span className="font-body-md text-body-md opacity-80 italic-serif">Moon in {moonPhase?.split(' ')[1] || 'Cancer'}. Ground through hydration.</span>
                     </div>
                   </div>
                 </Link>
               </div>
 
               {/* Ritual Space */}
-              <div className="reveal bg-surface-container-low p-stack-lg rounded-xl active cursor-pointer hover:shadow-sm transition-shadow duration-500" style={{ transitionDelay: '0.6s' }} onClick={() => router.push('/rituals')}>
+              <div className="reveal bg-forest-ink/60 backdrop-blur-xl border border-white/10 p-stack-lg rounded-xl active cursor-pointer hover:border-resonant-pink/30 transition-all duration-500 shadow-2xl" style={{ transitionDelay: '0.6s' }} onClick={() => router.push('/rituals')}>
                 <div className="flex justify-between items-center mb-stack-lg">
-                  <h3 className="font-headline-md text-headline-md text-primary tracking-tight">Today&apos;s Rituals</h3>
-                  <div className="flex items-center gap-unit">
-                    <span className="w-2 h-2 rounded-full bg-secondary-container pulse-pink"></span>
-                    <span className="font-label-caps text-label-caps text-secondary">LIVE SYNC</span>
-                  </div>
+                  <h3 className="font-headline-md text-headline-md text-surface-cream tracking-tight uppercase">Today&apos;s Rituals</h3>
                 </div>
                 <div className="space-y-stack-md">
                   {topThreeRituals.map((ritual, idx) => {
                     const isActive = idx === 1; // Example active state
                     return (
                       <div key={ritual.id} className={`flex items-start gap-stack-md group ${idx === 2 ? 'opacity-40' : ''}`}>
-                        <div className={`font-label-caps text-label-caps ${isActive ? 'text-secondary' : 'text-on-surface-variant'} w-24 pt-1`}>
+                        <div className={`font-label-caps text-label-caps ${isActive ? 'text-resonant-pink' : 'text-surface-cream/70'} w-24 pt-1 tracking-widest`}>
                           {formatRitualTime(ritual.time)}
                         </div>
-                        <div className="flex-1 border-b border-outline-variant pb-stack-md">
-                          <h4 className="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors flex items-center gap-unit">
+                        <div className="flex-1 border-b border-surface-cream/10 pb-stack-md">
+                          <h4 className="font-headline-sm text-headline-sm text-surface-cream group-hover:text-resonant-pink transition-colors flex items-center gap-unit uppercase">
                             {ritual.activity}
                             {isActive && (
-                              <span className="text-[12px] bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full font-label-caps">ACTIVE</span>
+                              <span className="text-[10px] tracking-widest bg-resonant-pink text-forest-ink px-2 py-0.5 rounded-full font-label-caps">ACTIVE</span>
                             )}
                           </h4>
-                          <p className="font-body-md text-body-md text-on-surface-variant italic">
+                          <p className="font-body-md text-body-md text-surface-cream/70 italic-serif mt-2">
                             {ritual.description}
                           </p>
                         </div>
                         {isActive ? (
-                          <button className="w-8 h-8 rounded-full border border-secondary-container flex items-center justify-center text-secondary hover:bg-secondary-container hover:text-white transition-all">
+                          <button className="w-8 h-8 rounded-full border border-resonant-pink/50 flex items-center justify-center text-resonant-pink hover:bg-resonant-pink hover:text-forest-ink transition-all shadow-[0_0_10px_rgba(254,181,202,0.2)]">
                             <span className="material-symbols-outlined text-[20px]">play_arrow</span>
                           </button>
                         ) : (
-                          <span className="material-symbols-outlined text-[24px] text-outline" style={idx === 0 ? { fontVariationSettings: "'FILL' 1", color: '#7b4355' } : {}}>
+                          <span className="material-symbols-outlined text-[24px] text-surface-cream/20" style={idx === 0 ? { fontVariationSettings: "'FILL' 1", color: '#feb5ca' } : {}}>
                             {idx === 0 ? 'check_circle' : 'radio_button_unchecked'}
                           </span>
                         )}
@@ -388,33 +389,33 @@ export default function Dashboard() {
 
               {/* Aura State Constitution */}
               <div 
-                className="reveal bg-surface-container-high p-stack-lg rounded-xl relative overflow-hidden flex flex-col items-center justify-center min-h-[400px] backdrop-blur-xl border border-outline-variant/30 active cursor-pointer group" 
+                className="reveal bg-white/5 p-stack-lg rounded-xl relative overflow-hidden flex flex-col items-center justify-center min-h-[400px] backdrop-blur-xl border border-white/10 active cursor-pointer group hover:border-resonant-pink/30 transition-colors" 
                 style={{ transitionDelay: '0.7s' }}
                 onClick={() => router.push('/prakriti')}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 pointer-events-none group-hover:opacity-70 transition-opacity duration-700"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-resonant-pink/5 to-transparent pointer-events-none group-hover:opacity-100 opacity-0 transition-opacity duration-700"></div>
                 <div className="relative z-10 flex flex-col items-center gap-stack-md">
-                  <span className="font-label-caps text-label-caps text-secondary tracking-widest uppercase">AURA STATE: {dominantDoshaText.toUpperCase()} ALIGNMENT</span>
+                  <span className="font-label-caps text-[12px] text-resonant-pink tracking-widest uppercase">AURA STATE: {dominantDoshaText.toUpperCase()} ALIGNMENT</span>
                   <div className="relative w-64 h-64 flex items-center justify-center mt-4">
-                    <div className="absolute inset-4 rounded-full border border-secondary-container/30 lotus-float"></div>
+                    <div className="absolute inset-4 rounded-full border border-resonant-pink/20 lotus-float group-hover:border-resonant-pink/40 transition-colors duration-500"></div>
                     <div className="relative flex flex-col items-center">
-                      <span className="font-display-lg text-[64px] text-primary leading-none group-hover:scale-105 transition-transform duration-700">{resonanceScore}%</span>
-                      <span className="font-label-caps text-label-caps text-on-surface-variant">RESONANCE</span>
+                      <span className="font-display-lg text-[64px] text-surface-cream leading-none group-hover:scale-105 transition-transform duration-700">{resonanceScore}%</span>
+                      <span className="font-label-caps text-label-caps text-surface-cream/60 tracking-widest uppercase">RESONANCE</span>
                     </div>
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2 flex flex-col items-center">
-                      <div className="w-3 h-3 rounded-full bg-secondary-container shadow-lg shadow-secondary/50"></div>
-                      <span className="font-label-caps text-[10px] mt-1 text-secondary">SLEEP</span>
+                      <div className="w-3 h-3 rounded-full bg-resonant-pink shadow-[0_0_15px_rgba(254,181,202,0.6)]"></div>
+                      <span className="font-label-caps text-[10px] mt-1 text-surface-cream/60 tracking-widest">SLEEP</span>
                     </div>
                     <div className="absolute top-1/4 -right-8 flex flex-col items-center">
-                      <div className="w-3 h-3 rounded-full bg-primary shadow-lg shadow-primary/50"></div>
-                      <span className="font-label-caps text-[10px] mt-1 text-primary">RITUALS</span>
+                      <div className="w-3 h-3 rounded-full bg-primary-fixed-dim shadow-[0_0_15px_rgba(146,213,169,0.6)]"></div>
+                      <span className="font-label-caps text-[10px] mt-1 text-surface-cream/60 tracking-widest">RITUALS</span>
                     </div>
                     <div className="absolute bottom-1/4 -left-8 flex flex-col items-center">
-                      <div className="w-3 h-3 rounded-full bg-primary-fixed-dim shadow-lg shadow-primary/50"></div>
-                      <span className="font-label-caps text-[10px] mt-1 text-on-primary-fixed-variant">FREQ</span>
+                      <div className="w-3 h-3 rounded-full bg-yellow-200/80 shadow-[0_0_15px_rgba(254,240,138,0.6)]"></div>
+                      <span className="font-label-caps text-[10px] mt-1 text-surface-cream/60 tracking-widest">FREQ</span>
                     </div>
                   </div>
-                  <p className="font-body-md text-body-md text-on-surface-variant italic text-center max-w-xs mt-stack-sm">
+                  <p className="font-body-md text-body-md text-surface-cream/70 italic-serif text-center max-w-xs mt-stack-sm">
                     Your energy field is currently vibrating in harmony with the {moonPhase ? moonPhase.split(' ')[1] || 'lunar' : 'lunar'} cycle.
                   </p>
                 </div>
@@ -422,7 +423,13 @@ export default function Dashboard() {
 
               {/* Recalibrate CTA */}
               <div className="reveal -mt-unit active" style={{ transitionDelay: '0.8s' }}>
-                <button onClick={() => router.push('/prakriti')} className="w-full bg-primary py-stack-md text-white font-label-caps text-label-caps tracking-[0.2em] hover:bg-primary-container transition-all flex items-center justify-center gap-stack-sm group rounded-b-xl hover:shadow-lg">
+                <button 
+                  onClick={() => {
+                    useUserStore.getState().resetAssessment();
+                    router.push('/?step=assessment');
+                  }} 
+                  className="w-full bg-resonant-pink py-stack-md text-forest-ink font-label-caps text-label-caps tracking-[0.2em] hover:bg-surface-cream transition-all flex items-center justify-center gap-stack-sm group rounded-b-xl hover:shadow-[0_0_20px_rgba(254,181,202,0.4)] cursor-pointer"
+                >
                   RECALIBRATE FREQUENCY
                   <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">trending_flat</span>
                 </button>

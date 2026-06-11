@@ -299,3 +299,13 @@ export const getTopThreeRituals = (
         return rituals.slice(-3);
     }
 };
+
+export const getAyurvedicSeason = () => {
+    const month = new Date().getMonth(); // 0-11
+    if (month === 0 || month === 1) return { season: 'Shishira', seasonEn: 'Late Winter', desc: 'favour warm, nourishing, and slightly oily foods to balance Vata.' };
+    if (month === 2 || month === 3) return { season: 'Vasanta', seasonEn: 'Spring', desc: 'favour lighter, drier, and warmer foods to balance Kapha.' };
+    if (month === 4 || month === 5) return { season: 'Grishma', seasonEn: 'Summer', desc: 'favour cooling, light, and hydrating foods. Avoid pungent, salty, and heavy meals that stoke Pitta.' };
+    if (month === 6 || month === 7) return { season: 'Varsha', seasonEn: 'Monsoon', desc: 'favour warm, freshly cooked foods to support weakened Agni and balance Vata.' };
+    if (month === 8 || month === 9) return { season: 'Sharad', seasonEn: 'Autumn', desc: 'favour cooling, sweet, and slightly bitter foods to pacify Pitta.' };
+    return { season: 'Hemanta', seasonEn: 'Early Winter', desc: 'favour warm, unctuous, and heavy foods to pacify Vata and nourish tissues.' };
+};

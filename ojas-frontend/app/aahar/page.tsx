@@ -1,20 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Header } from '../components/Header';
-import { Card } from '../components/Card';
-import { Button } from '../components/Button';
 import { useUserStore } from '../store/userStore';
 import { usePrakritiStore } from '../store/prakritiStore';
 import { getDominantDoshaLabel } from '../lib/dominantDosha';
 import { HERBS_DATA, Herb } from '../data/herbsData';
 import { useHerbStore } from '../store/herbStore';
+import { getAyurvedicSeason } from '../utils/ritualsData';
+import Link from 'next/link';
 
-
-
-// ─── Types ────────────────────────────────────────────────────────────────────
 type MealAlignment = 'aligned' | 'neutral' | 'aggravating';
 type AgniState = 'sharp' | 'slow' | 'irregular' | null;
 
@@ -23,44 +19,26 @@ interface Meal {
   label: string;
   foods: string;
   alignment: MealAlignment;
+  color: string;
+  desc: string;
 }
 
-// ─── Static data ──────────────────────────────────────────────────────────────
 const MEALS: Meal[] = [
-  { time: '7:00 AM',  label: 'Breakfast', foods: 'Warm oats, ghee, cardamom',       alignment: 'aligned'     },
-  { time: '12:00 PM', label: 'Lunch',     foods: 'Rice, dal, steamed greens',        alignment: 'neutral'     },
-  { time: '7:00 PM',  label: 'Dinner',    foods: 'Cold salad, raw tomatoes, coffee', alignment: 'aggravating' },
+  { time: '08:30 AM', label: 'Breakfast', foods: 'Soaked Almonds & Stewed Pear', alignment: 'aligned', color: 'bg-primary-fixed text-primary-fixed', desc: 'Vata-pacifying, warm, spiced with cardamom.' },
+  { time: '01:15 PM', label: 'Lunch', foods: 'Mung Dal Kitchari & Ghee', alignment: 'neutral', color: 'bg-secondary text-secondary', desc: 'Tridoshic, easy digestion, slightly high protein.' },
+  { time: '07:45 PM', label: 'Dinner', foods: 'Spiced Paneer & Flatbread', alignment: 'aggravating', color: 'bg-error text-error', desc: 'Pitta-provoking, delayed timing for Kapha rhythm.' },
 ];
 
 const SEASONAL_FOODS = [
-  { name: 'Coconut Water',  dosha: 'PITTA' },
-  { name: 'Cucumber',       dosha: 'PITTA' },
-  { name: 'Coriander',      dosha: 'VATA'  },
-  { name: 'Pomegranate',    dosha: 'KAPHA' },
-  { name: 'Fennel Seeds',   dosha: 'PITTA' },
+  'Watermelon', 'Cucumber', 'Fennel', 'Mung Beans', 'Coconut Water', 'Ghee'
 ];
 
-const ALIGNMENT_SCORE = 72; // % — today's dosha alignment
-
-const AGNI_OPTIONS: { id: AgniState; label: string; icon: string }[] = [
-  { id: 'sharp',    label: 'Sharp & Clear',   icon: '🔥' },
-  { id: 'slow',     label: 'Slow & Heavy',    icon: '🌫️' },
-  { id: 'irregular',label: 'Irregular',       icon: '〰️' },
+const AGNI_OPTIONS: { id: AgniState; label: string; icon: string; name: string }[] = [
+  { id: 'sharp', label: 'SHARP', icon: 'bolt', name: 'Tikshna' },
+  { id: 'slow', label: 'SLOW', icon: 'waves', name: 'Manda' },
+  { id: 'irregular', label: 'IRREGULAR', icon: 'shuffle', name: 'Vishama' },
 ];
 
-const DOSHA_PILL_COLOR: Record<string, string> = {
-  VATA:  'bg-blue-50 border-blue-200/60 text-blue-700  dark:bg-blue-900/20 dark:border-blue-800/40 dark:text-blue-300',
-  PITTA: 'bg-orange-50 border-orange-200/60 text-orange-700 dark:bg-orange-900/20 dark:border-orange-800/40 dark:text-orange-300',
-  KAPHA: 'bg-emerald-50 border-emerald-200/60 text-emerald-700 dark:bg-emerald-900/20 dark:border-emerald-800/40 dark:text-emerald-300',
-};
-
-const ALIGNMENT_BADGE: Record<MealAlignment, { label: string; color: string }> = {
-  aligned:     { label: 'Aligned',     color: 'bg-emerald-100 text-emerald-700 border-emerald-200/60 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800/40' },
-  neutral:     { label: 'Neutral',     color: 'bg-amber-100 text-amber-700 border-amber-200/60 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800/40'             },
-  aggravating: { label: 'Aggravating', color: 'bg-red-100 text-red-700 border-red-200/60 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800/40'                       },
-};
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
 export default function Aahar() {
   const router = useRouter();
   const { user, isAuthenticated } = useUserStore();
@@ -71,9 +49,7 @@ export default function Aahar() {
   // Herb states
   const { myStack, syncedToRituals, addHerb, removeHerb, setSynced } = useHerbStore();
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState('ALL');
   const [syncing, setSyncing] = useState(false);
-  const [expandedHerbs, setExpandedHerbs] = useState<Record<string, boolean>>({});
 
   const handleSync = () => {
     setSyncing(true);
@@ -94,19 +70,10 @@ export default function Aahar() {
   };
 
   const filteredHerbs = HERBS_DATA.filter((herb) => {
-    const matchesSearch = herb.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    return herb.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       herb.bestFor.some(f => f.toLowerCase().includes(searchQuery.toLowerCase())) ||
       herb.categories.some(c => c.toLowerCase().includes(searchQuery.toLowerCase()));
-
-    const matchesFilter = activeFilter === 'ALL' || 
-      (activeFilter === 'VATA' && herb.dosha.Vata === 'beneficial') ||
-      (activeFilter === 'PITTA' && herb.dosha.Pitta === 'beneficial') ||
-      (activeFilter === 'KAPHA' && herb.dosha.Kapha === 'beneficial') ||
-      herb.categories.includes(activeFilter);
-
-    return matchesSearch && matchesFilter;
   });
-
 
   useEffect(() => {
     setIsMounted(true);
@@ -116,515 +83,300 @@ export default function Aahar() {
   if (!isMounted) return null;
 
   const dominantDosha = getDominantDoshaLabel(user, prakriti, dominantPrakriti);
-
-  // ── Stat Cards ──────────────────────────────────────────────────────────────
-  const statCards = [
-    { label: 'Dominant Dosha', value: dominantDosha || 'Vata' },
-    { label: 'Season',         value: 'Grishma (Summer)'       },
-    { label: 'Agni Score',     value: '7 / 10'                 },
-  ];
+  const currentSeason = getAyurvedicSeason();
 
   return (
-    <div className="relative min-h-screen w-full bg-background text-foreground transition-colors duration-300">
+    <div className="bg-forest-ink text-on-surface font-body-md selection:bg-resonant-pink selection:text-forest-ink overflow-x-hidden min-h-screen">
+      <style dangerouslySetInnerHTML={{__html: `
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 48;
+            vertical-align: middle;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card:hover {
+            transform: translateY(-8px);
+            border-color: #feb5ca; /* Resonant Pink */
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .breathing {
+            animation: breathing 6s ease-in-out infinite;
+        }
+        @keyframes breathing {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        .breathing-glow {
+            animation: breatheGlow 8s ease-in-out infinite;
+            background: radial-gradient(circle, rgba(254, 181, 202, 0.08) 0%, rgba(0, 52, 28, 0) 70%);
+        }
+        @keyframes breatheGlow {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+        .italic-serif-font {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+        }
+      `}} />
+
+      {/* Atmospheric Background Layers */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="breathing-glow absolute top-[-10%] right-[-10%] w-[600px] h-[600px]"></div>
+        <div className="breathing-glow absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px]" style={{ animationDelay: '-4s' }}></div>
+      </div>
+
       <Header />
 
-      <main className="max-w-7xl mx-auto px-6 md:px-12 py-14 md:py-20">
+      {/* Header Section */}
+      <header className="relative z-10 pt-[120px] pb-stack-xl px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+        <div className="mb-4">
+            <button onClick={() => router.push('/dashboard')} className="inline-flex items-center gap-2 font-label-caps text-[10px] text-on-surface hover:text-resonant-pink transition-colors mb-4 cursor-pointer uppercase tracking-widest">
+                <span className="material-symbols-outlined text-[14px]">arrow_back</span>
+                Return to Dashboard
+            </button>
+        </div>
+        <div className="flex flex-col gap-unit">
+            <span className="font-label-caps text-[10px] text-resonant-pink uppercase tracking-[0.3em]">Nourishment Matrix</span>
+            <h1 className="font-headline-md text-[40px] md:text-[64px] text-on-surface max-w-3xl leading-[0.9] uppercase">Daily Aahar Sanctuary</h1>
+        </div>
+      </header>
 
-        {/* ── Page Header ─────────────────────────────────────────────────── */}
-        <section className="mb-14 animate-fade-rise">
+      {/* Overview Stats */}
+      <section className="relative z-10 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-3 gap-gutter mb-stack-xl">
+        <div className="glass-card p-6 md:p-stack-lg border-l-2 border-l-primary-fixed rounded-xl">
+            <div className="flex justify-between items-start mb-stack-sm">
+                <span className="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Dominant Dosha</span>
+                <span className="material-symbols-outlined text-resonant-pink">psychology</span>
+            </div>
+            <div className="font-headline-md text-headline-md text-on-surface uppercase">{dominantDosha || 'VATA'}</div>
+            <p className="font-italic-serif text-italic-serif text-on-surface-variant mt-2 italic">Requires specific rhythm & alignment</p>
+        </div>
+        <div className="glass-card p-6 md:p-stack-lg border-l-2 border-l-resonant-pink rounded-xl">
+            <div className="flex justify-between items-start mb-stack-sm">
+                <span className="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Current Season</span>
+                <span className="material-symbols-outlined text-resonant-pink">eco</span>
+            </div>
+            <div className="font-headline-md text-headline-md text-on-surface uppercase">{currentSeason.season} <span className="text-on-surface-variant text-[16px] block md:inline md:ml-2">({currentSeason.seasonEn})</span></div>
+            <p className="font-italic-serif text-italic-serif text-on-surface-variant mt-2 italic">{currentSeason.desc.split('.')[0]}</p>
+        </div>
+        <div className="glass-card p-6 md:p-stack-lg border-l-2 border-l-tertiary rounded-xl">
+            <div className="flex justify-between items-start mb-stack-sm">
+                <span className="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Agni Score</span>
+                <span className="material-symbols-outlined text-tertiary">local_fire_department</span>
+            </div>
+            <div className="font-headline-md text-headline-md text-tertiary">78 / 100</div>
+            <p className="font-italic-serif text-italic-serif text-on-surface-variant mt-2 italic">Sama Agni: Balanced Fire</p>
+        </div>
+      </section>
 
-          {/* Small label */}
-          <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-secondary font-bold mb-5">
-            NOURISHMENT MATRIX
-          </div>
-
-          {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-normal font-quote text-primary dark:text-on-primary leading-[1.07] tracking-tight mb-5">
-            Daily <em className="italic text-secondary">Aahar</em> Sanctuary
-          </h1>
-
-          {/* Subtitle */}
-          <p className="text-sm md:text-base text-stone-500 dark:text-stone-400 max-w-xl leading-relaxed">
-            Align your meals with your Prakriti, the seasonal rhythm, and your Agni&rsquo;s daily fire.
-          </p>
-
-          {/* Stat Cards Row */}
-          <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {statCards.map((s) => (
-              <div
-                key={s.label}
-                className="bg-white/50 dark:bg-stone-900/60 border border-stone-300/40 dark:border-stone-800/80 rounded-2xl px-6 py-5 shadow-[0_4px_20px_-4px_rgba(28,25,22,0.03)]"
-              >
-                <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500 mb-1.5 font-semibold">
-                  {s.label}
-                </div>
-                <div className="font-quote italic text-2xl text-secondary font-semibold">
-                  {s.value}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── Two-Column Grid ─────────────────────────────────────────────── */}
-        <div className="grid lg:grid-cols-12 gap-10 md:gap-14 items-start">
-
-          {/* ─── LEFT COLUMN ──────────────────────────────────────────────── */}
-          <div className="lg:col-span-5 flex flex-col gap-8 animate-fade-rise">
-
-            {/* Daily Food Log */}
-            <Card>
-              <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-secondary mb-6 font-semibold">
-                🥗 DAILY FOOD LOG — TODAY
-              </div>
-
-              {/* Meal Timeline */}
-              <div className="flex flex-col gap-0">
-                {MEALS.map((meal, idx) => {
-                  const badge = ALIGNMENT_BADGE[meal.alignment];
-                  return (
-                    <div key={meal.label} className="relative flex gap-5">
-                      {/* Timeline line */}
-                      <div className="flex flex-col items-center">
-                        <div className="w-2.5 h-2.5 rounded-full bg-secondary mt-1 flex-shrink-0 z-10" />
-                        {idx < MEALS.length - 1 && (
-                          <div className="w-px flex-1 bg-stone-200/60 dark:bg-stone-800 my-1" />
-                        )}
-                      </div>
-
-                      {/* Content */}
-                      <div className={`pb-6 flex-1 ${idx === MEALS.length - 1 ? 'pb-0' : ''}`}>
-                        <div className="flex items-center justify-between gap-2 mb-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-[9px] font-mono font-bold tracking-wider bg-secondary/10 text-secondary px-2 py-0.5 rounded">
-                              {meal.time}
-                            </span>
-                            <span className="text-xs font-mono text-stone-600 dark:text-stone-300 font-semibold">
-                              {meal.label}
-                            </span>
-                          </div>
-                          <span className={`text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${badge.color}`}>
-                            {badge.label}
-                          </span>
+      {/* Main Content Layout */}
+      <main className="relative z-10 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-gutter mb-stack-xl">
+        {/* Left Column: Food Log */}
+        <div className="lg:col-span-4 flex flex-col gap-stack-lg">
+            <div className="flex items-center justify-between">
+                <h2 className="font-headline-sm text-[20px] md:text-[24px] text-on-surface uppercase tracking-tight">Daily Food Log</h2>
+                <button className="material-symbols-outlined text-resonant-pink cursor-pointer">add_circle</button>
+            </div>
+            <div className="space-y-gutter relative">
+                {/* Timeline Line */}
+                <div className="absolute left-6 top-0 bottom-0 w-[1px] bg-white/10"></div>
+                
+                {MEALS.map((meal, i) => (
+                    <div key={i} className="relative pl-16 group">
+                        <div className={`absolute left-[18px] top-1 w-3 h-3 rounded-full ${meal.color.split(' ')[0]} shadow-[0_0_10px_currentColor] z-10 ${meal.color.split(' ')[1]}`}></div>
+                        <div className="glass-card p-5 md:p-stack-md rounded-xl">
+                            <div className="flex justify-between items-start mb-2">
+                                <span className="font-label-md text-[14px] text-on-surface-variant">{meal.time}</span>
+                                <span className={`px-3 py-1 ${meal.alignment === 'aligned' ? 'bg-primary-fixed/10 text-primary-fixed border-primary-fixed/20' : meal.alignment === 'neutral' ? 'bg-secondary/10 text-secondary border-secondary/20' : 'bg-error/10 text-error border-error/20'} font-label-caps text-[9px] rounded-full uppercase tracking-widest border`}>{meal.alignment}</span>
+                            </div>
+                            <h3 className="font-headline-sm text-[18px] md:text-[20px] mb-1 text-on-surface uppercase">{meal.foods}</h3>
+                            <p className="font-italic-serif text-[15px] text-on-surface-variant">{meal.desc}</p>
                         </div>
-                        <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
-                          {meal.foods}
-                        </p>
-                      </div>
                     </div>
-                  );
-                })}
-              </div>
-
-              {/* CTA */}
-              <div className="mt-8">
-                <Button variant="primary" className="w-full text-[9px]">
-                  + LOG A MEAL
-                </Button>
-              </div>
-            </Card>
-
-            {/* Dosha Alignment Score */}
-            <Card>
-              <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-stone-400 mb-6 font-semibold">
-                DOSHA ALIGNMENT SCORE
-              </div>
-
-              <div className="flex justify-between text-xs font-mono mb-2 text-stone-600 dark:text-stone-400">
-                <span>Today&rsquo;s Alignment</span>
-                <span className="font-semibold text-secondary">{ALIGNMENT_SCORE}%</span>
-              </div>
-              <div className="h-1.5 bg-stone-200/50 dark:bg-stone-800 rounded-full overflow-hidden mb-6">
-                <div
-                  className="h-full bg-secondary rounded-full transition-all duration-1000"
-                  style={{ width: `${ALIGNMENT_SCORE}%` }}
-                />
-              </div>
-
-              <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
-                Your food choices today are <strong className="text-stone-800 dark:text-stone-200">mostly aligned</strong> with your Vata constitution. Dinner choices introduced some Pitta aggravation.
-              </p>
-            </Card>
-          </div>
-
-          {/* ─── RIGHT COLUMN ─────────────────────────────────────────────── */}
-          <div className="lg:col-span-7 flex flex-col gap-8">
-
-            {/* Seasonal Foods */}
-            <Card>
-              <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-secondary mb-1 font-semibold">
-                RITUCHARYA · GRISHMA
-              </div>
-              <h2 className="font-quote italic text-2xl text-stone-900 dark:text-on-primary font-normal mb-6">
-                Seasonal Foods
-              </h2>
-
-              <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed mb-6">
-                During Grishma (Summer), favour cooling, light, and hydrating foods. Avoid pungent, salty, and heavy meals that stoke Pitta.
-              </p>
-
-              {/* Food Pill Tags */}
-              <div className="flex flex-wrap gap-2.5 mb-8">
-                {SEASONAL_FOODS.map((food) => (
-                  <div
-                    key={food.name}
-                    className="flex items-center gap-2 bg-white/70 dark:bg-stone-900/50 border border-stone-200/60 dark:border-stone-800 rounded-full px-4 py-2"
-                  >
-                    <span className="text-xs text-stone-700 dark:text-stone-300 font-medium">
-                      {food.name}
-                    </span>
-                    <span className={`text-[8px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full border ${DOSHA_PILL_COLOR[food.dosha]}`}>
-                      {food.dosha}
-                    </span>
-                  </div>
                 ))}
-              </div>
-
-              {/* Link CTA */}
-              <div className="pt-4 border-t border-stone-200/20 dark:border-stone-800">
-                <Link
-                  href="/rituals"
-                  className="text-[10px] font-mono uppercase tracking-wider text-secondary border-b border-secondary/30 hover:text-stone-900 dark:hover:text-white transition-colors"
-                >
-                  VIEW FULL SEASONAL GUIDE →
-                </Link>
-              </div>
-            </Card>
-
-            {/* Agni Check-in */}
-            <Card>
-              <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-secondary mb-1 font-semibold">
-                AGNI CHECK-IN
-              </div>
-              <h2 className="font-quote italic text-2xl text-stone-900 dark:text-on-primary font-normal mb-6">
-                How is your digestion today?
-              </h2>
-
-              {/* Selectable options */}
-              <div className="flex flex-wrap gap-3 mb-8">
-                {AGNI_OPTIONS.map((opt) => (
-                  <button
-                    key={opt.id}
-                    onClick={() => setAgni(opt.id)}
-                    className={`flex items-center gap-2 px-5 py-3 rounded-full border text-xs font-mono font-semibold tracking-wider transition-all duration-300 cursor-pointer ${
-                      agni === opt.id
-                        ? 'bg-primary text-[var(--ojas-cream-bg)] border-primary dark:bg-secondary dark:border-secondary'
-                        : 'bg-white/50 dark:bg-stone-900/40 border-stone-300/60 dark:border-stone-700 text-stone-600 dark:text-stone-400 hover:border-secondary/60 hover:text-secondary'
-                    }`}
-                  >
-                    <span>{opt.icon}</span>
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-
-              {agni && (
-                <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 mb-4 font-semibold animate-fade-rise">
-                  ✓ Logged — {AGNI_OPTIONS.find(o => o.id === agni)?.label}
-                </div>
-              )}
-
-              {/* Affirmation quote */}
-              <div className="border-l border-secondary/30 pl-5 py-1">
-                <p className="font-quote italic text-xl text-stone-700 dark:text-stone-300 leading-relaxed">
-                  &ldquo;A calm Agni is the root of all wellness.&rdquo;
-                </p>
-              </div>
-            </Card>
-
-          </div>
+            </div>
         </div>
 
-        {/* ─── AUSHADHI · HERB & SUPPLEMENT GUIDE ───────────────────────────── */}
-        <div className="border-t border-stone-300/30 dark:border-stone-800 my-16 md:my-20" />
-
-        <section className="animate-fade-rise">
-          {/* Section label */}
-          <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-secondary font-bold mb-5">
-            AUSHADHI · HERB & SUPPLEMENT GUIDE
-          </div>
-
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        {/* Right Column: Seasonal Foods & Agni */}
+        <div className="lg:col-span-5 flex flex-col gap-stack-lg">
+            {/* Ritucharya Guide */}
             <div>
-              <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary mb-1 font-semibold">
-                AUSHADHI SANCTUARY
-              </div>
-              <h2 className="text-4xl md:text-5xl font-normal font-quote text-primary dark:text-on-primary leading-tight">
-                Your Herb <span className="font-quote italic text-secondary">Stack</span>
-              </h2>
-              <p className="text-sm text-stone-500 dark:text-stone-400 max-w-xl leading-relaxed mt-2">
-                Ayurvedic herbs and supplements curated for your Vata constitution and current Agni state.
-              </p>
-            </div>
-
-            {/* Search Input */}
-            <div className="relative max-w-md w-full">
-              <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-stone-400">
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </span>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search herbs, e.g. Ashwagandha, Brahmi..."
-                className="w-full pl-11 pr-5 py-3 rounded-full border border-stone-300/60 dark:border-stone-700 bg-white/50 dark:bg-stone-900/40 text-stone-800 dark:text-stone-250 placeholder-stone-400 text-xs font-mono focus:outline-none focus:border-secondary focus:ring-1 focus:ring-[#C27A5D] transition-all duration-300"
-              />
-            </div>
-          </div>
-
-          {/* ─── Personalized Stack Recommendation Card (Dark #1C1C1A) ─────── */}
-          <div className="bg-[#1C1C1A] dark:bg-[#111110] rounded-[32px] p-8 text-on-primary mb-10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-72 h-72 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="relative z-10">
-              <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.3em] text-secondary font-bold mb-4">
-                YOUR PRAKRITI STACK · VATA OPTIMISED
-              </div>
-              <h3 className="text-2xl md:text-3xl font-normal font-quote text-on-primary leading-tight mb-6">
-                Recommended for you today
-              </h3>
-
-              {/* Grid of Recommended Pills */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                {[
-                  { name: 'Ashwagandha', reason: 'Grounds elevated Vata anxiety', dosage: '500mg', timeOfDay: '09:30 PM', emoji: '🌿', bestFor: ['Anxiety', 'Sleep', 'Grounding'] },
-                  { name: 'Brahmi', reason: 'Sharpens the quick Vata mind', dosage: '250mg', timeOfDay: '06:00 AM', emoji: '🌱', bestFor: ['Mental Clarity', 'Memory', 'Focus'] },
-                  { name: 'Triphala', reason: 'Regulates Vata digestion', dosage: '1000mg', timeOfDay: '09:45 PM', emoji: '🍇', bestFor: ['Digestion', 'Detoxification', 'Bowel Regularity'] }
-                ].map((rec) => {
-                  const inStack = myStack.some(s => s.name === rec.name);
-                  return (
-                    <div key={rec.name} className="flex flex-col gap-2.5">
-                      <div className="bg-white/5 border border-white/10 rounded-2xl px-5 py-4 flex flex-col justify-between h-full hover:border-secondary/40 transition duration-300">
-                        <div className="text-sm font-semibold text-white flex items-center gap-2 mb-1.5">
-                          <span className="text-lg">{rec.emoji}</span>
-                          {rec.name}
-                        </div>
-                        <div className="text-[11px] text-stone-400 leading-normal">
-                          {rec.reason}
-                        </div>
-                        <div className="text-[9px] font-mono text-stone-500 mt-2">
-                          {rec.dosage} · {rec.timeOfDay}
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => handleAddHerb(rec)}
-                        disabled={inStack}
-                        className={`text-[9px] font-mono uppercase tracking-wider text-left pl-1 transition-colors ${
-                          inStack ? 'text-emerald-500' : 'text-secondary hover:text-white'
-                        }`}
-                      >
-                        {inStack ? '✓ ADDED TO STACK' : '+ ADD TO ROUTINE'}
-                      </button>
+                <h2 className="font-headline-sm text-[20px] md:text-[24px] text-on-surface mb-stack-md uppercase tracking-tight">Seasonal Foods</h2>
+                <div className="glass-card p-6 md:p-stack-lg rounded-xl">
+                    <div className="mb-stack-md relative group">
+                        <img alt="Seasonal foods" className="w-full h-48 object-cover rounded-xl opacity-80 group-hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7qTQkGLSHl-AwfxipqBGXiIFy547Pft1yrWBkrERjhlp5w5yd26HJg74OWi20GjusDsW_S24eCn75h0uyIRL_PCLmjW-pbn4Bmq91URhVihRLIN-zsPnVMdvph2shQNvHkYfphLTNcTq9qwPBTP9ATRzraIzP09XeyXkc7lFO4d67yTcSFL84f4VLtJi9g0UUYwqBB1OFTR8rRCUp_Z5B95T3I8oE5AQmIRjG19Tloef50pTVyv24W7SLTfrH_Jw_J3bBFmxUAXtM" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-forest-ink/60 to-transparent rounded-xl"></div>
                     </div>
-                  );
-                })}
-              </div>
-
-              <div className="border-t border-stone-800/80 pt-4 flex justify-between items-center text-[9px] font-mono text-stone-500 uppercase tracking-widest">
-                <div>BASED ON YOUR PRAKRITI SCORE · VATA 94%</div>
-              </div>
-            </div>
-          </div>
-
-          {/* ─── Filter Row ────────────────────────────────────────────────── */}
-          <div className="flex gap-2 overflow-x-auto pb-4 mb-8 scrollbar-none">
-            {['ALL', 'VATA', 'PITTA', 'KAPHA', 'SLEEP', 'DIGESTION', 'IMMUNITY', 'MIND', 'HORMONES'].map((pill) => {
-              const isActive = activeFilter === pill;
-              return (
-                <button
-                  key={pill}
-                  onClick={() => setActiveFilter(pill)}
-                  className={`px-4.5 py-2 rounded-full border text-[9px] font-mono font-bold tracking-wider transition-all duration-300 cursor-pointer ${
-                    isActive
-                      ? 'bg-secondary text-white border-secondary'
-                      : 'bg-white/50 dark:bg-stone-900/40 border-stone-300/40 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:border-secondary/40 hover:text-secondary'
-                  }`}
-                >
-                  {pill}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* ─── Main Sanctuary Split Layout ──────────────────────────────── */}
-          <div className="grid lg:grid-cols-12 gap-8 md:gap-10 items-start">
-            
-            {/* Left Column: Herb Cards Grid */}
-            <div className="lg:col-span-8">
-              {filteredHerbs.length === 0 ? (
-                <div className="bg-white/40 dark:bg-stone-900/20 border border-stone-300/20 dark:border-stone-800 rounded-[32px] p-12 text-center text-stone-500">
-                  <span className="text-3xl block mb-3">🌱</span>
-                  <p className="text-xs font-mono">No herbs match your search or filter options.</p>
+                    <p className="font-italic-serif text-[18px] mb-stack-md text-white/80 italic">&ldquo;During {currentSeason.season}, Agni naturally lowers. Prioritize sweet, cold, liquid, and oily attributes.&rdquo;</p>
+                    <div className="flex flex-wrap gap-2">
+                        {SEASONAL_FOODS.map(f => (
+                            <span key={f} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full font-label-caps text-[10px] text-on-surface uppercase tracking-widest hover:border-resonant-pink transition-colors cursor-default">{f}</span>
+                        ))}
+                    </div>
                 </div>
-              ) : (
-                <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
-                  {filteredHerbs.map((herb) => {
-                    const inStack = myStack.some(s => s.name === herb.name);
-                    const isExpanded = expandedHerbs[herb.name] || false;
-                    return (
-                      <div
-                        key={herb.name}
-                        className="bg-white dark:bg-stone-900 border border-stone-300/40 dark:border-stone-800/80 rounded-3xl p-6 shadow-[0_4px_20px_-4px_rgba(28,25,22,0.03)] flex flex-col justify-between min-h-[340px]"
-                      >
-                        <div>
-                          {/* Top Info */}
-                          <div className="flex items-center gap-2.5 mb-3">
-                            <span className="text-2xl">{herb.emoji}</span>
-                            <h4 className="font-quote text-xl font-semibold text-stone-900 dark:text-stone-100">
-                              {herb.name}
-                            </h4>
-                          </div>
-
-                          {/* Dosha tag row */}
-                          <div className="flex flex-wrap gap-1.5 mb-4">
-                            {(['Vata', 'Pitta', 'Kapha'] as const).map((dKey) => {
-                              const status = herb.dosha[dKey];
-                              let colorClass = '';
-                              if (status === 'beneficial') {
-                                if (dKey === 'Vata') colorClass = 'bg-blue-500/10 text-blue-500 dark:text-blue-400 border-blue-500/20';
-                                else if (dKey === 'Pitta') colorClass = 'bg-secondary/10 text-secondary border-secondary/20';
-                                else colorClass = 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20';
-                              } else if (status === 'neutral') {
-                                colorClass = 'border-stone-200/60 dark:border-stone-800 text-stone-400 dark:text-stone-600 bg-transparent';
-                              } else {
-                                // aggravating
-                                colorClass = 'border-stone-200/60 dark:border-stone-800 text-stone-400 dark:text-stone-600 bg-transparent pr-4 relative';
-                              }
-
-                              return (
-                                <span
-                                  key={dKey}
-                                  className={`px-2 py-0.5 text-[8px] font-mono font-bold uppercase tracking-wider rounded border flex items-center gap-1 ${colorClass}`}
-                                >
-                                  {dKey}
-                                  {status === 'aggravating' && (
-                                    <span className="w-1 h-1 rounded-full bg-red-500 inline-block absolute right-1.5 top-[7px]" title="Aggravating" />
-                                  )}
-                                </span>
-                              );
-                            })}
-                          </div>
-
-                          {/* Attributes */}
-                          <div className="space-y-2 mt-4 text-[11px] leading-relaxed border-t border-stone-100 dark:border-stone-800/40 pt-4">
-                            <div>
-                              <span className="font-mono text-stone-400 uppercase tracking-widest text-[9px] block">BEST FOR</span>
-                              <span className="text-stone-700 dark:text-stone-300 font-semibold">{herb.bestFor.join(' · ')}</span>
-                            </div>
-                            <div className="mt-2.5">
-                              <span className="font-mono text-stone-400 uppercase tracking-widest text-[9px] block">WHEN TO TAKE</span>
-                              <span className="text-stone-600 dark:text-stone-400 font-medium">{herb.whenToTake} · {herb.dosage}</span>
-                            </div>
-                            <div className="mt-2.5">
-                              <span className="font-mono text-stone-400 uppercase tracking-widest text-[9px] block">AGNI NOTE</span>
-                              <span className="text-stone-500 dark:text-stone-400 italic">{herb.agniNote}</span>
-                            </div>
-                          </div>
-
-                          {/* Contraindications Expandable drawer */}
-                          <div className="mt-4">
-                            <button
-                              onClick={() => setExpandedHerbs(prev => ({ ...prev, [herb.name]: !isExpanded }))}
-                              className="text-[9px] font-mono text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 flex items-center gap-1 uppercase tracking-wider cursor-pointer"
-                            >
-                              Contraindications {isExpanded ? '↑' : '↓'}
-                            </button>
-                            {isExpanded && (
-                              <div className="text-[10px] text-red-600/80 dark:text-red-400/80 bg-red-500/5 dark:bg-red-500/10 border border-red-500/10 rounded-xl p-2.5 mt-2 font-mono leading-relaxed animate-fade-rise">
-                                ⚠️ {herb.contraindications}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Add to stack button */}
-                        <button
-                          onClick={() => handleAddHerb(herb)}
-                          disabled={inStack}
-                          className={`mt-6 text-center w-full px-4 py-2 border rounded-full text-[10px] font-mono font-bold uppercase tracking-wider block transition-all duration-300 cursor-pointer ${
-                            inStack
-                              ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-                              : 'border-secondary/30 text-secondary hover:bg-secondary hover:text-white'
-                          }`}
-                        >
-                          {inStack ? '✓ IN YOUR STACK' : '+ ADD TO MY STACK'}
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
             </div>
 
-            {/* Right Column: Persistent Saved Stack panel */}
-            <div className="lg:col-span-4 sticky top-24">
-              <div className="bg-white dark:bg-stone-900 border border-stone-300/40 dark:border-stone-800/80 rounded-[32px] p-6 shadow-[0_4px_25px_-5px_rgba(28,25,22,0.03)]">
-                <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-secondary mb-4 font-semibold">
-                  MY AUSHADHI STACK
-                </div>
-                
-                {myStack.length === 0 ? (
-                  <div className="text-center py-10 border border-dashed border-stone-300/40 dark:border-stone-800 rounded-2xl bg-stone-50/50 dark:bg-stone-900/30">
-                    <span className="text-2xl block mb-2">🌿</span>
-                    <p className="text-[11px] leading-relaxed text-stone-400 px-4">
-                      No herbs in your stack. Add recommendations or search the database to customize your daily nourishment.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-3 max-h-[380px] overflow-y-auto pr-1">
-                    {myStack.map((item) => (
-                      <div
-                        key={item.name}
-                        className="flex items-center justify-between p-3 border border-stone-200/50 dark:border-stone-800/60 rounded-xl bg-on-primary/30 dark:bg-stone-950/20"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg">{item.emoji}</span>
-                          <div>
-                            <div className="text-xs font-semibold text-stone-800 dark:text-stone-200">
-                              {item.name}
-                            </div>
-                            <div className="text-[9px] font-mono text-stone-400 dark:text-stone-500">
-                              {item.dosage} · {item.timeOfDay}
-                            </div>
-                          </div>
-                        </div>
-                        <button
-                          onClick={() => removeHerb(item.name)}
-                          className="text-stone-400 hover:text-red-500 text-lg leading-none p-1 cursor-pointer select-none font-light"
-                          aria-label={`Remove ${item.name}`}
-                        >
-                          ×
+            {/* Agni Check-in */}
+            <div>
+                <h2 className="font-headline-sm text-[20px] md:text-[24px] text-on-surface mb-stack-md uppercase tracking-tight">Agni Check-in</h2>
+                <div className="grid grid-cols-3 gap-3 md:gap-stack-sm">
+                    {AGNI_OPTIONS.map((opt) => (
+                        <button key={opt.id} onClick={() => setAgni(opt.id)} className={`flex flex-col items-center p-4 md:p-stack-md glass-card group rounded-xl cursor-pointer transition-all ${agni === opt.id ? 'border-resonant-pink bg-white/10 shadow-[0_0_15px_rgba(254,181,202,0.15)]' : ''}`}>
+                            <span className={`material-symbols-outlined text-[32px] mb-2 transition-colors ${agni === opt.id ? 'text-resonant-pink' : 'text-primary-fixed group-hover:text-resonant-pink'}`}>{opt.icon}</span>
+                            <span className={`font-label-caps text-[10px] tracking-widest ${agni === opt.id ? 'text-resonant-pink' : ''}`}>{opt.label}</span>
+                            <span className={`font-label-md text-[9px] mt-1 opacity-50 italic ${agni === opt.id ? 'text-resonant-pink' : ''}`}>{opt.name}</span>
                         </button>
-                      </div>
                     ))}
-                  </div>
-                )}
-
-                {/* Sync Actions */}
-                <button
-                  onClick={handleSync}
-                  disabled={myStack.length === 0 || syncing}
-                  className="w-full mt-6 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-[#1C1C1A] text-on-primary hover:bg-secondary hover:text-white transition-all duration-300 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[#1C1C1A] disabled:hover:text-on-primary cursor-pointer"
-                >
-                  {syncing ? 'SYNCING...' : syncedToRituals ? '✓ SYNCED' : 'SYNC TO MORNING RITUALS'}
-                </button>
-
-                <p className="text-[9px] text-stone-400 dark:text-stone-500 font-mono text-center mt-4 uppercase tracking-wider">
-                  Your stack syncs with your Dinacharya schedule
-                </p>
-              </div>
+                </div>
+                <div className="mt-stack-sm p-4 md:p-stack-md bg-white/5 border border-white/5 rounded-xl">
+                    <p className="font-italic-serif text-[15px] text-on-surface-variant text-center">&ldquo;Observe Agni&apos;s rhythm with kindness; it is the core of health.&rdquo;</p>
+                </div>
             </div>
+        </div>
 
-          </div>
-        </section>
+        {/* Sticky Sidebar/Panel */}
+        <aside className="lg:col-span-3">
+            <div className="sticky top-28 glass-card border-none overflow-hidden rounded-xl bg-white/[0.02]">
+                <div className="bg-white/10 p-5 md:p-stack-md flex justify-between items-center border-b border-white/5">
+                    <h3 className="font-headline-sm text-[16px] text-on-surface uppercase tracking-widest">Aushadhi Stack</h3>
+                    <span className="material-symbols-outlined text-resonant-pink breathing" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+                </div>
+                <div className="p-5 md:p-stack-md flex flex-col gap-stack-sm min-h-[300px]">
+                    {/* Selected Herbs */}
+                    {myStack.length === 0 ? (
+                        <div className="text-center py-6">
+                            <span className="text-2xl block mb-2 opacity-50">🌿</span>
+                            <p className="text-[11px] leading-relaxed text-white/40 px-2 font-label-md">
+                                No herbs in your stack. Add from the sanctuary below.
+                            </p>
+                        </div>
+                    ) : (
+                        myStack.map((item, idx) => (
+                            <div key={idx} className="flex items-center gap-4 p-2 border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-headline-sm text-[12px] ${idx % 2 === 0 ? 'bg-primary-container text-primary-fixed' : 'bg-secondary-container text-resonant-pink'}`}>
+                                    {item.name.charAt(0)}
+                                </div>
+                                <div className="flex-1">
+                                    <p className="font-label-caps text-[11px] leading-none text-on-surface tracking-wider uppercase">{item.name}</p>
+                                    <p className="font-label-md text-[9px] text-on-surface-variant uppercase tracking-tighter mt-1 italic">{item.timeOfDay}</p>
+                                </div>
+                                <button onClick={() => removeHerb(item.name)} className="material-symbols-outlined text-[16px] text-on-surface-variant hover:text-resonant-pink cursor-pointer">close</button>
+                            </div>
+                        ))
+                    )}
+                    
+                    <div className="mt-auto pt-stack-lg">
+                        <button onClick={handleSync} disabled={myStack.length === 0 || syncing} className="w-full bg-resonant-pink text-forest-ink py-4 rounded-lg font-headline-sm text-[14px] uppercase tracking-[0.2em] active:scale-95 transition-all shadow-[0_4px_20px_rgba(254,181,202,0.2)] disabled:opacity-50 cursor-pointer">
+                            {syncing ? 'SYNCING...' : syncedToRituals ? '✓ SYNCED' : 'SYNC RITUALS'}
+                        </button>
+                        <p className="text-center font-label-md text-[9px] text-on-surface-variant mt-3 uppercase tracking-widest opacity-50">Next sync: Tomorrow 06:00 AM</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
       </main>
 
+      {/* Herb Sanctuary (Aushadhi) Wide Section */}
+      <section className="bg-forest-ink/60 border-t border-white/5 py-stack-xl overflow-hidden relative z-10 backdrop-blur-sm">
+        <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-stack-xl gap-stack-md">
+                <div>
+                    <span className="font-label-caps text-label-caps text-resonant-pink uppercase tracking-[0.3em] text-[10px]">Botanical Intelligence</span>
+                    <h2 className="font-headline-md text-[40px] md:text-[48px] text-on-surface mt-2 leading-none uppercase">Herb Sanctuary</h2>
+                </div>
+                <div className="relative w-full md:w-96">
+                    <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="w-full bg-transparent border-b border-white/20 focus:border-resonant-pink text-on-surface font-italic-serif text-[20px] pb-2 placeholder:text-white/30 focus:ring-0 focus:outline-none transition-colors" placeholder="Search Aushadhi Database..." type="text" />
+                    <span className="material-symbols-outlined absolute right-0 bottom-2 text-on-surface-variant">search</span>
+                </div>
+            </div>
+
+            {/* Recommended Stack */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-stack-xl">
+                {[
+                  { name: 'Ashwagandha', category: 'Adaptogen', icon: 'stars', desc: 'The scent of a horse. Renowned for its ability to grant profound physical and mental strength.', tags: ['Vata-Pitta', 'Grounding'], dosage: '500mg', timeOfDay: '09:30 PM', emoji: '🌿', bestFor: ['Strength'] },
+                  { name: 'Brahmi', category: 'Nervine', icon: 'visibility', desc: 'Cosmic consciousness. The primary herb for revitalizing the nervous system and intellect.', tags: ['Tridoshic', 'Focus'], dosage: '250mg', timeOfDay: '06:00 AM', emoji: '🌱', bestFor: ['Intellect'] },
+                  { name: 'Triphala', category: 'Digestive', icon: 'refresh', desc: 'Three Fruits. A powerhouse for internal cleansing, detoxification, and Agni regulation.', tags: ['Tridoshic', 'Cleansing'], dosage: '1000mg', timeOfDay: '09:45 PM', emoji: '🍇', bestFor: ['Digestion'] }
+                ].map(rec => {
+                  const inStack = myStack.some(s => s.name === rec.name);
+                  return (
+                    <div key={rec.name} className="glass-card p-6 md:p-stack-lg flex flex-col gap-stack-sm rounded-xl">
+                        <div className="flex justify-between items-start">
+                            <span className="font-label-caps text-label-caps text-resonant-pink uppercase text-[10px] tracking-widest">{rec.category}</span>
+                            <span className="material-symbols-outlined text-white/20">{rec.icon}</span>
+                        </div>
+                        <h3 className="font-headline-sm text-[24px] text-on-surface uppercase tracking-tight">{rec.name}</h3>
+                        <p className="font-body-md text-white/70 text-[15px] leading-relaxed">{rec.desc}</p>
+                        <div className="flex gap-2 my-2">
+                            {rec.tags.map(t => (
+                                <span key={t} className="px-2 py-0.5 border border-white/10 text-[9px] font-label-caps uppercase text-white/50">{t}</span>
+                            ))}
+                        </div>
+                        <button onClick={() => handleAddHerb(rec)} disabled={inStack} className={`mt-auto py-3 font-headline-sm text-[12px] uppercase tracking-widest transition-colors cursor-pointer rounded ${inStack ? 'bg-primary-container text-primary-fixed' : 'bg-on-surface text-forest-ink hover:bg-resonant-pink'}`}>
+                            {inStack ? 'Added to Routine' : 'Add to Routine'}
+                        </button>
+                    </div>
+                  )
+                })}
+            </div>
+
+            {/* Herb Database Grid */}
+            <div className="overflow-x-auto">
+                <table className="w-full border-collapse border-t border-white/10 min-w-[600px]">
+                    <thead>
+                        <tr className="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-[0.2em] text-left border-b border-white/5">
+                            <th className="py-4 pr-4 font-normal">Herb Name</th>
+                            <th className="py-4 px-4 font-normal">Suitability</th>
+                            <th className="py-4 px-4 font-normal">Best For</th>
+                            <th className="py-4 px-4 font-normal">When to Take</th>
+                            <th className="py-4 pl-4 font-normal">Agni Note</th>
+                        </tr>
+                    </thead>
+                    <tbody className="font-body-md text-[14px]">
+                        {filteredHerbs.slice(0, 8).map(herb => (
+                            <tr key={herb.name} className="border-b border-white/5 hover:bg-white/[0.03] transition-colors group">
+                                <td className="py-4 pr-4">
+                                    <p className="text-on-surface font-bold uppercase tracking-wide">{herb.name} <span className="text-[12px] opacity-50 font-normal italic lowercase ml-1">{herb.emoji}</span></p>
+                                </td>
+                                <td className="py-4 px-4">
+                                    <div className="flex gap-1.5">
+                                        {herb.dosha.Vata === 'beneficial' && <div className="w-2 h-2 rounded-full bg-primary-fixed" title="Vata Beneficial"></div>}
+                                        {herb.dosha.Pitta === 'beneficial' && <div className="w-2 h-2 rounded-full bg-secondary-fixed" title="Pitta Beneficial"></div>}
+                                        {herb.dosha.Kapha === 'beneficial' && <div className="w-2 h-2 rounded-full bg-resonant-pink" title="Kapha Beneficial"></div>}
+                                    </div>
+                                </td>
+                                <td className="py-4 px-4 text-white/60">{herb.bestFor[0]}</td>
+                                <td className="py-4 px-4 text-white/60">{herb.whenToTake.split('.')[0]}</td>
+                                <td className="py-4 pl-4 text-resonant-pink italic text-[13px]">{herb.agniNote.substring(0, 30)}...</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                {filteredHerbs.length === 0 && (
+                    <div className="text-center py-12 text-white/40 font-label-md">No herbs found matching your search.</div>
+                )}
+            </div>
+        </div>
+      </section>
 
       {/* Footer */}
-      <footer className="w-full max-w-7xl mx-auto px-8 pb-6 pt-6 border-t border-stone-200/20 flex items-center justify-between text-[9px] md:text-[10px] font-mono text-stone-400 tracking-wider">
-        <div>NOURISHMENT / GRISHMA SEASON</div>
-        <div>© OJAS AAHAR MMXXVI</div>
+      <footer className="bg-forest-ink/80 border-t border-white/5 w-full relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter px-margin-mobile md:px-margin-desktop py-stack-lg max-w-container-max mx-auto items-center">
+            <div>
+                <span className="font-headline-sm text-headline-sm text-resonant-pink uppercase tracking-widest">OJAS</span>
+                <p className="font-body-md text-[14px] text-white/40 mt-2 max-w-xs">© 2026 OJAS Wellness. Ancient Wisdom, Modern Rhythm.</p>
+            </div>
+            <div className="flex flex-wrap md:justify-end gap-stack-lg">
+                <Link href="/" className="font-label-caps text-[10px] text-white/50 hover:text-resonant-pink transition-all uppercase tracking-widest">Privacy</Link>
+                <Link href="/" className="font-label-caps text-[10px] text-white/50 hover:text-resonant-pink transition-all uppercase tracking-widest">Terms</Link>
+                <Link href="/" className="font-label-caps text-[10px] text-white/50 hover:text-resonant-pink transition-all uppercase tracking-widest">Journal</Link>
+                <Link href="/" className="font-label-caps text-[10px] text-white/50 hover:text-resonant-pink transition-all uppercase tracking-widest">Community</Link>
+            </div>
+        </div>
       </footer>
     </div>
   );
