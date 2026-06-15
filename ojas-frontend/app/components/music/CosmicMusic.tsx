@@ -109,7 +109,16 @@ export const CosmicMusic = ({ onNext }: CosmicMusicProps) => {
       else phase = 'ovulation';
     }
     setPredictionPhase(phase);
-    setMusicRecommendations(getMusicRecommendations(phase, Math.ceil(energyLevel / 10) || 1, selectedDosha));
+    let recommendations = getMusicRecommendations(phase, Math.ceil(energyLevel / 10) || 1, selectedDosha);
+    // Dynamic re-ranking active during Mercury Rx (grounding/calming tracks prioritized)
+    recommendations = [...recommendations].sort((a, b) => {
+      const aGrounding = ['grounding', 'calming', 'gentle', 'reflective'].includes(a.mood.toLowerCase());
+      const bGrounding = ['grounding', 'calming', 'gentle', 'reflective'].includes(b.mood.toLowerCase());
+      if (aGrounding && !bGrounding) return -1;
+      if (!aGrounding && bGrounding) return 1;
+      return 0;
+    });
+    setMusicRecommendations(recommendations);
   }, [cycle, energyLevel, getCyclePhase, selectedDosha]);
 
   const togglePlay = (idx: number) => {
@@ -209,6 +218,16 @@ export const CosmicMusic = ({ onNext }: CosmicMusicProps) => {
                   </span>
                   <span className="font-label-md text-label-md opacity-50 uppercase tracking-widest">Ethereal</span>
                 </div>
+              </div>
+
+              {/* Mercury Rx adjustment banner */}
+              <div className="mt-6 max-w-md px-4 py-3 bg-[#c06080]/10 border border-[#c06080]/20 rounded-2xl flex items-center justify-between gap-3 animate-pulse">
+                <span className="text-[10px] font-mono font-bold tracking-wider text-[#c06080] uppercase">
+                  ☿ FREQUENCIES ADJUSTED FOR MERCURY RETROGRADE
+                </span>
+                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-[#c06080]/20 text-[#c06080] font-bold">
+                  432HZ PRIORITIZED
+                </span>
               </div>
             </div>
 

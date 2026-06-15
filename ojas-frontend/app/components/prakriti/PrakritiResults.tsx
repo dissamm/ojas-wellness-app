@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useUserStore } from '../../store/userStore';
-import { StardustCanvas, ElementalCanvas, SanctuaryOverlayCanvas } from './PrakritiAnimations';
+import { StardustCanvas, ElementalCanvas } from './PrakritiAnimations';
 import { Disclaimer } from '../Disclaimer';
 import { DOSHA_DETAILS as FULL_DOSHA_DETAILS, DOSHA_MAP } from '../../data/prakritiData';
 

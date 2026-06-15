@@ -7,7 +7,6 @@ import { useUserStore } from './store/userStore';
 import { Header } from './components/Header';
 import { isFullyOnboarded, getResumeStep } from './lib/onboardingState';
 import WellnessFlow from './WellnessFlow';
-import { CompactLunarAnimation } from './components/CompactLunarAnimation';
 
 export default function Home() {
   const router = useRouter();

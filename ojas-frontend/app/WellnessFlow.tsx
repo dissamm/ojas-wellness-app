@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useUserStore } from './store/userStore';
 import { DoshaAnimation } from './components/flows/DoshaAnimation';
@@ -17,11 +17,6 @@ function FlowController() {
     const setCurrentStep = useUserStore((state) => state.setCurrentStep);
     const user = useUserStore((state) => state.user);
 
-    const [predictionData, setPredictionData] = useState<{
-        predictedMood: number | null;
-        moodType: string;
-        cyclePhase: string;
-    } | null>(null);
 
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -87,11 +82,6 @@ function FlowController() {
             <div className="bg-forest-ink min-h-screen">
                 <CosmicCycle 
                     onNext={() => setCurrentStep('music')}
-                    onPredictionComplete={(data) => setPredictionData({
-                        predictedMood: data.predicted_mood ?? null,
-                        moodType: data.predicted_mood && data.predicted_mood > 5 ? 'Elevated' : 'Grounded',
-                        cyclePhase: data.cycle_phase ?? 'balanced'
-                    })} 
                 />
             </div>
         );

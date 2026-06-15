@@ -94,7 +94,7 @@ export const DailyCompanion = () => {
                     <div className="w-full bg-white/5 border border-white/5 rounded-2xl p-6 md:p-8 text-center relative overflow-hidden">
                         <div className="absolute top-0 left-0 w-1 h-full bg-resonant-pink/50"></div>
                         <p className="font-body-md italic text-surface-cream/80 text-lg md:text-xl leading-relaxed">
-                            "True wellness is a dynamic balance of body, mind, and spirit. May your journey inward bring you boundless light."
+                            &ldquo;True wellness is a dynamic balance of body, mind, and spirit. May your journey inward bring you boundless light.&rdquo;
                         </p>
                     </div>
                 </div>

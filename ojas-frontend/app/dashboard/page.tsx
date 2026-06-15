@@ -14,6 +14,7 @@ import { getDominantDoshaLabel } from '../lib/dominantDosha';
 import { SleepCheckinModal } from '../components/SleepCheckinModal';
 import { useSleepStore, SleepLog } from '../store/sleepStore';
 import { Header } from '../components/Header';
+import { getJyotishProfile } from '../utils/jyotishData';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function Dashboard() {
   const { user } = useUserStore();
   
   const dominantDoshaText = getDominantDoshaLabel(user, prakriti, dominantPrakriti);
+  const jyotish = getJyotishProfile(user?.dateOfBirth);
   
   const [greeting, setGreeting] = useState("Good morning");
 
@@ -437,6 +439,95 @@ export default function Dashboard() {
 
             </div>
           </div>
+
+          {/* JYOTISH · PLANETARY MATRIX */}
+          <section className="reveal bg-[#FBF9F5] text-stone-900 border border-[#C27A5D]/20 p-6 md:p-8 rounded-xl relative overflow-hidden mt-stack-xl active" style={{ transitionDelay: '0.9s' }}>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#C27A5D]/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-stone-200 pb-6 mb-6">
+              <div>
+                <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-[#C27A5D] font-bold block mb-1">
+                  JYOTISH · PLANETARY MATRIX
+                </span>
+                <h2 className="text-2xl md:text-3xl font-serif font-normal text-stone-950">
+                  Your <span className="italic text-[#C27A5D]">Cosmic</span> Alignment
+                </h2>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#C27A5D] animate-pulse" />
+                <span className="text-[10px] font-mono uppercase tracking-widest text-[#C27A5D] font-bold">
+                  Planetary Layer Active
+                </span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 text-stone-800">
+              {/* Column 1: Birth Chart */}
+              <div className="flex flex-col gap-2">
+                <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold flex items-center gap-2">
+                  <span>☉</span> BIRTH CHART
+                </div>
+                <div>
+                  <h3 className="font-serif italic text-xl text-stone-900 mb-1">
+                    Sun in {jyotish.sunSign.english} • Moon in {jyotish.moonSign.english}
+                  </h3>
+                  <p className="text-xs text-stone-600 leading-relaxed font-inter">
+                    {jyotish.dominantInfluence}
+                  </p>
+                </div>
+              </div>
+
+              {/* Column 2: Today's Transit */}
+              <div className="flex flex-col gap-2">
+                <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold flex items-center gap-2">
+                  <span>☿</span> TODAY&apos;S TRANSIT
+                </div>
+                <div>
+                  <h3 className="font-serif italic text-xl text-stone-900 mb-1">
+                    Mercury Retrograde
+                  </h3>
+                  <p className="text-xs text-stone-600 leading-relaxed font-inter">
+                    Until June 18. Avoid new contracts and major decisions. Ideal for inner reflection and revisiting practices.
+                  </p>
+                </div>
+              </div>
+
+              {/* Column 3: Numerology */}
+              <div className="flex flex-col gap-2">
+                <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#C27A5D] font-semibold flex items-center gap-2">
+                  <span>🔢</span> NUMEROLOGY
+                </div>
+                <div>
+                  <h3 className="font-serif italic text-xl text-stone-900 mb-1">
+                    Life Path {jyotish.lifePathNumber}
+                  </h3>
+                  <p className="text-xs text-stone-600 leading-relaxed font-inter">
+                    {jyotish.lifePathTagline}. {jyotish.lifePathDescription}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Lower Planet Pill Row */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-6 border-t border-stone-200">
+              <div className="flex flex-wrap gap-2">
+                <span className="px-3 py-1 rounded-full text-[9px] font-mono font-bold uppercase tracking-widest border border-[#C27A5D] bg-[#C27A5D]/5 text-[#C27A5D]">
+                  ☿ Mercury Rx
+                </span>
+                <span className="px-3 py-1 rounded-full text-[9px] font-mono uppercase tracking-widest border border-stone-200 text-stone-500">
+                  ♀ Venus in Taurus
+                </span>
+                <span className="px-3 py-1 rounded-full text-[9px] font-mono uppercase tracking-widest border border-stone-200 text-stone-500">
+                  ♂ Mars in Leo
+                </span>
+                <span className="px-3 py-1 rounded-full text-[9px] font-mono uppercase tracking-widest border border-stone-200 text-stone-500">
+                  ♃ Jupiter in Gemini
+                </span>
+                <span className="px-3 py-1 rounded-full text-[9px] font-mono uppercase tracking-widest border border-stone-200 text-stone-500 font-bold">
+                  ☽ Waning Gibbous · Day 14
+                </span>
+              </div>
+            </div>
+          </section>
         </main>
 
         {/* Footer */}

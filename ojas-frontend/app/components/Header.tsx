@@ -100,12 +100,12 @@ export const Header = () => {
         <div className="flex items-center gap-stack-md">
           {!isOnboardingFlow && (
             <nav className="hidden md:flex items-center gap-stack-md">
-              {navStructure.map((navItem, i) => {
+              {navStructure.map((navItem) => {
                 if ('groupKey' in navItem) {
                   return (
                     <div key={navItem.groupKey} className="relative group">
                       <button className="font-label-caps text-label-caps text-surface-cream/70 hover:text-resonant-pink transition-colors py-2 flex items-center gap-1 tracking-widest uppercase">
-                        {t(navItem.groupKey as any)}
+                        {t(navItem.groupKey)}
                         <span className="material-symbols-outlined text-[16px] transition-transform group-hover:rotate-180">expand_more</span>
                       </button>
                       <div className="absolute top-full left-0 mt-2 w-48 bg-forest-ink/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 overflow-hidden">
@@ -121,7 +121,7 @@ export const Header = () => {
                                   : 'text-surface-cream/70 hover:bg-white/5 hover:text-surface-cream border-l-2 border-transparent'
                               }`}
                             >
-                              {t(item.key as any)}
+                              {t(item.key)}
                             </Link>
                           );
                         })}
@@ -140,7 +140,7 @@ export const Header = () => {
                           : 'text-surface-cream/70 hover:text-resonant-pink border-b-2 border-transparent'
                       }`}
                     >
-                      {t(navItem.key as any)}
+                      {t(navItem.key)}
                     </Link>
                   );
                 }
@@ -191,7 +191,7 @@ export const Header = () => {
       {/* Mobile Nav Dropdown */}
       {isMenuOpen && !isOnboardingFlow && (
         <div className="md:hidden w-full border-t border-white/10 bg-forest-ink mt-4 px-margin-mobile py-4 flex flex-col gap-2">
-          {navStructure.map((item, idx) => {
+          {navStructure.map((item) => {
             if ('groupKey' in item) {
               return (
                 <div key={item.groupKey} className="flex flex-col">
