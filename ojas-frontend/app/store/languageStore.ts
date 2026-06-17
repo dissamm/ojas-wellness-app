@@ -34,6 +34,7 @@ export const translations = {
     login: "Login",
     register: "Register",
     signIn: "Sign In",
+    ask: "Ask AI",
     
     // Dinacharya Phases
     "phase.morning": "Morning",
@@ -102,6 +103,7 @@ export const translations = {
     login: "लॉग इन",
     register: "पंजीकरण",
     signIn: "साइन इन",
+    ask: "Ask AI",
     
     // Dinacharya Phases
     "phase.morning": "सुबह",
@@ -164,6 +166,7 @@ export const translations = {
     login: "ਲੌਗਇਨ",
     register: "ਰਜਿਸਟਰ",
     signIn: "ਸਾਈਨ ਇਨ",
+    ask: "Ask AI",
     
     // Dinacharya Phases
     "phase.morning": "ਸਵੇਰ",
@@ -226,6 +229,7 @@ export const translations = {
     login: "Accedi",
     register: "Registrati",
     signIn: "Accedi",
+    ask: "Ask AI",
     
     // Dinacharya Phases
     "phase.morning": "Mattina",
@@ -288,6 +292,7 @@ export const translations = {
     login: "登录",
     register: "注册",
     signIn: "登录",
+    ask: "Ask AI",
     
     // Dinacharya Phases
     "phase.morning": "早晨",
@@ -350,6 +355,7 @@ export const translations = {
     login: "Connexion",
     register: "S'inscrire",
     signIn: "Se connecter",
+    ask: "Ask AI",
     
     // Dinacharya Phases
     "phase.morning": "Matin",

@@ -30,3 +30,4 @@ Thumbs.db
 # Databases
 *.db
 ojas.db
+chroma_db/

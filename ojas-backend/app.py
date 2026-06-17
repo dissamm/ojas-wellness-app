@@ -9,6 +9,10 @@ from datetime import datetime, timedelta
 import ephem
 import jwt
 
+import chromadb
+from google import genai
+from dotenv import load_dotenv
+from pathlib import Path
 # Reconfigure stdout/stderr to UTF-8 to avoid encoding errors on Windows
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
@@ -21,6 +25,30 @@ app = Flask(__name__)
 allowed_origins = os.environ.get("CORS_ORIGINS", "http://localhost:3000,https://your-app.vercel.app").split(",")
 CORS(app, origins=allowed_origins)
 app.config['JWT_SECRET_KEY'] = os.environ.get("JWT_SECRET_KEY", "fallback-dev-secret-key")
+
+# RAG Configuration
+load_dotenv()
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+RAG_EMBEDDING_MODEL = "models/gemini-embedding-2"
+RAG_ANSWER_MODEL = "models/gemini-2.5-flash"
+RAG_CHROMA_DB_PATH = "./chroma_db"
+RAG_COLLECTION_NAME = "ayurveda_knowledge"
+
+rag_client = None
+rag_collection = None
+
+if GEMINI_API_KEY:
+    try:
+        rag_client = genai.Client(api_key=GEMINI_API_KEY)
+        
+        # Initialize ChromaDB
+        chroma_client = chromadb.PersistentClient(path=RAG_CHROMA_DB_PATH)
+        rag_collection = chroma_client.get_collection(name=RAG_COLLECTION_NAME)
+        print("RAG system initialized successfully.")
+    except Exception as e:
+        print(f"Warning: RAG system initialization failed: {e}")
+else:
+    print("Warning: GEMINI_API_KEY not found. RAG features will be disabled.")
 
 # Initialize database tables on load/import
 init_db()
@@ -661,6 +689,115 @@ def delete_account(current_user):
         })
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 400
+
+
+# -----------------------------------------------------------------------------
+# RAG Helper Functions
+# -----------------------------------------------------------------------------
+
+def rag_retrieve_chunks(query, n_results=3):
+    if not rag_collection or not rag_client:
+        raise Exception("RAG system is not initialized")
+        
+    query_embedding = rag_client.models.embed_content(
+        model=RAG_EMBEDDING_MODEL,
+        contents=query
+    ).embeddings[0].values
+    
+    results = rag_collection.query(
+        query_embeddings=[query_embedding],
+        n_results=n_results
+    )
+    
+    chunks = results['documents'][0]
+    metadatas = results['metadatas'][0]
+    return chunks, metadatas
+
+def rag_build_prompt(query, retrieved_chunks):
+    context = "\n\n".join(retrieved_chunks)
+    prompt = f"""You are an Ayurvedic AI assistant for the OJAS wellness platform.
+Use the following context to answer the user's question.
+If the answer is not in the context, use your general Ayurvedic knowledge, but prioritize the context.
+
+Context:
+{context}
+
+User Question: {query}
+"""
+    return prompt
+
+def rag_answer_question(query):
+    if not rag_client:
+        raise Exception("RAG system is not initialized")
+        
+    chunks, metadatas = rag_retrieve_chunks(query)
+    prompt = rag_build_prompt(query, chunks)
+    
+    response = rag_client.models.generate_content(
+        model=RAG_ANSWER_MODEL,
+        contents=prompt
+    )
+    
+    # Extract unique sources
+    sources = list(set([m['source'] for m in metadatas if 'source' in m]))
+    
+    return {
+        "answer": response.text,
+        "sources": sources,
+        "status": "success"
+    }
+
+# -----------------------------------------------------------------------------
+# RAG Route
+# -----------------------------------------------------------------------------
+
+@app.route('/api/ask', methods=['POST', 'OPTIONS'])
+def ask_rag():
+    if request.method == 'OPTIONS':
+        from flask import make_response
+        response = make_response()
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+        response.headers.add("Access-Control-Allow-Methods", "POST,OPTIONS")
+        return response
+    try:
+        data = request.json
+        if not data or 'question' not in data:
+            return jsonify({
+                "answer": None, 
+                "sources": [], 
+                "status": "error", 
+                "error": "Question is required in the request body."
+            }), 400
+            
+        question = data['question'].strip()
+        if not question:
+            return jsonify({
+                "answer": None, 
+                "sources": [], 
+                "status": "error", 
+                "error": "Question cannot be empty."
+            }), 400
+            
+        if not rag_client or not rag_collection:
+            return jsonify({
+                "answer": None, 
+                "sources": [], 
+                "status": "error", 
+                "error": "RAG system is currently unavailable."
+            }), 503
+            
+        result = rag_answer_question(question)
+        return jsonify(result), 200
+        
+    except Exception as e:
+        print(f"Error in /api/ask: {str(e)}")
+        return jsonify({
+            "answer": None, 
+            "sources": [], 
+            "status": "error", 
+            "error": "An error occurred while processing your request."
+        }), 500
 
 
 if __name__ == '__main__':

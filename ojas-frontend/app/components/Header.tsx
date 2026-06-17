@@ -66,6 +66,7 @@ export const Header = () => {
         { name: 'Jyotish', path: '/jyotish', key: 'jyotish' },
         { name: 'Cycle', path: '/cycle', key: 'cycle' },
         { name: 'Music', path: '/music', key: 'music' },
+        { name: 'Ask AI', path: '/ask', key: 'ask' },
       ] as NavItem[]).filter(link => !(link.key === 'cycle' && user?.gender === 'male'))
     }
   ];
@@ -159,7 +160,7 @@ export const Header = () => {
 
           {/* User Profile / Login */}
           {!isOnboardingFlow && (
-            isAuthenticated ? (
+            (isMounted && isAuthenticated) ? (
               <button 
                 onClick={() => setIsProfileOpen(true)}
                 className="w-10 h-10 rounded-full bg-resonant-pink text-forest-ink font-label-caps text-label-caps flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-sm border border-resonant-pink/30 shadow-[0_0_10px_rgba(254,181,202,0.4)]"
