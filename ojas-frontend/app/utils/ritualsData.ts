@@ -283,12 +283,8 @@ export const getTopThreeRituals = (
         return rituals.slice(0, 3);
     } else if (currentHour < 17) {
         // Afternoon: Agni Peak (Lunch), Walk, Meditation
-        const afternoonIndices = [6, 7, 8];
-        const result: Ritual[] = [];
-        afternoonIndices.forEach(idx => {
-            const found = rituals.find(r => r.id === ritualsList[idx]?.id);
-            if (found) result.push(found);
-        });
+        const afternoonIds = ['lunch', 'walk', 'meditation'];
+        const result = rituals.filter(r => afternoonIds.includes(r.id));
         if (result.length >= 3) return result.slice(0, 3);
         return rituals.slice(Math.max(0, Math.floor(rituals.length / 2) - 1), Math.floor(rituals.length / 2) + 2);
     } else {

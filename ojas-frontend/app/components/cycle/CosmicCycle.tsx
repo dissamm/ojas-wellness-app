@@ -6,6 +6,40 @@ import { useCycleStore } from '../../store/cycleStore';
 import { useUserStore } from '../../store/userStore';
 import { predictMood, PredictionData } from '../../lib/api';
 
+const PHASE_DATA: Record<string, {
+  tags: string[];
+  insight: string;
+  energy: string;
+}> = {
+  menstrual: {
+    tags: ['Rest & Restore', 'Iron-Rich Foods', 'Gentle Movement'],
+    insight: 'Energy turns inward. Prioritize rest, warmth, and nourishing foods. Avoid intense exertion.',
+    energy: 'Low — restorative',
+  },
+  follicular: {
+    tags: ['Creative Projects', 'Social Energy', 'Cardio-Friendly'],
+    insight: 'Estrogen rises, mental clarity sharpens. Great phase for starting new tasks and outward activity.',
+    energy: 'Rising — expansive',
+  },
+  ovulation: {
+    tags: ['Manifestation Peak', 'High Stamina', 'Socialise'],
+    insight: 'Peak vitality and communication. Your body is at its most energetic — ideal for high-output work.',
+    energy: 'Peak — outward',
+  },
+  luteal: {
+    tags: ['Hydration Focus', 'Magnesium Foods', 'Wind Down'],
+    insight: 'Progesterone dominates. Energy draws inward. Favour calming routines and avoid overstimulation.',
+    energy: 'Declining — introspective',
+  },
+};
+
+const getMoodLabel = (score: number) => {
+  if (score >= 8) return 'Elevated';
+  if (score >= 6) return 'Balanced';
+  if (score >= 4) return 'Moderate';
+  return 'Low';
+};
+
 interface CosmicCycleProps {
     onNext?: () => void;
     onPredictionComplete?: (data: PredictionData) => void;
@@ -269,32 +303,73 @@ export const CosmicCycle = ({ onNext, onPredictionComplete }: CosmicCycleProps) 
                                     </div>
 
                                     {/* Result Card */}
-                                    <div className="glass-card-dark p-stack-lg rounded-xl mt-4 animate-fade-rise">
-                                        <div className="flex justify-between items-start mb-stack-md">
-                                            <div>
-                                                <span className="font-italic-serif text-resonant-pink block mb-1">Current State</span>
-                                                <h2 className="font-headline-md text-3xl md:text-4xl text-surface-cream capitalize">{prediction.cycle_phase || 'follicular'}</h2>
-                                            </div>
-                                            <span className="material-symbols-outlined text-resonant-pink text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>flare</span>
-                                        </div>
-                                        
-                                        <div className="w-full bg-forest-ink/40 h-[2px] mb-stack-sm relative overflow-hidden">
-                                            <div className="absolute top-0 left-0 h-full bg-resonant-pink transition-all duration-1000" style={{ width: `${phaseProgress}%` }}></div>
-                                        </div>
-                                        
-                                        <div className="flex justify-between font-label-caps text-[10px] text-surface-cream/80 uppercase mb-stack-md tracking-widest">
-                                            <span>Day {activeCycleDay}</span>
-                                            <span>Phase Progress: {phaseProgress}%</span>
-                                        </div>
-                                        
-                                        <p className="font-body-md text-surface-cream/90 mb-stack-md leading-relaxed">
-                                            Your <strong className="text-resonant-pink">{user?.dominantDosha || 'Pitta-Kapha'}</strong> balance is currently shifting. High creative energy predicted. Focus on expansive movements and nourishing foods.
-                                        </p>
-                                        
-                                        <div className="flex flex-wrap gap-2 mb-8">
-                                            <span className="border border-resonant-pink/30 px-3 py-1 rounded-full text-[10px] font-label-caps text-resonant-pink/90 uppercase bg-resonant-pink/5">Hydration Focus</span>
-                                            <span className="border border-resonant-pink/30 px-3 py-1 rounded-full text-[10px] font-label-caps text-resonant-pink/90 uppercase bg-resonant-pink/5">Manifestation Peak</span>
-                                        </div>
+                                    {(() => {
+                                        const phase = prediction.cycle_phase || 'follicular';
+                                        const phaseInfo = PHASE_DATA[phase] ?? PHASE_DATA['follicular'];
+                                        const moodScore = prediction.predicted_mood ?? 5;
+                                        const moodLabel = getMoodLabel(moodScore);
+
+                                        return (
+                                            <div className="glass-card-dark p-stack-lg rounded-xl mt-4 animate-fade-rise">
+                                                <div className="flex justify-between items-start mb-stack-md">
+                                                    <div>
+                                                        <span className="font-italic-serif text-resonant-pink block mb-1">Current Phase</span>
+                                                        <h2 className="font-headline-md text-3xl md:text-4xl text-surface-cream capitalize">{phase}</h2>
+                                                        <span className="text-[11px] font-mono text-surface-cream/50 uppercase tracking-widest mt-1 block">
+                                                            Energy: {phaseInfo.energy}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex flex-col items-end gap-1">
+                                                        <span className="material-symbols-outlined text-resonant-pink text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>flare</span>
+                                                        {/* ML Mood Score — this is the actual model output */}
+                                                        <div className="text-right">
+                                                            <span className="text-[10px] font-mono text-surface-cream/50 uppercase tracking-widest block">Mood Score</span>
+                                                            <span className="text-2xl font-bold text-resonant-pink">{moodScore}<span className="text-sm text-surface-cream/40">/10</span></span>
+                                                            <span className="text-[10px] font-mono text-surface-cream/70 uppercase tracking-widest block">{moodLabel}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Mood Score Bar */}
+                                                <div className="mb-stack-sm">
+                                                    <div className="flex justify-between text-[10px] font-mono text-surface-cream/50 uppercase tracking-widest mb-1">
+                                                        <span>Predicted Mood</span>
+                                                        <span>{moodScore}/10</span>
+                                                    </div>
+                                                    <div className="w-full bg-forest-ink/40 h-[6px] rounded-full overflow-hidden">
+                                                        <div
+                                                            className="h-full bg-resonant-pink transition-all duration-1000 rounded-full"
+                                                            style={{ width: `${(moodScore / 10) * 100}%` }}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                {/* Cycle Progress */}
+                                                <div className="w-full bg-forest-ink/40 h-[2px] mb-stack-sm relative overflow-hidden mt-4">
+                                                    <div className="absolute top-0 left-0 h-full bg-resonant-pink/50 transition-all duration-1000" style={{ width: `${phaseProgress}%` }} />
+                                                </div>
+                                                <div className="flex justify-between font-label-caps text-[10px] text-surface-cream/80 uppercase mb-stack-md tracking-widest">
+                                                    <span>Day {activeCycleDay}</span>
+                                                    <span>Cycle Progress: {phaseProgress}%</span>
+                                                </div>
+
+                                                {/* Phase-specific insight from model context */}
+                                                <p className="font-body-md text-surface-cream/90 mb-stack-md leading-relaxed">
+                                                    <strong className="text-resonant-pink capitalize">{phase} phase:</strong> {phaseInfo.insight}{' '}
+                                                    Your <strong className="text-resonant-pink">{user?.dominantDosha || 'Pitta-Kapha'}</strong> balance is currently shifting.
+                                                </p>
+
+                                                {/* Dynamic tags based on phase */}
+                                                <div className="flex flex-wrap gap-2 mb-8">
+                                                    {phaseInfo.tags.map((tag) => (
+                                                        <span
+                                                            key={tag}
+                                                            className="border border-resonant-pink/30 px-3 py-1 rounded-full text-[10px] font-label-caps text-resonant-pink/90 uppercase bg-resonant-pink/5"
+                                                        >
+                                                            {tag}
+                                                        </span>
+                                                    ))}
+                                                </div>
 
                                         {/* Manual Timeline Override */}
                                         <div className="bg-forest-ink/40 p-4 rounded-xl border border-white/5">
@@ -342,6 +417,8 @@ export const CosmicCycle = ({ onNext, onPredictionComplete }: CosmicCycleProps) 
                                             </button>
                                         )}
                                     </div>
+                                    );
+                                    })()}
                                     </>
                                 )
                         )}

@@ -40,3 +40,62 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+/* Jyotish Blueprint styling migrated from component */
+.breathing-glow {
+    animation: jyotishBreathe 8s ease-in-out infinite;
+    background: radial-gradient(circle, rgba(254, 181, 202, 0.1) 0%, rgba(0, 52, 28, 0) 70%);
+}
+
+@keyframes jyotishBreathe {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.2); }
+}
+
+.fade-in-up {
+    animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 12px;
+}
+
+.glass-card:hover {
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: #feb5ca;
+}
+
+.ritual-btn:active {
+    transform: scale(0.95);
+}
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+
+.matrix-cell {
+    transition: all 0.3s ease;
+}
+.matrix-cell:hover {
+    background-color: rgba(254, 181, 202, 0.15);
+    color: #feb5ca;
+}
+
+.italic-serif-font {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+}
+

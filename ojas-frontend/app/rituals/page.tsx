@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Header } from '../components/Header';
@@ -8,7 +8,7 @@ import { Card } from '../components/Card';
 import { usePrakritiStore } from '../store/prakritiStore';
 import { useCycleStore } from '../store/cycleStore';
 import { useUserStore } from '../store/userStore';
-import { getRitualsForDosha, getCycleStateFromStore, Ritual } from '../utils/ritualsData';
+import { getRitualsForDosha, getCycleStateFromStore, Ritual, getAyurvedicSeason } from '../utils/ritualsData';
 import { useHerbStore } from '../store/herbStore';
 import { HERBS_DATA } from '../data/herbsData';
 import { PRANAYAMA_TECHNIQUES, YOGA_SEQUENCES, PranayamaTechnique } from '../data/yogaPranayamaData';
@@ -101,10 +101,9 @@ const CLEANSE_PRACTICES: CleansePractice[] = [
 ];
 
 const FAVOUR_FOODS = ['Kitchari', 'Moong Dal', 'Ghee', 'Warm Water', 'Steamed Vegetables'];
-const AVOID_FOODS  = ['RAW FOODS', 'COLD DRINKS', 'PROCESSED MEAT'];
+const AVOID_FOODS  = ['RAW FOODS', 'COLD DRINKS', 'REFINED SUGAR'];
 
-const SEASONS = ['VASANTA', 'GRISHMA', 'VARSHA', 'HEMANTA'];
-const CURRENT_SEASON = 'GRISHMA';
+const SEASONS = ['SHISHIRA', 'VASANTA', 'GRISHMA', 'VARSHA', 'SHARAD', 'HEMANTA'];
 
 const PoseIcon = ({ id }: { id: string }) => {
   let paths = null;
@@ -182,6 +181,8 @@ export default function RitualsPage() {
         const dominant = entries.reduce((a, b) => (a[1] > b[1] ? a : b))[0];
         dominantDosha = dominant.charAt(0).toUpperCase() + dominant.slice(1);
     }
+
+    const CURRENT_SEASON = getAyurvedicSeason().season.toUpperCase();
 
     const [showPhaseMod, setShowPhaseMod] = useState(true);
     const [hydrated, setHydrated] = useState(false);
@@ -301,46 +302,56 @@ export default function RitualsPage() {
         }
     }, [completedAsanas, activeYogaTab]);
 
+    const timerStateRef = useRef({ phase: pranayamaPhase, secondsLeft: pranayamaSecondsLeft, timer: pranayamaTimer, minutes: pranayamaMinutes, maxRounds });
+    useEffect(() => {
+        timerStateRef.current = { phase: pranayamaPhase, secondsLeft: pranayamaSecondsLeft, timer: pranayamaTimer, minutes: pranayamaMinutes, maxRounds };
+    });
+
     // Timer Interval logic for Pranayama
     useEffect(() => {
         let interval: NodeJS.Timeout | null = null;
         
         if (pranayamaState === 'breathing') {
             interval = setInterval(() => {
+                const { phase, secondsLeft, timer, minutes, maxRounds } = timerStateRef.current;
+
                 setPranayamaElapsed(prev => {
                     const next = prev + 1;
-                    if (next >= pranayamaMinutes * 60) {
+                    if (next >= minutes * 60) {
                         setPranayamaState('complete');
                         return next;
                     }
                     return next;
                 });
 
+                if (secondsLeft <= 1 && phase === 'Exhale') {
+                    setPranayamaRounds(r => {
+                        if (r >= maxRounds) {
+                            setPranayamaState('complete');
+                        }
+                        return r + 1;
+                    });
+                }
+
                 setPranayamaSecondsLeft(prev => {
                     if (prev <= 1) {
                         let nextPhase: 'Inhale' | 'Hold' | 'Exhale' = 'Inhale';
                         let nextSeconds = 0;
                         
-                        if (pranayamaPhase === 'Inhale') {
-                            if (pranayamaTimer.hold > 0) {
+                        if (phase === 'Inhale') {
+                            if (timer.hold > 0) {
                                 nextPhase = 'Hold';
-                                nextSeconds = pranayamaTimer.hold;
+                                nextSeconds = timer.hold;
                             } else {
                                 nextPhase = 'Exhale';
-                                nextSeconds = pranayamaTimer.exhale;
+                                nextSeconds = timer.exhale;
                             }
-                        } else if (pranayamaPhase === 'Hold') {
+                        } else if (phase === 'Hold') {
                             nextPhase = 'Exhale';
-                            nextSeconds = pranayamaTimer.exhale;
+                            nextSeconds = timer.exhale;
                         } else {
                             nextPhase = 'Inhale';
-                            nextSeconds = pranayamaTimer.inhale;
-                            setPranayamaRounds(r => {
-                                if (r >= maxRounds) {
-                                    setPranayamaState('complete');
-                                }
-                                return r + 1;
-                            });
+                            nextSeconds = timer.inhale;
                         }
                         
                         setPranayamaPhase(nextPhase);
@@ -354,7 +365,7 @@ export default function RitualsPage() {
         return () => {
             if (interval) clearInterval(interval);
         };
-    }, [pranayamaState, pranayamaPhase, pranayamaTimer, pranayamaMinutes, maxRounds]);
+    }, [pranayamaState]);
 
     const scaleValue = (() => {
         if (pranayamaState === 'idle' || pranayamaState === 'complete') return 0.75;
@@ -379,23 +390,29 @@ export default function RitualsPage() {
 
     useEffect(() => {
         setHydrated(true);
-        if (typeof window !== 'undefined') {
-            const stored = localStorage.getItem('ojas_custom_transit_rituals');
-            if (stored) {
-                try {
-                    setCustomTransitRituals(JSON.parse(stored));
-                } catch (e) {
-                    console.error(e);
-                }
-            }
-            const saved = localStorage.getItem('ojas_intention_mode') as IntentionMode;
-            if (saved) setIntentionMode(saved);
-        }
     }, []);
 
     useEffect(() => {
-        if (intentionMode && typeof window !== 'undefined') {
-            localStorage.setItem('ojas_intention_mode', intentionMode);
+        if (!hydrated || typeof window === 'undefined') return;
+        const stored = localStorage.getItem('ojas_custom_transit_rituals');
+        if (stored) {
+            try {
+                setCustomTransitRituals(JSON.parse(stored));
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        const saved = localStorage.getItem('ojas_intention_mode') as IntentionMode;
+        if (saved) setIntentionMode(saved);
+    }, [hydrated]);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            if (intentionMode) {
+                localStorage.setItem('ojas_intention_mode', intentionMode);
+            } else {
+                localStorage.removeItem('ojas_intention_mode');
+            }
         }
     }, [intentionMode]);
 
@@ -509,7 +526,9 @@ export default function RitualsPage() {
                     </div>
                 );
             }
-            return filteredCleanse.map((practice, idx) => {
+            return (
+                <div className="space-y-4">
+                    {filteredCleanse.map((practice, idx) => {
                 const done = completedPractices.has(practice.id);
                 return (
                     <motion.div
@@ -579,7 +598,9 @@ export default function RitualsPage() {
                         </Card>
                     </motion.div>
                 );
-            });
+            })}
+                </div>
+            );
         } else {
             if (filteredStd.length === 0) {
                 return (
@@ -588,7 +609,9 @@ export default function RitualsPage() {
                     </div>
                 );
             }
-            return filteredStd.map((ritual, idx) => {
+            return (
+                <div className="space-y-4">
+                    {filteredStd.map((ritual, idx) => {
                 const hasMod = showPhaseMod && cycle && ritual.phase;
                 return (
                     <motion.div
@@ -676,7 +699,9 @@ export default function RitualsPage() {
                         </Card>
                     </motion.div>
                 );
-            });
+            })}
+                </div>
+            );
         }
     };
 
@@ -809,10 +834,7 @@ export default function RitualsPage() {
                         {/* Active Mode Bar */}
                         <div className="flex items-center justify-between mb-10 animate-fade-rise">
                           <button
-                            onClick={() => {
-                              setIntentionMode(null);
-                              localStorage.removeItem('ojas_intention_mode');
-                            }}
+                            onClick={() => setIntentionMode(null)}
                             className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary dark:hover:text-white transition text-[10px] font-mono uppercase tracking-widest cursor-pointer"
                           >
                             ← Change intention
@@ -838,7 +860,7 @@ export default function RitualsPage() {
                                 <div className="relative z-10">
                                     {/* Label */}
                                     <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.3em] text-resonant-pink font-bold mb-4">
-                                        SEASONAL TRANSITION · GRISHMA
+                                        SEASONAL TRANSITION · {CURRENT_SEASON}
                                     </div>
 
                                     {/* Heading */}
@@ -1089,7 +1111,7 @@ export default function RitualsPage() {
                               Guided Breath <span className="font-serif italic text-resonant-pink">Practice</span>
                             </h2>
                             <p className="text-sm text-on-surface-variant dark:text-on-surface-variant max-w-xl leading-relaxed mt-2">
-                              Breathing patterns calibrated for your Vata constitution to settle the nervous system and anchor your energy.
+                              Breathing patterns calibrated for your {dominantDosha} constitution to settle the nervous system and anchor your energy.
                             </p>
                           </div>
 
@@ -1362,7 +1384,7 @@ export default function RitualsPage() {
                               Your Yoga <span className="font-serif italic text-resonant-pink">Practice</span>
                             </h2>
                             <p className="text-sm text-on-surface-variant dark:text-on-surface-variant max-w-xl leading-relaxed mt-2">
-                              Asanas selected and sequenced specifically for your Vata constitution to restore balance, ground scattered energy, and build strength without depletion.
+                              Asanas selected and sequenced specifically for your {dominantDosha} constitution to restore balance, ground scattered energy, and build strength without depletion.
                             </p>
                           </div>
 
@@ -1421,7 +1443,7 @@ export default function RitualsPage() {
                                       next.add(curAsana.id);
                                       return next;
                                     });
-                                    if (activePoseIndex < 9) {
+                                    if (activePoseIndex < YOGA_SEQUENCES[activeYogaTab].length - 1) {
                                       setActivePoseIndex(activePoseIndex + 1);
                                     } else {
                                       setActivePoseIndex(null); // sequence finished!
@@ -1429,7 +1451,7 @@ export default function RitualsPage() {
                                   }}
                                   className="px-6 py-2.5 bg-resonant-pink rounded-full text-[9px] font-mono font-bold uppercase tracking-wider text-white hover:bg-[#C4603A] transition cursor-pointer shadow-md"
                                 >
-                                  {activePoseIndex === 9 ? '✓ FINISH' : 'NEXT POSE →'}
+                                  {activePoseIndex === YOGA_SEQUENCES[activeYogaTab].length - 1 ? '✓ FINISH' : 'NEXT POSE →'}
                                 </button>
                               </div>
                             </Card>
@@ -1524,10 +1546,14 @@ export default function RitualsPage() {
                               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
                                 <div>
                                   <h3 className="font-serif italic text-3xl text-primary dark:text-inverse-on-surface font-normal">
-                                    Complete Vata Sequence Flow
+                                    Complete {activeYogaTab} Sequence Flow
                                   </h3>
                                   <p className="text-xs text-on-surface-variant dark:text-on-surface-variant leading-normal mt-1.5 max-w-md">
-                                    Follow all 10 asanas chronologically to reset apana vayu, ground instability, and center the mind.
+                                    {activeYogaTab === 'PITTA'
+                                      ? 'Follow all 10 asanas chronologically to release excess heat, soothe frustration, and calm the nervous system.'
+                                      : activeYogaTab === 'KAPHA'
+                                      ? 'Follow all 10 asanas chronologically to stimulate circulation, invigorate sluggishness, and awaken lightness.'
+                                      : 'Follow all 10 asanas chronologically to reset apana vayu, ground instability, and center the mind.'}
                                   </p>
                                 </div>
                                 {/* Total Duration pill */}
@@ -1581,7 +1607,7 @@ export default function RitualsPage() {
                                   }}
                                   className="px-7 py-3 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-transparent border border-stone-400 dark:border-outline-variant/30 text-on-surface-variant dark:text-stone-300 hover:border-resonant-pink hover:text-resonant-pink transition-all duration-300 active:scale-[0.98] cursor-pointer"
                                 >
-                                  CUSTOM SEQUENCE
+                                  ✓ MARK ALL COMPLETE
                                 </button>
                               </div>
                             </Card>
